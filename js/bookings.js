@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 export const LODGING_GST_RATE = 12;
 export const FOODING_GST_RATE = 5;
@@ -10,11 +10,16 @@ export function calculateBookingCharges({
   foodRatePerGuestPerNight = 500, 
   numberOfGuests = 1, 
   numberOfNights = 1, 
-  gstMode = "extra" 
+  gstMode = "extra",
+  discount = 0 // নতুন: ডিসকাউন্ট
 }) {
   const nights = Math.max(1, parseInt(numberOfNights) || 1);
   const guests = Math.max(1, parseInt(numberOfGuests) || 1);
-  const rawRoom = parseFloat(roomRatePerNight) || 0;
+  const disc = Math.max(0, parseFloat(discount) || 0);
+
+  // Apply discount on the base room rate
+  const rawRoom = Math.max(0, (parseFloat(roomRatePerNight) || 0) - disc);
+  
   const isFood = packageType === "fooding_lodging";
   const rawFood = isFood ? (parseFloat(foodRatePerGuestPerNight) * guests) : 0;
 
@@ -57,7 +62,7 @@ export function calculateBookingCharges({
   const grandTotal = lodgingTotal + foodingTotal;
 
   return {
-    packageType, gstMode, nights, guests,
+    packageType, gstMode, nights, guests, discount: disc,
     lodging: { 
       ratePerNight: rawRoom, taxable: Number(lodgingTaxable.toFixed(2)), 
       cgst: Number(lodgingCgst.toFixed(2)), sgst: Number(lodgingSgst.toFixed(2)), total: Number(lodgingTotal.toFixed(2)) 
@@ -78,48 +83,29 @@ export function calculateBookingCharges({
 
 export async function createNewBooking(hotelId, bookingData) {
   const bookingId = "BK_" + Date.now().toString().slice(-6);
-  
-  // Calculate Due Amount
   const advancePaid = parseFloat(bookingData.advancePaid) || 0;
   const balanceDue = bookingData.summary.grandTotal - advancePaid;
   const isSettled = balanceDue <= 0;
 
   await setDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
-    bookingId, 
-    ...bookingData, 
-    advancePaid,
-    balanceDue,
-    isSettled,
-    status: "checked_in", 
-    createdAt: new Date().toISOString()
+    bookingId, ...bookingData, advancePaid, balanceDue, isSettled,
+    status: "checked_in", createdAt: new Date().toISOString()
   });
   
   await updateDoc(doc(db, "hotels", hotelId, "rooms", bookingData.roomId), {
-    status: "occupied", 
-    currentBookingId: bookingId, 
-    guestName: bookingData.guestName
+    status: "occupied", currentBookingId: bookingId, guestName: bookingData.guestName
   });
   
   return { success: true, bookingId };
 }
 
 export async function processCheckOut(hotelId, bookingId, roomId, settlementData) {
-  // settlementData will contain finalPaidAmount, totalPaid, balanceDue, isSettled
   await updateDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
-    status: "checked_out", 
-    settledAt: new Date().toISOString(), 
-    checkOutTime: settlementData.checkOutTime,
-    totalPaid: settlementData.totalPaid,
-    balanceDue: settlementData.balanceDue,
-    isSettled: settlementData.isSettled,
-    settled: settlementData.isSettled
+    status: "checked_out", settledAt: new Date().toISOString(), 
+    ...settlementData
   });
-  
   await updateDoc(doc(db, "hotels", hotelId, "rooms", roomId), {
-    status: "cleaning", 
-    currentBookingId: null, 
-    guestName: null
+    status: "cleaning", currentBookingId: null, guestName: null
   });
-  
   return { success: true };
 }
