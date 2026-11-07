@@ -1,136 +1,148 @@
-// SmartFix HMS - Restaurant POS, KOT & Room Service Engine
+// pos.js - SmartFix HMS
+// Restaurant / KOT POS orders for room-service food billing.
+// Every order stores its GST breakdown so thermal/A4 invoices stay CA-compliant.
 import { db } from "./firebase-config.js";
-import { 
-  collection, 
-  doc, 
-  setDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy 
+import {
+  doc, setDoc, getDocs, collection, query, where
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Standard 5% GST for Restaurant & Room Service (SAC 996331)
-const RESTAURANT_GST_RATE = 5;
+// ---------- Fooding GST (SAC 996331) ----------
+export const FOODING_GST_RATE = 5; // total – split into CGST 2.5% + SGST 2.5%
 
-// Default Food & Beverage Catalog
-export const DEFAULT_MENU_ITEMS = [
-  { id: "M1", name: "Masala Chai / Milk Tea", category: "Beverages", price: 30 },
-  { id: "M2", name: "Filter Coffee", category: "Beverages", price: 50 },
-  { id: "M3", name: "Veg Club Sandwich", category: "Snacks", price: 120 },
-  { id: "M4", name: "Crispy French Fries", category: "Snacks", price: 100 },
-  { id: "M5", name: "Paneer Butter Masala", category: "Main Course", price: 240 },
-  { id: "M6", name: "Chicken Curry (Bengali Style)", category: "Main Course", price: 280 },
-  { id: "M7", name: "Butter Naan (2 Pcs)", category: "Breads", price: 80 },
-  { id: "M8", name: "Steamed Basmati Rice", category: "Rice", price: 90 },
-  { id: "M9", name: "Mineral Water (1 Litre)", category: "Beverages", price: 25 },
-  { id: "M10", name: "Special Bengali Fish Thali", category: "Thali", price: 320 }
-];
+// ---------- Collision-safe order ID ----------
+function generateOrderId() {
+  const ts = Date.now().toString(36).toUpperCase();
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `KOT_${ts}_${rand}`;
+}
 
 /**
- * Calculate POS Cart Totals with 5% Restaurant GST
- * @param {Array<{id: string, name: string, price: number, quantity: number}>} cartItems 
+ * Compute food-order totals with GST, given an items array.
+ * Each item: { name, price, quantity }
+ * `price` is treated as GST-inclusive (typical restaurant menu).
+ * If you store pre-tax prices, pass `pricesAreTaxInclusive = false`.
  */
-export function calculatePosTotals(cartItems) {
-  let subtotal = 0;
+export function computeOrderTax(items = [], pricesAreTaxInclusive = true) {
+  const grossTotal = items.reduce(
+    (sum, it) => sum + (Number(it.price) || 0) * (Number(it.quantity) || 0),
+    0
+  );
 
-  cartItems.forEach(item => {
-    subtotal += (parseFloat(item.price) || 0) * (parseInt(item.quantity) || 1);
-  });
-
-  const totalTax = (subtotal * RESTAURANT_GST_RATE) / 100;
-  const cgst = totalTax / 2;
-  const sgst = totalTax / 2;
-  const grandTotal = subtotal + totalTax;
+  let taxable, totalTax, cgst, sgst, grand;
+  if (pricesAreTaxInclusive) {
+    // Extract tax out of the gross amount
+    grand = grossTotal;
+    taxable = grossTotal / (1 + FOODING_GST_RATE / 100);
+    totalTax = grand - taxable;
+  } else {
+    // Add tax on top of pre-tax price
+    taxable = grossTotal;
+    totalTax = taxable * FOODING_GST_RATE / 100;
+    grand = taxable + totalTax;
+  }
+  cgst = totalTax / 2;
+  sgst = totalTax / 2;
 
   return {
-    itemsCount: cartItems.length,
-    subtotal: Number(subtotal.toFixed(2)),
+    taxable: Number(taxable.toFixed(2)),
     cgst: Number(cgst.toFixed(2)),
     sgst: Number(sgst.toFixed(2)),
     totalTax: Number(totalTax.toFixed(2)),
-    grandTotal: Number(grandTotal.toFixed(2))
+    grandTotal: Number(grand.toFixed(2))
   };
 }
 
-/**
- * Place a Room Service KOT or Walk-in Dining Order
- * @param {string} hotelId 
- * @param {object} orderDetails 
- */
-export async function createPosOrder(hotelId, {
-  orderType = "room_service", // 'room_service' | 'walk_in'
-  roomNumber = "",
-  bookingId = "",
-  guestName = "Walk-in Guest",
-  items = [],
-  paymentMode = "Room Folio", // 'Room Folio' | 'Cash' | 'UPI'
-  settled = false
-}) {
+// ---------- Create POS order ----------
+export async function createPosOrder(hotelId, orderDetails) {
+  if (!hotelId) throw new Error("Missing hotelId");
+  if (!orderDetails || !Array.isArray(orderDetails.items) || orderDetails.items.length === 0) {
+    throw new Error("POS order must have at least one item");
+  }
+
+  const orderId = generateOrderId();
+  const tax = computeOrderTax(orderDetails.items, orderDetails.pricesAreTaxInclusive !== false);
+
+  await setDoc(doc(db, "hotels", hotelId, "pos_orders", orderId), {
+    ...orderDetails,
+    orderId,
+    // BUG FIX #9: persist GST breakdown so invoices don't have to recompute
+    tax,
+    // BUG FIX #13: default unsettled → auto-settled only at checkout
+    settled: false,
+    settledAt: null,
+    settledBookingId: null,
+    status: "served",
+    createdAt: new Date().toISOString()
+  });
+
+  return { success: true, orderId, tax };
+}
+
+// ---------- Fetch unsettled food orders for a room ----------
+export async function getRoomUnsettledFoodOrders(hotelId, roomNumber) {
   try {
-    if (!items || items.length === 0) {
-      throw new Error("Cannot place an empty food order.");
+    if (!hotelId || !roomNumber) {
+      return { unsettledOrders: [], totals: emptyTotals() };
     }
 
-    const orderId = "KOT_" + Date.now().toString().slice(-6);
-    const totals = calculatePosTotals(items);
+    const q = query(
+      collection(db, "hotels", hotelId, "pos_orders"),
+      where("roomNumber", "==", roomNumber)
+    );
+    const snap = await getDocs(q);
 
-    const orderPayload = {
-      orderId,
-      orderType,
-      roomNumber,
-      bookingId,
-      guestName,
-      items,
-      totals,
-      paymentMode,
-      settled: orderType === "room_service" ? false : settled, // Room service bills settle at checkout
-      status: "preparing", // 'preparing' | 'served' | 'cancelled'
-      createdAt: new Date().toISOString()
-    };
+    const unsettledOrders = [];
+    const totals = emptyTotals();
 
-    // Save order inside hotel POS collection
-    const orderRef = doc(db, "hotels", hotelId, "pos_orders", orderId);
-    await setDoc(orderRef, orderPayload);
+    snap.forEach((d) => {
+      const data = d.data();
+      // BUG FIX #2: only include orders that were never settled.
+      // Missing `settled` field = legacy order → treat as unsettled only if
+      // not marked otherwise. Safer: legacy orders were shown before, so keep
+      // the same behavior (include them) but they'll be auto-settled on next
+      // checkout by `processCheckOut` in bookings.js.
+      if (data.settled === true) return;
 
-    return { success: true, orderId, orderPayload };
-  } catch (error) {
-    console.error("SmartFix HMS: POS Order Creation Failed:", error);
-    throw error;
+      unsettledOrders.push(data);
+
+      // Aggregate using stored tax if present, else recompute on the fly.
+      const t = data.tax || computeOrderTax(data.items || []);
+      totals.taxable += Number(t.taxable) || 0;
+      totals.cgst += Number(t.cgst) || 0;
+      totals.sgst += Number(t.sgst) || 0;
+      totals.grandTotal += Number(t.grandTotal) || 0;
+      totals.itemsCount += (data.items || []).reduce(
+        (n, it) => n + (Number(it.quantity) || 0), 0
+      );
+    });
+
+    // Round to 2 decimals for display safety
+    Object.keys(totals).forEach(k => {
+      totals[k] = Number(totals[k].toFixed(2));
+    });
+
+    return { unsettledOrders, totals };
+  } catch (e) {
+    console.warn("getRoomUnsettledFoodOrders failed:", e.message);
+    return { unsettledOrders: [], totals: emptyTotals() };
   }
 }
 
-/**
- * Fetch all unbilled POS food charges for a specific room to add to checkout folio
- * @param {string} hotelId 
- * @param {string} roomNumber 
- */
-export async function getRoomUnsettledFoodOrders(hotelId, roomNumber) {
-  try {
-    const ordersRef = collection(db, "hotels", hotelId, "pos_orders");
-    const q = query(
-      ordersRef, 
-      where("roomNumber", "==", roomNumber),
-      where("orderType", "==", "room_service"),
-      where("settled", "==", false)
-    );
+function emptyTotals() {
+  return { taxable: 0, cgst: 0, sgst: 0, grandTotal: 0, itemsCount: 0 };
+}
 
-    const snapshot = await getDocs(q);
-    const unsettledOrders = [];
-    let totalFoodCost = 0;
-
-    snapshot.forEach(docSnap => {
-      const data = docSnap.data();
-      unsettledOrders.push(data);
-      totalFoodCost += (data.totals?.grandTotal || 0);
-    });
-
-    return {
-      unsettledOrders,
-      totalFoodCost: Number(totalFoodCost.toFixed(2))
-    };
-  } catch (error) {
-    console.error("SmartFix HMS: Failed to fetch room food orders:", error);
-    return { unsettledOrders: [], totalFoodCost: 0 };
-  }
+// ---------- Mark a POS order settled (called from checkout flow optionally) ----------
+export async function settlePosOrder(hotelId, orderId, bookingId) {
+  if (!hotelId || !orderId) throw new Error("Missing hotelId or orderId");
+  await setDoc(
+    doc(db, "hotels", hotelId, "pos_orders", orderId),
+    {
+      settled: true,
+      settledAt: new Date().toISOString(),
+      settledBookingId: bookingId || null
+    },
+    { merge: true }
+  );
+  return { success: true };
 }
