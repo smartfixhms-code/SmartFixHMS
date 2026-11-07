@@ -4,132 +4,175 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SmartFix HMS - Dashboard</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#060B14">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+    }
+  </script>
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #060B14; color: #E2E8F0; background-image: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #060B14 70%); }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
     .glass { background: rgba(16, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
+    /* Isometric 3D Effect for Desktop */
+    .room-card { transition: all 0.3s ease; transform-style: preserve-3d; }
+    .room-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 25px -5px rgba(0, 230, 118, 0.2); }
   </style>
 </head>
 <body class="h-screen flex overflow-hidden">
 
-  <!-- SIDEBAR (DESKTOP) -->
+  <!-- SVG LOGO (Global) -->
+  <svg style="display: none;">
+    <symbol id="smartfix-logo" viewBox="0 0 460 110">
+      <g transform="translate(10, 5)">
+        <rect x="0" y="32" width="22" height="58" rx="2" stroke="#00B4D8" stroke-width="4" fill="#061224" />
+        <rect x="68" y="32" width="22" height="58" rx="2" stroke="#00B4D8" stroke-width="4" fill="#061224" />
+        <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="#00E676" stroke-width="5" fill="#08182f" />
+        <circle cx="45" cy="50" r="18" fill="#061426" stroke="#00E676" stroke-width="4" />
+        <polyline points="37,50 43,56 55,42" fill="none" stroke="#00E676" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <text x="110" y="52" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="#00B4D8">Fix</tspan></text>
+      <rect x="300" y="22" width="90" height="32" rx="16" fill="#00E676" />
+      <text x="345" y="45" font-family="'Inter', sans-serif" font-weight="900" font-size="20" fill="#060B14" text-anchor="middle">HMS</text>
+      <text x="112" y="80" font-family="'Inter', sans-serif" font-weight="700" font-size="12" fill="#00B4D8" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+    </symbol>
+  </svg>
+
+  <!-- SIDEBAR (DESKTOP ONLY) -->
   <aside class="w-64 glass border-r border-slate-800 flex-col hidden lg:flex z-20">
-    <div class="h-16 flex items-center px-6 border-b border-slate-800">
-      <div class="w-8 h-8 rounded bg-gradient-to-br from-[#00E676] to-[#00B4D8] flex items-center justify-center text-[#060B14] font-black text-xl mr-3">S</div>
-      <h1 class="text-lg font-bold text-white tracking-wide">SmartFix <span class="text-[#00E676]">HMS</span></h1>
+    <div class="h-16 flex items-center px-4 border-b border-slate-800">
+      <svg class="h-10 w-auto"><use href="#smartfix-logo"></use></svg>
     </div>
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <button onclick="switchView('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold bg-[#00E676]/10 text-[#00E676] border border-[#00E676]/20">Dashboard</button>
-      <button onclick="switchView('room-manager')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">Rooms & Tariffs</button>
-      <button onclick="switchView('pos')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">Restaurant POS</button>
-      <button onclick="switchView('billing-archive')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">Billing Archive</button>
-      <button onclick="switchView('reports')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">P&L / Expenses</button>
-      <button onclick="switchView('gst-audit')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">GST CA Audit</button>
-      <button onclick="switchView('settings')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">Settings</button>
+      <button onclick="switchView('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold bg-[#00E676]/10 text-[#00E676] border border-[#00E676]/20 transition">Dashboard</button>
+      <button onclick="switchView('room-manager')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">Rooms & Tariffs</button>
+      <button onclick="switchView('pos')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">Restaurant POS</button>
+      <button onclick="switchView('billing-archive')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">Billing Archive</button>
+      <button onclick="switchView('reports')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">P&L / Expenses</button>
+      <button onclick="switchView('gst-audit')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">GST CA Audit</button>
+      <button onclick="switchView('settings')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">Settings</button>
     </nav>
   </aside>
 
-  <!-- MAIN AREA -->
-  <main class="flex-1 flex flex-col h-full overflow-hidden">
-    <header class="h-16 glass border-b border-slate-800 flex items-center justify-between px-6 z-10 shrink-0">
-      <div class="flex items-center gap-4">
-        <h2 id="pageTitle" class="text-lg font-bold text-white">Dashboard</h2>
-        <span id="licenseBadgeText" class="text-[10px] font-mono text-[#00E676] bg-[#00E676]/10 px-2 py-1 rounded border border-[#00E676]/20 hidden sm:block">30 Days Left</span>
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+    <header class="h-16 glass border-b border-slate-800 flex items-center justify-between px-4 lg:px-6 z-10 shrink-0">
+      <div class="flex items-center gap-3">
+        <svg class="h-8 w-auto lg:hidden"><use href="#smartfix-logo"></use></svg>
+        <div class="hidden lg:block">
+          <h2 id="pageTitle" class="text-lg font-bold text-white">Hotel Overview</h2>
+          <p id="navHotelTitle" class="text-[10px] text-[#00E676] font-semibold uppercase tracking-wider">Demo Hotel</p>
+        </div>
       </div>
       <div class="flex items-center gap-4">
-        <span id="navHotelTitle" class="text-sm font-semibold text-slate-300">Demo Hotel</span>
+        <span id="licenseBadgeText" class="text-[10px] font-mono text-[#00E676] bg-[#00E676]/10 px-2 py-1 rounded border border-[#00E676]/20 hidden sm:block">30 Days Left</span>
         <button onclick="handleSignOut()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white">Logout</button>
       </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-4 lg:p-6 hide-scrollbar pb-24 lg:pb-6">
+    <div class="flex-1 flex overflow-hidden">
       
-      <!-- VIEW: DASHBOARD -->
-      <section id="view-dashboard" class="space-y-6 animate-fadeIn">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="glass p-4 rounded-2xl border-l-4 border-l-[#00E676]"><p class="text-[10px] text-slate-400 font-bold uppercase">Vacant</p><h3 id="statVacantRooms" class="text-2xl font-black text-[#00E676] font-mono mt-1">0</h3></div>
-          <div class="glass p-4 rounded-2xl border-l-4 border-l-rose-500"><p class="text-[10px] text-slate-400 font-bold uppercase">Occupied</p><h3 id="statOccupiedRooms" class="text-2xl font-black text-rose-400 font-mono mt-1">0</h3></div>
-          <div class="glass p-4 rounded-2xl border-l-4 border-l-[#00B4D8]"><p class="text-[10px] text-slate-400 font-bold uppercase">Occupancy</p><h3 id="statOccupancyRate" class="text-2xl font-black text-[#00B4D8] font-mono mt-1">0%</h3></div>
-          <div class="glass p-4 rounded-2xl border-l-4 border-l-yellow-500"><p class="text-[10px] text-slate-400 font-bold uppercase">Today's Rev</p><h3 id="statTodayRevenue" class="text-2xl font-black text-yellow-400 font-mono mt-1">₹0</h3></div>
-        </div>
-        <div class="glass p-5 rounded-2xl border border-slate-800">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-base font-bold text-white uppercase tracking-wider">Floor Map</h3>
-            <button onclick="openBookingModal()" class="px-4 py-2 bg-[#00E676] text-[#060B14] text-xs font-bold rounded-lg shadow-lg">+ New Booking</button>
+      <!-- CENTER AREA (Views) -->
+      <div id="mainViewArea" class="flex-1 overflow-y-auto p-4 lg:p-6 hide-scrollbar pb-24 lg:pb-6 transition-all duration-300">
+        
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="space-y-6 animate-fadeIn">
+          
+          <!-- Stats Grid (Visible on Mobile, hidden on Desktop as it's in Right Panel) -->
+          <div class="grid grid-cols-2 lg:hidden gap-3">
+            <div class="glass p-4 rounded-2xl border-l-4 border-l-[#00E676]"><p class="text-[10px] text-slate-400 font-bold uppercase">Vacant</p><h3 id="statVacantRoomsMobile" class="text-2xl font-black text-[#00E676] font-mono mt-1">0</h3></div>
+            <div class="glass p-4 rounded-2xl border-l-4 border-l-rose-500"><p class="text-[10px] text-slate-400 font-bold uppercase">Occupied</p><h3 id="statOccupiedRoomsMobile" class="text-2xl font-black text-rose-400 font-mono mt-1">0</h3></div>
+            <div class="glass p-4 rounded-2xl border-l-4 border-l-[#00B4D8]"><p class="text-[10px] text-slate-400 font-bold uppercase">Occupancy</p><h3 id="statOccupancyRateMobile" class="text-2xl font-black text-[#00B4D8] font-mono mt-1">0%</h3></div>
+            <div class="glass p-4 rounded-2xl border-l-4 border-l-yellow-500"><p class="text-[10px] text-slate-400 font-bold uppercase">Today's Rev</p><h3 id="statTodayRevenueMobile" class="text-xl font-black text-yellow-400 font-mono mt-1">₹0</h3></div>
           </div>
-          <div id="roomGridContainer" class="space-y-8"></div>
-        </div>
-      </section>
 
-      <!-- VIEW: ROOM MANAGER -->
-      <section id="view-room-manager" class="hidden space-y-6 animate-fadeIn">
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-bold text-white">Rooms & Tariffs</h2>
-          <button onclick="openAddRoomModal()" class="px-4 py-2 bg-[#00E676] text-[#060B14] text-xs font-bold rounded-lg">+ Add Room</button>
-        </div>
-        <div class="glass rounded-2xl overflow-hidden">
-          <table class="w-full text-left text-xs font-mono whitespace-nowrap">
-            <thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-4">Room</th><th class="py-3 px-4">Floor</th><th class="py-3 px-4">Type</th><th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Food/Head (₹)</th><th class="py-3 px-4 text-right">Actions</th></tr></thead>
-            <tbody id="roomManagerTableBody" class="divide-y divide-slate-800/50"></tbody>
-          </table>
-        </div>
-      </section>
+          <!-- Quick Actions (Mobile) -->
+          <div class="grid grid-cols-4 gap-2 lg:hidden">
+            <button onclick="openBookingModal()" class="glass p-3 rounded-xl flex flex-col items-center gap-1.5"><svg class="w-5 h-5 text-[#00E676]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg><span class="text-[9px] text-slate-300">Book</span></button>
+            <button onclick="switchView('pos')" class="glass p-3 rounded-xl flex flex-col items-center gap-1.5"><svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="text-[9px] text-slate-300">POS</span></button>
+            <button onclick="switchView('reports')" class="glass p-3 rounded-xl flex flex-col items-center gap-1.5"><svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-[9px] text-slate-300">Expenses</span></button>
+            <button onclick="switchView('gst-audit')" class="glass p-3 rounded-xl flex flex-col items-center gap-1.5"><svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-[9px] text-slate-300">GST</span></button>
+          </div>
 
-      <!-- VIEW: POS -->
-      <section id="view-pos" class="hidden space-y-6 animate-fadeIn">
-        <h2 class="text-lg font-bold text-white">Restaurant POS</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="glass p-5 rounded-2xl md:col-span-2">
-            <h3 class="text-sm font-bold text-[#00B4D8] mb-4">Add Order to Room</h3>
-            <div class="grid grid-cols-2 gap-4 mb-4">
-              <div><label class="block text-xs text-slate-400 mb-1">Select Room</label><select id="posRoomSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></select></div>
-              <div><label class="block text-xs text-slate-400 mb-1">Item Name</label><input type="text" id="posItemName" placeholder="e.g. Chicken Biryani" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
-              <div><label class="block text-xs text-slate-400 mb-1">Price (₹)</label><input type="number" id="posItemPrice" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
-              <div><label class="block text-xs text-slate-400 mb-1">Qty</label><input type="number" id="posItemQty" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
+          <!-- Room Grid -->
+          <div class="glass p-4 lg:p-6 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-sm lg:text-base font-bold text-white uppercase tracking-wider">Live Floor Status</h3>
+              <span class="flex items-center gap-1 text-[10px] text-[#00E676]"><span class="w-2 h-2 rounded-full bg-[#00E676] animate-pulse"></span> Live</span>
             </div>
-            <button onclick="addPosItem()" class="w-full py-2 bg-slate-800 text-white font-bold text-sm rounded-lg mb-4">+ Add Item</button>
+            <div id="roomGridContainer" class="space-y-6"></div>
+          </div>
+        </section>
+
+        <!-- VIEW: ROOM MANAGER -->
+        <section id="view-room-manager" class="hidden space-y-6 animate-fadeIn">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold text-white">Rooms & Tariffs</h2>
+            <button onclick="openAddRoomModal()" class="px-4 py-2 bg-[#00E676] text-[#060B14] text-xs font-bold rounded-lg">+ Add Room</button>
+          </div>
+          <div class="glass rounded-2xl overflow-x-auto border border-slate-800">
+            <table class="w-full text-left text-xs font-mono whitespace-nowrap">
+              <thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-4">Room</th><th class="py-3 px-4">Type</th><th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Food/Head (₹)</th><th class="py-3 px-4 text-right">Actions</th></tr></thead>
+              <tbody id="roomManagerTableBody" class="divide-y divide-slate-800/50"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW: POS -->
+        <section id="view-pos" class="hidden space-y-6 animate-fadeIn">
+          <h2 class="text-lg font-bold text-white">Restaurant POS</h2>
+          <div class="glass p-5 rounded-2xl border border-slate-800">
+            <h3 class="text-sm font-bold text-[#00B4D8] mb-4">Add Order to Room</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div><label class="block text-xs text-slate-400 mb-1">Room</label><select id="posRoomSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></select></div>
+              <div class="col-span-2"><label class="block text-xs text-slate-400 mb-1">Item Name</label><input type="text" id="posItemName" placeholder="e.g. Biryani" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
+              <div><label class="block text-xs text-slate-400 mb-1">Price (₹)</label><input type="number" id="posItemPrice" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
+            </div>
+            <div class="flex gap-4 items-center mb-4">
+              <div class="w-24"><label class="block text-xs text-slate-400 mb-1">Qty</label><input type="number" id="posItemQty" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
+              <button onclick="addPosItem()" class="mt-5 px-6 py-2 bg-slate-800 text-white font-bold text-sm rounded-lg">+ Add Item</button>
+            </div>
             <table class="w-full text-left text-xs"><thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-2">Item</th><th class="py-2">Qty</th><th class="py-2">Rate</th><th class="py-2 text-right">Total</th></tr></thead><tbody id="posCartBody"></tbody></table>
             <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-800"><span class="font-bold text-white">Cart Total:</span><span id="posCartTotal" class="text-xl font-black text-[#00E676] font-mono">₹0.00</span></div>
             <button onclick="submitPosOrder()" class="w-full mt-4 py-3 bg-[#00E676] text-[#060B14] font-bold rounded-xl">Confirm Order</button>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- VIEW: BILLING ARCHIVE (Phone Search) -->
-      <section id="view-billing-archive" class="hidden space-y-6 animate-fadeIn">
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-bold text-white">Billing Archive</h2>
-          <input type="text" id="billSearchInput" oninput="filterInvoices()" placeholder="Search by Phone or Name..." class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#00E676]">
-        </div>
-        <div class="glass rounded-2xl overflow-hidden">
-          <table class="w-full text-left text-xs font-mono"><thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-4">Invoice</th><th class="py-3 px-4">Guest</th><th class="py-3 px-4">Phone</th><th class="py-3 px-4">Amount</th><th class="py-3 px-4 text-right">Print</th></tr></thead><tbody id="invoiceTableBody" class="divide-y divide-slate-800/50"></tbody></table>
-        </div>
-      </section>
+        <!-- VIEW: BILLING ARCHIVE (Phone Search) -->
+        <section id="view-billing-archive" class="hidden space-y-6 animate-fadeIn">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 class="text-lg font-bold text-white">Billing Archive</h2>
+            <input type="text" id="billSearchInput" oninput="filterInvoices()" placeholder="Search by Phone or Name..." class="w-full sm:w-64 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#00E676]">
+          </div>
+          <div class="glass rounded-2xl overflow-x-auto border border-slate-800">
+            <table class="w-full text-left text-xs font-mono whitespace-nowrap"><thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-4">Invoice</th><th class="py-3 px-4">Guest</th><th class="py-3 px-4">Phone</th><th class="py-3 px-4">Amount</th><th class="py-3 px-4 text-right">Print</th></tr></thead><tbody id="invoiceTableBody" class="divide-y divide-slate-800/50"></tbody></table>
+          </div>
+        </section>
 
-      <!-- VIEW: REPORTS / EXPENSES -->
-      <section id="view-reports" class="hidden space-y-6 animate-fadeIn">
-        <div class="flex justify-between items-center"><h2 class="text-lg font-bold text-white">P&L Journal</h2><button onclick="document.getElementById('expenseModal').classList.remove('hidden')" class="px-4 py-2 bg-rose-500 text-white text-xs font-bold rounded-lg">+ Log Expense</button></div>
-        <div class="glass rounded-2xl p-4">
-          <table class="w-full text-left text-xs"><thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-2">Date</th><th class="py-2">Category</th><th class="py-2">Description</th><th class="py-2 text-right">Amount</th></tr></thead><tbody id="expenseTableBody"></tbody></table>
-        </div>
-      </section>
+        <!-- VIEW: REPORTS / EXPENSES -->
+        <section id="view-reports" class="hidden space-y-6 animate-fadeIn">
+          <div class="flex justify-between items-center"><h2 class="text-lg font-bold text-white">P&L Journal</h2><button onclick="document.getElementById('expenseModal').classList.remove('hidden')" class="px-4 py-2 bg-rose-500 text-white text-xs font-bold rounded-lg">+ Log Expense</button></div>
+          <div class="glass rounded-2xl p-4 border border-slate-800 overflow-x-auto">
+            <table class="w-full text-left text-xs"><thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-2">Date</th><th class="py-2">Category</th><th class="py-2">Description</th><th class="py-2 text-right">Amount</th></tr></thead><tbody id="expenseTableBody"></tbody></table>
+          </div>
+        </section>
 
-      <!-- VIEW: GST AUDIT -->
-      <section id="view-gst-audit" class="hidden space-y-6 animate-fadeIn">
-        <div class="flex justify-between items-center"><h2 class="text-lg font-bold text-white">GST CA Audit</h2><button onclick="exportGstToCsv()" class="px-4 py-2 bg-[#00B4D8] text-[#060B14] text-xs font-bold rounded-lg">Download CSV</button></div>
-        <div class="glass rounded-2xl overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono whitespace-nowrap"><thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Date</th><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">Taxable</th><th class="py-3 px-3">CGST</th><th class="py-3 px-3">SGST</th><th class="py-3 px-3 text-right">Total</th></tr></thead><tbody id="gstAuditTableBody" class="divide-y divide-slate-800/50"></tbody></table>
-        </div>
-      </section>
+        <!-- VIEW: GST AUDIT -->
+        <section id="view-gst-audit" class="hidden space-y-6 animate-fadeIn">
+          <div class="flex justify-between items-center"><h2 class="text-lg font-bold text-white">GST CA Audit</h2><button onclick="exportGstToCsv()" class="px-4 py-2 bg-[#00B4D8] text-[#060B14] text-xs font-bold rounded-lg">Download CSV</button></div>
+          <div class="glass rounded-2xl overflow-x-auto border border-slate-800">
+            <table class="w-full text-left text-xs font-mono whitespace-nowrap"><thead class="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Date</th><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">Taxable</th><th class="py-3 px-3">CGST</th><th class="py-3 px-3">SGST</th><th class="py-3 px-3 text-right">Total</th></tr></thead><tbody id="gstAuditTableBody" class="divide-y divide-slate-800/50"></tbody></table>
+          </div>
+        </section>
 
-      <!-- VIEW: SETTINGS -->
-      <section id="view-settings" class="hidden space-y-6 animate-fadeIn">
-        <h2 class="text-lg font-bold text-white">Settings</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="glass p-6 rounded-2xl border border-slate-800">
+        <!-- VIEW: SETTINGS -->
+        <section id="view-settings" class="hidden space-y-6 animate-fadeIn">
+          <h2 class="text-lg font-bold text-white">Settings</h2>
+          <div class="glass p-6 rounded-2xl border border-slate-800 max-w-2xl">
             <h3 class="text-sm font-bold text-[#00E676] mb-4 uppercase">Hotel Details</h3>
             <div class="space-y-4">
               <div><label class="block text-xs text-slate-400 mb-1">Phone</label><input type="text" id="setHotelPhone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></div>
@@ -140,21 +183,74 @@
               <button onclick="saveHotelSettings()" class="px-6 py-2 bg-[#00E676] text-[#060B14] font-bold text-sm rounded-lg">Save Settings</button>
             </div>
           </div>
+        </section>
+      </div>
+
+      <!-- RIGHT PANEL (DESKTOP ONLY - Photo 2 style) -->
+      <aside id="desktopRightPanel" class="hidden xl:flex flex-col w-80 glass border-l border-slate-800 p-6 space-y-6 overflow-y-auto hide-scrollbar">
+        
+        <!-- Occupancy Ring -->
+        <div class="text-center">
+          <p class="text-xs text-slate-400 font-bold uppercase mb-3 text-left">Occupancy</p>
+          <div class="relative w-32 h-32 mx-auto">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-slate-800" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="100, 100" />
+              <path id="occupancyRing" class="text-[#00B4D8]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round" />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span id="statOccupancyRateDesktop" class="text-2xl font-black font-mono text-white">0%</span>
+            </div>
+          </div>
         </div>
-      </section>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800"><p class="text-[10px] text-slate-400 font-bold uppercase">Vacant</p><h3 id="statVacantRoomsDesktop" class="text-xl font-black text-[#00E676] font-mono mt-1">0</h3></div>
+          <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800"><p class="text-[10px] text-slate-400 font-bold uppercase">Occupied</p><h3 id="statOccupiedRoomsDesktop" class="text-xl font-black text-rose-400 font-mono mt-1">0</h3></div>
+        </div>
+
+        <!-- License Info -->
+        <div class="bg-[#00E676]/10 border border-[#00E676]/20 p-4 rounded-xl">
+          <p class="text-[10px] text-slate-300 font-bold uppercase mb-1">License Status</p>
+          <h3 id="licensePanelText" class="text-sm font-bold text-[#00E676]">30 Days Trial Active</h3>
+        </div>
+
+        <!-- Guest Details (Shows when a room is clicked) -->
+        <div id="guestDetailsPanel" class="bg-slate-900 border border-slate-700 p-4 rounded-xl hidden relative">
+          <button onclick="document.getElementById('guestDetailsPanel').classList.add('hidden')" class="absolute top-2 right-2 text-slate-500 hover:text-white">&times;</button>
+          <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-[#00B4D8] font-bold" id="guestAvatar">G</div>
+            <div>
+              <h4 id="guestNameDisplay" class="text-sm font-bold text-white">Guest Name</h4>
+              <p class="text-[10px] text-slate-400" id="guestPhoneDisplay">Phone</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs font-mono">
+            <div class="flex justify-between"><span class="text-slate-400">Room:</span><span class="text-white" id="guestRoomDisplay">101</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Total Bill:</span><span class="text-[#00E676]" id="guestBillDisplay">₹0.00</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Advance Paid:</span><span class="text-yellow-400" id="guestAdvanceDisplay">₹0.00</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Balance Due:</span><span class="text-rose-400 font-bold" id="guestDueDisplay">₹0.00</span></div>
+          </div>
+          <button onclick="checkoutFromPanel()" class="w-full mt-4 py-2 bg-[#00B4D8] text-[#060B14] font-bold text-xs uppercase rounded-lg">Instant Check-Out & Bill</button>
+        </div>
+
+        <div class="mt-auto text-center">
+          <button onclick="openBookingModal()" class="w-full py-3 bg-gradient-to-r from-[#00E676] to-[#00B4D8] text-[#060B14] font-bold text-sm uppercase rounded-xl shadow-lg shadow-[#00E676]/20">+ New Booking</button>
+        </div>
+      </aside>
     </div>
   </main>
 
   <!-- MOBILE NAV -->
   <nav class="lg:hidden fixed bottom-0 w-full glass border-t border-slate-800 flex justify-around items-center py-3 z-50">
-    <button onclick="switchView('dashboard')" class="text-[#00E676] flex flex-col items-center"><span class="text-xs">Home</span></button>
-    <button onclick="switchView('room-manager')" class="text-slate-400 flex flex-col items-center"><span class="text-xs">Rooms</span></button>
-    <button onclick="openBookingModal()" class="bg-[#00E676] text-[#060B14] w-12 h-12 rounded-full flex items-center justify-center -mt-6 shadow-lg font-bold text-2xl">+</button>
-    <button onclick="switchView('billing-archive')" class="text-slate-400 flex flex-col items-center"><span class="text-xs">Bills</span></button>
-    <button onclick="switchView('settings')" class="text-slate-400 flex flex-col items-center"><span class="text-xs">Settings</span></button>
+    <button onclick="switchView('dashboard')" class="text-[#00E676] flex flex-col items-center"><svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-[9px]">Home</span></button>
+    <button onclick="switchView('room-manager')" class="text-slate-400 flex flex-col items-center"><svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-[9px]">Rooms</span></button>
+    <button onclick="openBookingModal()" class="bg-[#00E676] text-[#060B14] w-12 h-12 rounded-full flex items-center justify-center -mt-6 shadow-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+    <button onclick="switchView('billing-archive')" class="text-slate-400 flex flex-col items-center"><svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-[9px]">Bills</span></button>
+    <button onclick="switchView('settings')" class="text-slate-400 flex flex-col items-center"><svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span class="text-[9px]">Menu</span></button>
   </nav>
 
-  <!-- BOOKING MODAL -->
+  <!-- MODALS (Booking, Expense, Room) -->
   <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="glass border border-slate-700 w-full max-w-lg rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-white">New Reservation</h3><button onclick="document.getElementById('bookingModal').classList.add('hidden')" class="text-slate-400 text-2xl">&times;</button></div>
@@ -182,7 +278,6 @@
     </div>
   </div>
 
-  <!-- EXPENSE MODAL -->
   <div id="expenseModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="glass border border-slate-700 w-full max-w-md rounded-2xl p-6">
       <h3 class="text-lg font-bold text-rose-400 mb-4">Log Expense</h3>
@@ -195,7 +290,6 @@
     </div>
   </div>
 
-  <!-- ROOM EDIT MODAL -->
   <div id="roomEditModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="glass border border-slate-700 w-full max-w-md rounded-2xl p-6">
       <h3 class="text-lg font-bold text-white mb-4">Configure Room</h3>
@@ -223,6 +317,7 @@
 
     let currentHotelId = null, currentHotelProfile = null;
     let cachedRooms = [], cachedBookings = [], cachedExpenses = [], posCart = [];
+    let selectedRoomForPanel = null;
 
     monitorAuthState(async (state) => {
       if (!state || !state.profile) return window.location.href = "index.html";
@@ -232,6 +327,7 @@
       
       document.getElementById("navHotelTitle").innerText = currentHotelProfile.hotelName || "Hotel";
       document.getElementById("licenseBadgeText").innerText = `${lic.daysRemaining ?? 0} Days Left`;
+      document.getElementById("licensePanelText").innerText = `${lic.daysRemaining ?? 0} Days ${lic.details?.status === 'trial' ? 'Trial' : 'Active'}`;
       document.getElementById("setHotelPhone").value = currentHotelProfile.phone || "";
       document.getElementById("setCheckIn").value = currentHotelProfile.checkInTime || "12:00 PM";
       document.getElementById("setCheckOut").value = currentHotelProfile.checkOutTime || "11:00 AM";
@@ -271,7 +367,7 @@
           let color = "border-[#00E676] text-[#00E676] bg-[#00E676]/5";
           if (r.status === 'occupied') color = "border-rose-500 text-rose-400 bg-rose-500/5";
           if (r.status === 'cleaning') color = "border-yellow-500 text-yellow-400 bg-yellow-500/5";
-          html += `<div onclick="handleRoomClick('${r.id}')" class="cursor-pointer border ${color} rounded-xl p-3 hover:bg-slate-800/50 transition">
+          html += `<div onclick="handleRoomClick('${r.id}')" class="room-card cursor-pointer border ${color} rounded-xl p-3">
             <div class="flex justify-between items-start mb-2"><span class="text-lg font-black font-mono text-white">${r.roomNumber}</span><span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-black/30">${r.status}</span></div>
             <div class="text-[10px] text-slate-300">Lodging: ₹${r.rate}</div><div class="text-[10px] text-slate-400">Food: ₹${r.foodRate}/head</div>
           </div>`;
@@ -284,16 +380,52 @@
     function updateMetrics() {
       const occ = cachedRooms.filter(r => r.status === 'occupied').length;
       const vac = cachedRooms.filter(r => r.status === 'vacant').length;
-      document.getElementById("statOccupiedRooms").innerText = occ;
-      document.getElementById("statVacantRooms").innerText = vac;
-      document.getElementById("statOccupancyRate").innerText = Math.round((occ/(cachedRooms.length||1))*100) + "%";
+      const rate = Math.round((occ/(cachedRooms.length||1))*100);
+      
+      if(document.getElementById("statOccupiedRoomsMobile")) document.getElementById("statOccupiedRoomsMobile").innerText = occ;
+      if(document.getElementById("statVacantRoomsMobile")) document.getElementById("statVacantRoomsMobile").innerText = vac;
+      if(document.getElementById("statOccupancyRateMobile")) document.getElementById("statOccupancyRateMobile").innerText = rate + "%";
+      
+      if(document.getElementById("statOccupiedRoomsDesktop")) document.getElementById("statOccupiedRoomsDesktop").innerText = occ;
+      if(document.getElementById("statVacantRoomsDesktop")) document.getElementById("statVacantRoomsDesktop").innerText = vac;
+      if(document.getElementById("statOccupancyRateDesktop")) document.getElementById("statOccupancyRateDesktop").innerText = rate + "%";
+      
+      const ring = document.getElementById("occupancyRing");
+      if(ring) ring.setAttribute('stroke-dasharray', `${rate}, 100`);
     }
 
     window.handleRoomClick = async (id) => {
       const r = cachedRooms.find(x => x.id === id);
+      selectedRoomForPanel = r;
+      
+      // Desktop Right Panel Logic
+      if(window.innerWidth >= 1280 && r.status === 'occupied') {
+        const b = cachedBookings.find(x => x.id === r.currentBookingId);
+        if(b) {
+          document.getElementById("guestNameDisplay").innerText = b.guestName;
+          document.getElementById("guestPhoneDisplay").innerText = b.phone || 'N/A';
+          document.getElementById("guestRoomDisplay").innerText = r.roomNumber;
+          document.getElementById("guestBillDisplay").innerText = `₹${(b.summary?.grandTotal||0).toFixed(2)}`;
+          document.getElementById("guestAdvanceDisplay").innerText = `₹${(b.advancePaid||0).toFixed(2)}`;
+          document.getElementById("guestDueDisplay").innerText = `₹${((b.summary?.grandTotal||0) - (b.advancePaid||0)).toFixed(2)}`;
+          document.getElementById("guestDetailsPanel").classList.remove("hidden");
+          return;
+        }
+      }
+      
+      // Mobile click logic
       if (r.status === 'vacant') openBookingModal(r.roomNumber);
       else if (r.status === 'cleaning' && confirm(`Room ${r.roomNumber} cleaned?`)) markRoomCleaned(currentHotelId, r.id);
       else if (r.status === 'occupied' && confirm(`Checkout Room ${r.roomNumber}?`)) { await processCheckOut(currentHotelId, r.currentBookingId, r.id, { settled: true }); alert("Checked out."); }
+    };
+
+    window.checkoutFromPanel = async () => {
+      if(!selectedRoomForPanel) return;
+      if(confirm(`Checkout Room ${selectedRoomForPanel.roomNumber}?`)) {
+        await processCheckOut(currentHotelId, selectedRoomForPanel.currentBookingId, selectedRoomForPanel.id, { settled: true });
+        document.getElementById("guestDetailsPanel").classList.add("hidden");
+        alert("Checked out successfully!");
+      }
     };
 
     window.openBookingModal = (presetRoom = null) => {
@@ -322,7 +454,7 @@
       const sel = document.getElementById("bookRoomSelect"), opt = sel.options[sel.selectedIndex];
       const { charges, advance } = recalcBill();
       const payload = {
-        roomDocId: opt.dataset.id, roomNumber: sel.value, floor: "Floor 1", 
+        roomDocId: opt.dataset.id, roomNumber: sel.value, floor: cachedRooms.find(r=>r.id===opt.dataset.id)?.floor || "Floor 1", 
         guestName: document.getElementById("bookGuestName").value.trim(), 
         phone: document.getElementById("bookPhone").value.trim(), 
         adults: parseInt(document.getElementById("bookAdults").value), 
