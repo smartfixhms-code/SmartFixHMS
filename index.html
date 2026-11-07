@@ -4,12 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartFix HMS - Modern Cloud Hotel PMS</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#060913">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SmartFix HMS">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -22,6 +33,17 @@
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
     }
   </style>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+          .then((reg) => console.log("SmartFix HMS: Service Worker Registered!", reg.scope))
+          .catch((err) => console.error("Service Worker Error:", err));
+      });
+    }
+  </script>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
 
@@ -106,12 +128,12 @@
       <p id="lockReason" class="text-xs text-slate-400 mt-2">Your 30-Day trial evaluation period or active license has expired.</p>
       
       <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800 text-left text-xs space-y-2">
-        <div class="flex justify-between text-slate-400"><span>Support Line:</span><span class="text-slate-200 font-mono">+91 98XXXXXXXX</span></div>
-        <div class="flex justify-between text-slate-400"><span>Email:</span><span class="text-slate-200 font-mono">support@smartfix.com</span></div>
+        <div class="flex justify-between text-slate-400"><span>Platform:</span><span class="text-slate-200 font-mono">SmartFix HMS</span></div>
+        <div class="flex justify-between text-slate-400"><span>Developer Support:</span><span class="text-slate-200 font-mono">admin@smartfix.com</span></div>
       </div>
 
       <a href="https://wa.me/" target="_blank" class="block w-full mt-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
-        Contact Developer on WhatsApp
+        Contact Developer to Renew
       </a>
     </div>
   </div>
@@ -150,7 +172,7 @@
       <div class="flex justify-between items-center mb-4">
         <div>
           <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">Interactive Tape Chart & Floor Plan</h2>
-          <p class="text-xs text-slate-400">Click any room to view details, clean room, or perform instant checkout.</p>
+          <p class="text-xs text-slate-400">Click any room card to view guest details, housekeeping status, or instant checkout.</p>
         </div>
         <div class="flex items-center gap-3 text-[11px] font-medium text-slate-400">
           <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Vacant</span>
@@ -200,7 +222,7 @@
         <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Select Room</label>
-            <select id="bookRoomSelect" onchange="handleRoomSelectionChange()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-cyan-400 outline-none">
+            <select id="bookRoomSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-cyan-400 outline-none">
               <!-- Injected dynamically -->
             </select>
           </div>
@@ -249,7 +271,7 @@
     </div>
   </div>
 
-  <!-- ================= SCRIPTS ================= -->
+  <!-- ================= APPLICATION SCRIPTS ================= -->
   <script type="module">
     import { db } from "./js/firebase-config.js";
     import { loginUser, registerNewHotel, logoutUser, monitorAuthState } from "./js/auth.js";
@@ -264,10 +286,9 @@
     let currentHotelProfile = null;
     let currentAuthMode = "login";
     let activeGstMode = "extra";
-    let allAvailableRooms = [];
     let selectedActiveRoom = null;
 
-    // Monitor Auth State
+    // Monitor Session & Authentication State
     monitorAuthState(async (state) => {
       const authModal = document.getElementById("authModal");
       const appWorkspace = document.getElementById("appWorkspace");
@@ -281,7 +302,7 @@
         authBtn.innerText = "Sign Out";
         currentHotelId = state.profile.hotelId;
 
-        // If user is superadmin, offer link to super-admin console
+        // Redirect Super-Admin directly to developer console
         if (state.profile.role === "superadmin") {
           window.location.href = "super-admin.html";
           return;
@@ -304,10 +325,10 @@
         licenseBadgeText.innerText = `${licenseCheck.daysRemaining} Days Left`;
         appWorkspace.classList.remove("hidden");
 
-        // Initialize sample rooms if not present
+        // Seed default sample rooms if new hotel
         await initializeDefaultRooms(currentHotelId);
 
-        // Listen to live room updates
+        // Realtime Room Status Listener
         listenToRoomGrid(currentHotelId, (clickedRoom) => {
           openRoomDetailModal(clickedRoom);
         });
@@ -339,7 +360,7 @@
       }
     };
 
-    // Submit Auth Form
+    // Submit Authentication
     window.submitAuthForm = async () => {
       const email = document.getElementById("inputEmail").value.trim();
       const pass = document.getElementById("inputPassword").value;
@@ -376,7 +397,7 @@
       }
     };
 
-    // GST Mode Switcher
+    // GST Computation Switcher
     window.setGstMode = (mode) => {
       activeGstMode = mode;
       const bEx = document.getElementById("btnExtraGst");
@@ -392,12 +413,11 @@
       recalculateLiveModalBill();
     };
 
-    // Open Walk-In Booking Modal
-    window.openBookingModal = async (presetRoomId = null) => {
+    // Open Walk-in Modal
+    window.openBookingModal = (presetRoomId = null) => {
       const select = document.getElementById("bookRoomSelect");
       select.innerHTML = "";
 
-      // Fetch current rooms from DOM
       const roomCards = document.querySelectorAll("#roomGridContainer .cursor-pointer");
       let optionsHtml = "";
 
@@ -410,7 +430,7 @@
       });
 
       if (!optionsHtml) {
-        alert("All rooms are currently occupied or being cleaned.");
+        alert("All rooms are currently occupied or awaiting housekeeping.");
         return;
       }
 
@@ -425,13 +445,13 @@
       document.getElementById("bookingModal").classList.add("hidden");
     };
 
-    // Calculate Modal Live Bill
+    // Compute Live Bill in Modal
     window.recalculateLiveModalBill = () => {
       const nights = document.getElementById("bookNights").value || 1;
       const packageType = document.getElementById("bookPackageSelect").value;
       
       const charges = calculateBookingCharges({
-        roomRatePerNight: 2200, // Standard baseline rate
+        roomRatePerNight: 2200,
         packageType: packageType,
         foodRatePerGuestPerNight: 500,
         numberOfGuests: 1,
@@ -446,7 +466,7 @@
       return charges;
     };
 
-    // Submit New Booking
+    // Confirm Booking
     window.submitBookingForm = async () => {
       const guestName = document.getElementById("bookGuestName").value.trim();
       const phone = document.getElementById("bookPhone").value.trim();
@@ -469,14 +489,14 @@
 
       try {
         await createNewBooking(currentHotelId, bookingPayload);
-        alert(`Guest ${guestName} checked in successfully to Room ${roomNumber}!`);
+        alert(`Guest ${guestName} checked in to Room ${roomNumber}!`);
         closeBookingModal();
       } catch (err) {
         alert("Booking error: " + err.message);
       }
     };
 
-    // Open Room Detail & Instant Checkout Modal
+    // Open Room Details & Instant Checkout Modal
     async function openRoomDetailModal(room) {
       selectedActiveRoom = room;
       const modal = document.getElementById("roomDetailModal");
@@ -491,12 +511,12 @@
           <div class="p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/50 text-emerald-400">
             This room is vacant and ready for new guests.
           </div>
-          <div><b>Tariff:</b> ₹${room.rate} per night</div>
+          <div><b>Standard Tariff:</b> ₹${room.rate} per night</div>
           <div><b>Floor:</b> ${room.floor || 'Floor 1'}</div>
         `;
         actionArea.innerHTML = `
-          <button onclick="closeRoomDetailModal(); openBookingModal('${room.roomNumber}')" class="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase">
-            Book This Room
+          <button onclick="closeRoomDetailModal(); openBookingModal('${room.roomNumber}')" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
+            Book Walk-In Guest
           </button>
         `;
       } else if (room.status === "cleaning") {
@@ -506,12 +526,11 @@
           </div>
         `;
         actionArea.innerHTML = `
-          <button onclick="handleMarkCleaned('${room.roomId}')" class="w-full py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase">
+          <button onclick="handleMarkCleaned('${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
             Mark Cleaned & Available
           </button>
         `;
       } else if (room.status === "occupied") {
-        // Fetch Booking Details & POS Orders
         const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", room.currentBookingId));
         const bookingData = bDoc.exists() ? bDoc.data() : { guestName: room.guestName, summary: { grandTotal: 2200 } };
         const foodSummary = await getRoomUnsettledFoodOrders(currentHotelId, room.roomNumber);
@@ -524,15 +543,15 @@
             <div class="flex justify-between"><span>Room Charges:</span><span>₹${(bookingData.summary?.grandTotal || 0).toFixed(2)}</span></div>
             <div class="flex justify-between"><span>Room Service / POS:</span><span>₹${foodSummary.totalFoodCost.toFixed(2)}</span></div>
             <div class="flex justify-between font-bold text-white pt-1 border-t border-slate-800">
-              <span>Total Settlement Due:</span>
+              <span>Total Settlement:</span>
               <span class="text-emerald-400">₹${((bookingData.summary?.grandTotal || 0) + foodSummary.totalFoodCost).toFixed(2)}</span>
             </div>
           </div>
         `;
 
         actionArea.innerHTML = `
-          <button onclick="handleInstantCheckout('${room.currentBookingId}', '${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase">
-            Process Checkout & Payment
+          <button onclick="handleInstantCheckout('${room.currentBookingId}', '${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
+            Process Checkout & Settle
           </button>
           <div class="grid grid-cols-3 gap-2 pt-2">
             <button onclick="triggerPrint('58mm', '${room.currentBookingId}')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px]">Print 58mm</button>
@@ -557,11 +576,11 @@
     window.handleInstantCheckout = async (bookingId, roomId) => {
       if (!confirm("Confirm checkout and mark room for housekeeping?")) return;
       await processCheckOut(currentHotelId, bookingId, roomId, { paymentMode: "UPI / Cash", paidAmount: 2200 });
-      alert("Checkout finalized successfully!");
+      alert("Checkout settled successfully!");
       closeRoomDetailModal();
     };
 
-    // Printing Handlers
+    // Print Handlers
     window.triggerPrint = async (format, bookingId) => {
       const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId));
       if (!bDoc.exists()) return alert("Booking record not found.");
