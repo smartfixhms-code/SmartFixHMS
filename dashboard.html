@@ -42,6 +42,8 @@
     <!-- Desktop Sidebar -->
     <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-2 bg-slate-950/40">
       <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400"><span>Dashboard</span></button>
+      <button onclick="switchView('followup')" id="nav-followup" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Follow-up</span></button>
+      <button onclick="switchView('marketdue')" id="nav-marketdue" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Market Due</span></button>
       <button onclick="switchView('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Restaurant POS</span></button>
       <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Rooms & Tariffs</span></button>
       <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Invoices Archive</span></button>
@@ -91,24 +93,24 @@
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             <span class="text-[10px] font-semibold text-slate-300">Book Room</span>
           </button>
-          <button onclick="switchView('dashboard')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Check-In</span>
+          <button onclick="switchView('followup')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-[10px] font-semibold text-slate-300">Follow-up</span>
           </button>
-          <button onclick="switchView('billing-archive')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Check-Out</span>
+          <button onclick="switchView('marketdue')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
+            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-[10px] font-semibold text-slate-300">Market Due</span>
           </button>
           <button onclick="filterRoomsStatus('cleaning')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
             <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Housekeeping</span>
+            <span class="text-[10px] font-semibold text-slate-300">Cleaning</span>
           </button>
           <button onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
             <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span class="text-[10px] font-semibold text-slate-300">Expenses</span>
           </button>
           <button onclick="switchView('pos')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             <span class="text-[10px] font-semibold text-slate-300">POS</span>
           </button>
         </div>
@@ -122,9 +124,44 @@
         </div>
       </section>
 
+      <!-- FOLLOW UP (UPCOMING BOOKINGS) SECTION -->
+      <section id="view-followup" class="hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider">Follow-up & Upcoming Bookings</h2>
+          <button onclick="openBookingModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ New Booking</button>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
+              <tr><th class="py-3 px-4 font-sans">Guest</th><th class="py-3 px-4">Check-In Date</th><th class="py-3 px-4">Room</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right font-sans">Action</th></tr>
+            </thead>
+            <tbody id="followupTableBody" class="divide-y divide-slate-800/60"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MARKET DUE SECTION -->
+      <section id="view-marketdue" class="hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider">Market Due / Outstanding Balances</h2>
+          <span class="text-xs text-rose-400 font-bold" id="totalMarketDueText">Total Due: ₹0.00</span>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
+              <tr><th class="py-3 px-4 font-sans">Guest / Company</th><th class="py-3 px-4">Phone</th><th class="py-3 px-4">Room</th><th class="py-3 px-4">Due Amount</th><th class="py-3 px-4 text-right font-sans">Action</th></tr>
+            </thead>
+            <tbody id="marketDueTableBody" class="divide-y divide-slate-800/60"></tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- POS SECTION -->
       <section id="view-pos" class="hidden space-y-6">
-        <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Restaurant POS & Room Service</h2></div>
+        <div class="flex justify-between items-center">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider">Restaurant POS & Room Service</h2>
+          <button onclick="openMenuModal()" class="px-3 py-1.5 bg-slate-800 text-cyan-400 text-xs font-bold rounded-lg hover:bg-slate-700">+ Add Menu Item</button>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
             <h3 class="text-sm font-bold text-emerald-400 uppercase">New Order</h3>
@@ -132,8 +169,14 @@
               <label class="block text-xs text-slate-400 mb-1">Select Room (Folio Transfer)</label>
               <select id="posRoomSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400"></select>
             </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Select Item from Menu</label>
+              <select id="posMenuSelect" onchange="handleMenuSelectChange()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
+                <option value="">-- Choose Item --</option>
+              </select>
+            </div>
             <div class="grid grid-cols-2 gap-2">
-              <div><label class="block text-xs text-slate-400 mb-1">Item Name</label><input type="text" id="posItemName" placeholder="Chicken Biryani" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+              <div><label class="block text-xs text-slate-400 mb-1">Item Name (Manual)</label><input type="text" id="posItemName" placeholder="Chicken Biryani" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
               <div><label class="block text-xs text-slate-400 mb-1">Price (₹)</label><input type="number" id="posItemPrice" value="150" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
             </div>
             <div class="grid grid-cols-2 gap-2">
@@ -196,7 +239,6 @@
           <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-emerald-400 uppercase">Net Profit</span><div id="repNetProfit" class="text-2xl font-bold text-emerald-400 font-mono mt-1">₹0.00</div></div>
         </div>
 
-        <!-- Charts -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
             <h3 class="text-xs font-bold text-white uppercase mb-4">Monthly Profit Trend</h3>
@@ -272,18 +314,18 @@
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
       <span class="text-[10px] font-bold">Home</span>
     </button>
-    <button onclick="switchView('billing-archive')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+    <button onclick="switchView('followup')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-      <span class="text-[10px] font-bold">Bookings</span>
+      <span class="text-[10px] font-bold">Follow-up</span>
     </button>
     <div class="relative -top-4">
       <button onclick="openBookingModal()" class="w-14 h-14 rounded-full bg-cyan-400 border-4 border-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.5)]">
         <svg class="w-8 h-8 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
       </button>
     </div>
-    <button onclick="switchView('reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-      <span class="text-[10px] font-bold">Reports</span>
+    <button onclick="switchView('marketdue')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span class="text-[10px] font-bold">Due</span>
     </button>
     <button onclick="switchView('settings')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
@@ -297,7 +339,6 @@
       <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4"><h3 class="text-sm font-bold uppercase text-cyan-400">New Reservation</h3><button onclick="closeBookingModal()" class="text-slate-400 text-lg">×</button></div>
       <form id="bookingForm" onsubmit="event.preventDefault(); submitBooking();" class="space-y-3">
         
-        <!-- Group Booking Toggle -->
         <div class="flex items-center justify-between p-2 bg-slate-950 border border-slate-800 rounded-xl">
           <div>
             <label class="block text-xs font-bold text-white mb-0.5">Group Booking?</label>
@@ -330,10 +371,11 @@
           <div><label class="block text-xs text-cyan-400 font-bold mb-1">ID Number *</label><input type="text" id="bookIdNumber" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono"></div>
         </div>
         
-        <div class="grid grid-cols-3 gap-2.5">
+        <div class="grid grid-cols-4 gap-2.5">
           <div><label class="block text-xs text-slate-400 mb-1">Adults</label><input type="number" id="bookAdults" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
           <div><label class="block text-xs text-slate-400 mb-1">Children</label><input type="number" id="bookChildren" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
           <div><label class="block text-xs text-slate-400 mb-1">Nights</label><input type="number" id="bookNights" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Check-In Date</label><input type="date" id="bookCheckInDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
         </div>
         
         <div class="grid grid-cols-2 gap-3">
@@ -415,6 +457,35 @@
     </div>
   </div>
 
+  <!-- Market Due Collect Modal -->
+  <div id="dueModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+      <h3 class="text-sm font-bold uppercase text-cyan-400 text-center">Collect Market Due</h3>
+      <div class="text-xs space-y-1.5 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800">
+        <div class="flex justify-between"><span class="text-slate-400">Guest:</span><span id="dueGuestName" class="text-white font-bold">---</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Invoice:</span><span id="dueInvoiceId" class="text-cyan-400">---</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Total Bill:</span><span id="dueTotalBill" class="text-white">₹0.00</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Already Paid:</span><span id="duePaid" class="text-emerald-400">₹0.00</span></div>
+        <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Current Due:</span><span id="dueAmount" class="text-rose-400 font-bold">₹0.00</span></div>
+      </div>
+      
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Amount Receiving Now (₹)</label>
+        <input type="number" id="dueCollectAmount" oninput="calcNewDue()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-cyan-400 font-bold font-mono outline-none">
+      </div>
+
+      <div class="text-center py-2 bg-slate-950 border border-slate-800 rounded-xl">
+        <span class="text-[10px] text-slate-400 block mb-1">Remaining Due After This</span>
+        <span id="dueRemaining" class="text-xl font-black text-white font-mono">₹0.00</span>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="document.getElementById('dueModal').classList.add('hidden')" class="flex-1 py-2 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+        <button onclick="submitDueCollection()" class="flex-1 py-2 bg-cyan-500 text-slate-950 text-xs font-black uppercase rounded-xl">Receive</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Settings Password Verify Modal -->
   <div id="settingsAuthModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
@@ -461,6 +532,18 @@
     </div>
   </div>
 
+  <!-- Menu Add Modal -->
+  <div id="menuModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
+      <h3 class="text-sm font-bold uppercase text-cyan-400">Add POS Menu Item</h3>
+      <form onsubmit="event.preventDefault(); submitMenuItem();" class="space-y-3">
+        <div><label class="block text-xs text-slate-400 mb-1">Item Name</label><input type="text" id="menuName" required placeholder="Ex: Chicken Biryani" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+        <div><label class="block text-xs text-slate-400 mb-1">Price (₹)</label><input type="number" id="menuPrice" required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+        <div class="flex gap-2 pt-2"><button type="submit" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save Item</button><button type="button" onclick="document.getElementById('menuModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button></div>
+      </form>
+    </div>
+  </div>
+
   <!-- License Lock Modal -->
   <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
     <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl shadow-2xl shadow-rose-500/10 text-center space-y-6">
@@ -490,12 +573,14 @@
     let cachedRooms = [];
     let cachedBookings = [];
     let cachedExpenses = [];
+    let cachedMenuItems = [];
     let hotelFloors = ["Floor 1", "Floor 2", "Floor 3"];
     let currentPosOrder = [];
     
     // Global Vars for Modals
     let checkoutBookingData = null;
     let checkoutRoomId = null;
+    let dueBookingData = null;
     let pendingSettingsPayload = null;
     let profitChartInstance = null;
     let foodChartInstance = null;
@@ -517,6 +602,7 @@
         
         await initializeDefaultRooms(currentHotelId);
         await loadHotelFloors();
+        await loadMenuItems();
         
         onSnapshot(collection(db, "hotels", currentHotelId, "rooms"), (snap) => {
           cachedRooms = [];
@@ -535,7 +621,7 @@
 
     window.handleSignOut = () => logoutUser();
     window.switchView = (vId) => {
-      ['dashboard', 'pos', 'room-manager', 'billing-archive', 'reports', 'gst-audit', 'settings'].forEach(v => {
+      ['dashboard', 'followup', 'marketdue', 'pos', 'room-manager', 'billing-archive', 'reports', 'gst-audit', 'settings'].forEach(v => {
         document.getElementById(`view-${v}`)?.classList.add('hidden');
         document.getElementById(`nav-${v}`)?.classList.remove('bg-cyan-500/10', 'text-cyan-400');
       });
@@ -545,6 +631,8 @@
       if (vId === 'room-manager') loadRoomManager();
       if (vId === 'gst-audit') renderGstAudit();
       if (vId === 'pos') populatePosRooms();
+      if (vId === 'followup') loadFollowupBookings();
+      if (vId === 'marketdue') loadMarketDue();
       if (vId === 'reports') setTimeout(renderCharts, 100);
     };
 
@@ -614,7 +702,6 @@
       } else if (r.status === "cleaning") {
         if (confirm(`Room ${r.roomNumber} cleaned? Mark as Vacant?`)) await markRoomCleaned(currentHotelId, r.id);
       } else {
-        // OPEN CHECKOUT MODAL
         const booking = cachedBookings.find(b => b.bookingId === r.currentBookingId);
         if (!booking) return alert("Booking data not found.");
         
@@ -677,6 +764,137 @@
       await loadFinancialReports();
     };
 
+    // --- FOLLOW UP LOGIC ---
+    window.loadFollowupBookings = () => {
+      const tbody = document.getElementById("followupTableBody");
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      const upcoming = cachedBookings.filter(b => {
+        if(b.status !== 'confirmed' && b.status !== 'checked_in') return false;
+        if(!b.checkInDate) return false;
+        const bDate = new Date(b.checkInDate);
+        return bDate >= today;
+      });
+
+      if (upcoming.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No upcoming bookings found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = upcoming.map(b => {
+        const due = (b.summary?.grandTotal || 0) - (b.advancePaid || 0);
+        return `<tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName}</td>
+          <td class="py-3 px-4 text-cyan-400 font-bold">${b.checkInDate}</td>
+          <td class="py-3 px-4">Room ${b.roomNumber}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">${b.status.toUpperCase()}</span>
+          </td>
+          <td class="py-3 px-4 text-right space-x-2 font-sans">
+            <button onclick="sendWhatsAppReminder('${b.id}', '${b.phone}', '${b.guestName}', '${b.checkInDate}', ${due})" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-bold">WhatsApp</button>
+          </td>
+        </tr>`;
+      }).join('');
+    };
+
+    window.sendWhatsAppReminder = (id, phone, name, date, due) => {
+      const hotelName = currentHotelProfile.hotelName || "Our Hotel";
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+      
+      let message = `Hello *${name}*,\n\nGreetings from *${hotelName}*! 🏨\n\nYour booking is confirmed for *${date}*.\n\n`;
+      if(due > 0) {
+        message += `💰 Balance Due: ₹${due.toFixed(2)}\nPlease clear the due amount at the reception.\n\n`;
+      }
+      message += `We look forward to hosting you. Have a safe journey! ✨`;
+      
+      const url = `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    };
+
+    // --- MARKET DUE LOGIC ---
+    window.loadMarketDue = () => {
+      const tbody = document.getElementById("marketDueTableBody");
+      const totalText = document.getElementById("totalMarketDueText");
+      
+      const dueBookings = cachedBookings.filter(b => (b.balanceDue || 0) > 0);
+      let totalDue = 0;
+
+      if (dueBookings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No outstanding dues. Great job!</td></tr>`;
+        totalText.innerText = `Total Due: ₹0.00`;
+        return;
+      }
+
+      tbody.innerHTML = dueBookings.map(b => {
+        totalDue += b.balanceDue;
+        return `<tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName}</td>
+          <td class="py-3 px-4">${b.phone || 'N/A'}</td>
+          <td class="py-3 px-4">R-${b.roomNumber}</td>
+          <td class="py-3 px-4 text-rose-400 font-bold">₹${b.balanceDue.toFixed(2)}</td>
+          <td class="py-3 px-4 text-right font-sans">
+            <button onclick="openDueModal('${b.id}')" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-[11px] font-bold">Receive Payment</button>
+          </td>
+        </tr>`;
+      }).join('');
+      
+      totalText.innerText = `Total Due: ₹${totalDue.toFixed(2)}`;
+    };
+
+    window.openDueModal = (id) => {
+      dueBookingData = cachedBookings.find(b => b.id === id || b.bookingId === id);
+      if(!dueBookingData) return;
+      
+      document.getElementById("dueGuestName").innerText = dueBookingData.guestName;
+      document.getElementById("dueInvoiceId").innerText = dueBookingData.bookingId;
+      document.getElementById("dueTotalBill").innerText = `₹${(dueBookingData.summary?.grandTotal || 0).toFixed(2)}`;
+      document.getElementById("duePaid").innerText = `₹${(dueBookingData.totalPaid || dueBookingData.advancePaid || 0).toFixed(2)}`;
+      document.getElementById("dueAmount").innerText = `₹${(dueBookingData.balanceDue || 0).toFixed(2)}`;
+      
+      document.getElementById("dueCollectAmount").value = (dueBookingData.balanceDue || 0).toFixed(2);
+      calcNewDue();
+      
+      document.getElementById("dueModal").classList.remove("hidden");
+    };
+
+    window.calcNewDue = () => {
+      const collect = parseFloat(document.getElementById("dueCollectAmount").value) || 0;
+      const newBal = dueBookingData.balanceDue - collect;
+      document.getElementById("dueRemaining").innerText = `₹${newBal.toFixed(2)}`;
+      if (newBal <= 0) {
+        document.getElementById("dueRemaining").className = "text-xl font-black text-emerald-400 font-mono";
+      } else {
+        document.getElementById("dueRemaining").className = "text-xl font-black text-rose-400 font-mono";
+      }
+    };
+
+    window.submitDueCollection = async () => {
+      const collect = parseFloat(document.getElementById("dueCollectAmount").value) || 0;
+      if(collect <= 0) return alert("Enter valid amount.");
+      
+      const oldPaid = dueBookingData.totalPaid || dueBookingData.advancePaid || 0;
+      const newPaid = oldPaid + collect;
+      const newBal = Math.max(0, dueBookingData.summary.grandTotal - newPaid);
+      const isSettled = newBal <= 0;
+      
+      try {
+        await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), {
+          totalPaid: newPaid,
+          balanceDue: newBal,
+          isSettled: isSettled
+        });
+        alert("Payment collected successfully!");
+        document.getElementById("dueModal").classList.add("hidden");
+        await loadInvoiceArchives();
+        await loadFinancialReports();
+        loadMarketDue();
+      } catch(e) {
+        alert("Error: " + e.message);
+      }
+    };
+
     // --- BOOKING LOGIC ---
     window.checkCustomerHistory = () => {
       const phone = document.getElementById("bookPhone").value.trim();
@@ -725,6 +943,10 @@
       document.getElementById("bookGroupRate").value = "";
       document.getElementById("bookDiscount").value = "0";
       document.getElementById("crmStatus").classList.add("hidden");
+      
+      // Set default check-in date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById("bookCheckInDate").value = today;
       
       handleRoomSelectChange();
       document.getElementById("bookingModal").classList.remove("hidden");
@@ -788,12 +1010,18 @@
       const isGroup = document.getElementById("bookIsGroup").checked;
       const groupName = document.getElementById("bookGroupName").value.trim();
       const advancePaid = parseFloat(document.getElementById("bookAdvancePaid").value) || 0;
+      const checkInDate = document.getElementById("bookCheckInDate").value;
       
       if (!idNumber) return alert("ID Document Number is mandatory!");
       if (isGroup && !groupName) return alert("Please enter Group/Company Name.");
       
       const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
       const charges = recalcBill();
+      
+      // If check-in date is in future, it's a confirmed booking (not checked-in yet).
+      const today = new Date().toISOString().split('T')[0];
+      const isFutureBooking = checkInDate > today;
+      
       const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
       
       const payload = { 
@@ -801,18 +1029,59 @@
         floor: roomData?.floor || "Floor 1", 
         guestName: isGroup ? `${groupName} (${guestName})` : guestName, 
         phone, idType, idNumber, adults, children, packageType: pkg, gstMode, nights, 
-        checkInTime: inTime, 
+        checkInTime: isFutureBooking ? null : inTime, 
+        checkInDate: checkInDate,
         isGroup, groupName, advancePaid, discount,
         ...charges 
       };
       
       try {
         const res = await createNewBooking(currentHotelId, payload);
-        alert(`Guest checked in to Room ${roomNo}! Bill #${res.bookingId}`);
+        if (isFutureBooking) {
+          alert(`Future booking confirmed for Room ${roomNo}!`);
+        } else {
+          alert(`Guest checked in to Room ${roomNo}! Bill #${res.bookingId}`);
+        }
         closeBookingModal();
         await loadInvoiceArchives();
         await loadFinancialReports();
       } catch (e) { alert("Error: " + e.message); }
+    };
+
+    // --- POS MENU LOGIC ---
+    async function loadMenuItems() {
+      const snap = await getDocs(collection(db, "hotels", currentHotelId, "menu_items"));
+      cachedMenuItems = [];
+      snap.forEach(d => cachedMenuItems.push({ id: d.id, ...d.data() }));
+      
+      const sel = document.getElementById("posMenuSelect");
+      sel.innerHTML = `<option value="">-- Choose Item --</option>`;
+      cachedMenuItems.forEach(item => {
+        sel.innerHTML += `<option value="${item.id}" data-name="${item.name}" data-price="${item.price}">${item.name} - ₹${item.price}</option>`;
+      });
+    }
+
+    window.openMenuModal = () => document.getElementById("menuModal").classList.remove("hidden");
+    
+    window.submitMenuItem = async () => {
+      const name = document.getElementById("menuName").value.trim();
+      const price = parseFloat(document.getElementById("menuPrice").value) || 0;
+      if(!name || price <= 0) return alert("Enter valid details");
+      
+      const id = "M_" + Date.now().toString().slice(-4);
+      await setDoc(doc(db, "hotels", currentHotelId, "menu_items", id), { name, price });
+      document.getElementById("menuModal").classList.add("hidden");
+      await loadMenuItems();
+      alert("Menu item added!");
+    };
+
+    window.handleMenuSelectChange = () => {
+      const sel = document.getElementById("posMenuSelect");
+      const opt = sel.options[sel.selectedIndex];
+      if(opt.value) {
+        document.getElementById("posItemName").value = opt.dataset.name;
+        document.getElementById("posItemPrice").value = opt.dataset.price;
+      }
     };
 
     // --- INVOICE ARCHIVE ---
@@ -826,11 +1095,13 @@
       cachedBookings.forEach(b => {
         const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
         const total = (b.summary?.grandTotal || 0).toFixed(2);
-        const paid = (b.advancePaid || 0).toFixed(2);
-        const due = ((b.summary?.grandTotal || 0) - (b.advancePaid || 0)).toFixed(2);
+        const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
+        const due = (b.balanceDue || 0).toFixed(2);
         
         let statusBadge = "";
-        if(b.status === "checked_in") {
+        if(b.status === "confirmed") {
+            statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">UPCOMING</span>`;
+        } else if(b.status === "checked_in") {
             statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">IN-HOUSE</span>`;
         } else if (isSettled) {
             statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">✓ SETTLED</span>`;
@@ -887,7 +1158,7 @@
       else printA4TaxInvoice(currentHotelProfile, bData, food.unsettledOrders);
     };
 
-    // --- POS LOGIC ---
+    // --- POS ORDER LOGIC ---
     window.populatePosRooms = () => {
       const sel = document.getElementById("posRoomSelect");
       sel.innerHTML = "";
@@ -907,6 +1178,7 @@
       currentPosOrder.push({ name, price, quantity: qty });
       document.getElementById("posItemName").value = "";
       document.getElementById("posItemQty").value = "1";
+      document.getElementById("posMenuSelect").value = "";
       renderPosOrder();
     };
 
@@ -1035,12 +1307,11 @@
     };
 
     window.renderCharts = () => {
-      // 1. Monthly Profit Chart
       const ctxProfit = document.getElementById('profitChart').getContext('2d');
       if(profitChartInstance) profitChartInstance.destroy();
       
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-      const profitData = [12000, 19000, 15000, 22000, 18000, 28000]; // Demo Data
+      const profitData = [12000, 19000, 15000, 22000, 18000, 28000]; 
       
       profitChartInstance = new Chart(ctxProfit, {
         type: 'line',
@@ -1058,7 +1329,6 @@
         options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
       });
 
-      // 2. Top Food Items Chart
       const ctxFood = document.getElementById('foodChart').getContext('2d');
       if(foodChartInstance) foodChartInstance.destroy();
       
