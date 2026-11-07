@@ -1,4 +1,4 @@
-// SmartFix HMS - Thermal & A4 Unified Print Engine with Monochrome Footer Logo
+// SmartFix HMS - Unified Thermal & A4 Engine with Floor-Wise WiFi & Monochrome Logo
 
 function openPrintWindow(htmlContent, title = "Print Bill") {
   const printWindow = window.open("", "_blank", "width=850,height=950");
@@ -29,10 +29,9 @@ function openPrintWindow(htmlContent, title = "Print Bill") {
   printWindow.document.close();
 }
 
-// Crisp Vector Monochrome Footer Logo
 const MONO_FOOTER_LOGO = `
   <div style="text-align: center; margin-top: 8px; padding-top: 6px; border-top: 1px solid #000;">
-    <svg width="140" height="32" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: grayscale(100%);">
+    <svg width="130" height="30" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(10, 5)">
         <rect x="0" y="32" width="22" height="58" rx="2" stroke="#000" stroke-width="4" fill="none" />
         <rect x="68" y="32" width="22" height="58" rx="2" stroke="#000" stroke-width="4" fill="none" />
@@ -45,16 +44,22 @@ const MONO_FOOTER_LOGO = `
       <text x="347" y="45" font-family="'Segoe UI', sans-serif" font-weight="900" font-size="22" fill="#fff" text-anchor="middle">HMS</text>
       <text x="112" y="80" font-family="'Segoe UI', sans-serif" font-weight="700" font-size="12" fill="#000" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
     </svg>
-    <div style="font-size: 8px; color: #333; margin-top: 2px;">Automated Cloud Folio Billing</div>
+    <div style="font-size: 8px; color: #333; margin-top: 2px;">Smart Cloud Property Management</div>
   </div>
 `;
 
+function getFloorWifiString(hotel, floor) {
+  const targetFloor = floor || "Floor 1";
+  const pass = (hotel.floorWifi && hotel.floorWifi[targetFloor]) ? hotel.floorWifi[targetFloor] : (hotel.defaultWifi || "Welcome@123");
+  return `<div style="padding: 3px 0; font-size: 10px; border-bottom: 1px dashed #000;">📶 <b>Free WiFi (${targetFloor}):</b> ${pass}</div>`;
+}
+
 /**
- * 1. 58mm Thermal Print
+ * 58mm Thermal Print
  */
 export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
   const isFooding = booking.packageType === "fooding_lodging";
-  const inTime = booking.checkInTime || booking.createdAtFormatted || new Date().toLocaleString("en-IN");
+  const inTime = booking.checkInTime || new Date().toLocaleString("en-IN");
   const outTime = booking.checkOutTime || new Date().toLocaleString("en-IN");
 
   let foodTotal = 0;
@@ -64,12 +69,7 @@ export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
       ord.items.forEach(it => {
         const amt = it.price * it.quantity;
         foodTotal += amt;
-        foodRows += `
-          <div style="display:flex; justify-content:space-between; font-size:10px;">
-            <span>${it.quantity}x ${it.name.substring(0, 13)}</span>
-            <span>₹${amt.toFixed(2)}</span>
-          </div>
-        `;
+        foodRows += `<div style="display:flex; justify-content:space-between; font-size:10px;"><span>${it.quantity}x ${it.name.substring(0, 13)}</span><span>₹${amt.toFixed(2)}</span></div>`;
       });
     });
   }
@@ -80,7 +80,7 @@ export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
     <div style="width: 48mm; max-width: 48mm; margin: 0 auto; padding: 2mm 0; font-size: 11px; line-height: 1.25; color: #000;">
       <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 4px;">
         <div style="font-weight: 900; font-size: 15px; text-transform: uppercase;">${hotel.hotelName || "HOTEL PARADISE"}</div>
-        <div style="font-size: 9px;">${hotel.address || "Kalyani, Nadia, West Bengal"}</div>
+        <div style="font-size: 9px;">${hotel.address || "Station Road, West Bengal"}</div>
         <div style="font-size: 9px;">GSTIN: ${hotel.gstin || "19ABCDE1234F1Z5"}</div>
         <div style="font-size: 9px;">Ph: ${hotel.phone || "+91 9876543210"}</div>
       </div>
@@ -88,22 +88,23 @@ export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
       <div style="font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
         <div>Inv: <b>${booking.bookingId}</b></div>
         <div>Guest: <b>${booking.guestName}</b></div>
+        <div>ID: <b>${booking.idType} (${booking.idNumber})</b></div>
         <div>Guests: ${booking.adults || 1} Adult(s), ${booking.children || 0} Child</div>
-        <div>Verification: <b>${booking.idType || 'Aadhaar'} Verified</b></div>
-        <div>Room: <b>${booking.roomNumber}</b> (${booking.roomType || 'Standard'})</div>
-        <div>Check-In: ${inTime}</div>
-        <div>Check-Out: ${outTime}</div>
-        <div>Policy: ${hotel.policyNote || "In: 12 PM | Out: 11 AM"}</div>
+        <div>Room: <b>${booking.roomNumber}</b> (${booking.floor || 'Floor 1'})</div>
+        <div>In: ${inTime}</div>
+        <div>Out: ${outTime}</div>
       </div>
+
+      ${getFloorWifiString(hotel, booking.floor)}
 
       <div style="border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
         <div style="display:flex; justify-content:space-between; font-size:10px;">
-          <span>Room Lodging (${booking.nights || 1}N)</span>
+          <span>Room Lodging (SAC 996311)</span>
           <span>₹${(booking.lodging?.taxable || booking.roomTotal || 0).toFixed(2)}</span>
         </div>
         ${isFooding ? `
           <div style="display:flex; justify-content:space-between; font-size:10px;">
-            <span>Meal Package (MAP)</span>
+            <span>Meal Package (SAC 996331)</span>
             <span>₹${(booking.fooding?.taxable || 0).toFixed(2)}</span>
           </div>
         ` : ""}
@@ -118,10 +119,6 @@ export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
           <span>TOTAL:</span>
           <span>₹${grandTotal.toFixed(2)}</span>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:9px;">
-          <span>Mode:</span>
-          <span>${booking.paymentMode || "UPI / Cash"} (PAID)</span>
-        </div>
       </div>
 
       ${MONO_FOOTER_LOGO}
@@ -131,11 +128,11 @@ export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
 }
 
 /**
- * 2. 80mm Thermal Print
+ * 80mm Thermal Print
  */
 export function print80mmThermalReceipt(hotel, booking, foodOrders = []) {
   const isFooding = booking.packageType === "fooding_lodging";
-  const inTime = booking.checkInTime || booking.createdAtFormatted || new Date().toLocaleString("en-IN");
+  const inTime = booking.checkInTime || new Date().toLocaleString("en-IN");
   const outTime = booking.checkOutTime || new Date().toLocaleString("en-IN");
 
   let foodTotal = 0;
@@ -162,28 +159,23 @@ export function print80mmThermalReceipt(hotel, booking, foodOrders = []) {
     <div style="width: 74mm; max-width: 74mm; margin: 0 auto; padding: 2mm 0; font-size: 11px; line-height: 1.3; color: #000;">
       <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px;">
         <div style="font-weight: 900; font-size: 17px; text-transform: uppercase;">${hotel.hotelName || "HOTEL PARADISE"}</div>
-        <div style="font-size: 10px;">${hotel.address || "Kalyani, Nadia, West Bengal"}</div>
+        <div style="font-size: 10px;">${hotel.address || "Station Road, West Bengal"}</div>
         <div style="font-size: 10px;"><b>GSTIN:</b> ${hotel.gstin || "19ABCDE1234F1Z5"} | <b>Ph:</b> ${hotel.phone || "+91 9876543210"}</div>
-        <div style="font-size: 11px; font-weight: bold; margin-top: 2px;">TAX INVOICE / GUEST RECEIPT</div>
       </div>
 
       <div style="font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">
         <div style="display:flex; justify-content:space-between;"><span>Inv: <b>${booking.bookingId}</b></span><span>Date: ${new Date().toLocaleDateString("en-IN")}</span></div>
-        <div>Guest: <b>${booking.guestName}</b> (${booking.phone || 'N/A'})</div>
-        <div>ID Status: <b>${booking.idType || 'Aadhaar'} Verified</b></div>
-        <div>Occupancy: ${booking.adults || 1} Adult(s), ${booking.children || 0} Child</div>
-        <div style="display:flex; justify-content:space-between; margin-top:2px;">
-          <span>Room: <b>${booking.roomNumber}</b> (${booking.roomType || 'Standard'})</span>
-          <span>Plan: <b>${isFooding ? 'MAP' : 'EP'}</b></span>
-        </div>
-        <div>Check-In Time: <b>${inTime}</b></div>
-        <div>Check-Out Time: <b>${outTime}</b></div>
-        <div style="font-size:9px; color:#444;">Standard Times: In: 12:00 PM | Out: 11:00 AM</div>
+        <div>Guest: <b>${booking.guestName}</b> | Ph: ${booking.phone || 'N/A'}</div>
+        <div>ID: <b>${booking.idType} (${booking.idNumber})</b></div>
+        <div>Room: <b>${booking.roomNumber}</b> (${booking.floor || 'Floor 1'})</div>
+        <div>Check-In: <b>${inTime}</b> | Check-Out: <b>${outTime}</b></div>
       </div>
+
+      ${getFloorWifiString(hotel, booking.floor)}
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 11px;">
         <thead>
-          <tr style="border-bottom: 1px solid #000; font-weight: bold;">
+          <tr style="border-bottom: 1px solid #000;">
             <th style="text-align:left;">Service</th>
             <th style="text-align:center;">SAC</th>
             <th style="text-align:right;">Taxable</th>
@@ -213,9 +205,6 @@ export function print80mmThermalReceipt(hotel, booking, foodOrders = []) {
         <div style="display:flex; justify-content:space-between; font-weight:900; font-size:13px; margin-top:3px;">
           <span>GRAND TOTAL:</span><span>₹${grandTotal.toFixed(2)}</span>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:10px;">
-          <span>Settlement:</span><span>PAID (${booking.paymentMode || 'UPI'})</span>
-        </div>
       </div>
 
       ${MONO_FOOTER_LOGO}
@@ -225,11 +214,11 @@ export function print80mmThermalReceipt(hotel, booking, foodOrders = []) {
 }
 
 /**
- * 3. A4 Official Tax Folio
+ * A4 Official Tax Folio
  */
 export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
   const isFooding = booking.packageType === "fooding_lodging";
-  const inTime = booking.checkInTime || booking.createdAtFormatted || new Date().toLocaleString("en-IN");
+  const inTime = booking.checkInTime || new Date().toLocaleString("en-IN");
   const outTime = booking.checkOutTime || new Date().toLocaleString("en-IN");
 
   let foodTotal = 0;
@@ -259,12 +248,12 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
 
   const html = `
     <div style="width: 210mm; min-height: 297mm; padding: 15mm 20mm; margin: 0 auto; background: #fff; color: #000; position: relative;">
-      <!-- Hotel Header Top (Big & Prominent) -->
+      <!-- Hotel Name Large Header -->
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 15px;">
         <div>
-          <h1 style="font-size: 26px; font-weight: 900; text-transform: uppercase;">${hotel.hotelName || "THE GRAND PALACE HOTEL"}</h1>
+          <h1 style="font-size: 26px; font-weight: 900; text-transform: uppercase;">${hotel.hotelName || "HOTEL PARADISE"}</h1>
           <div style="font-size: 12px; color: #333; line-height: 1.4; margin-top: 4px;">
-            ${hotel.address || "Station Road, Kalyani, Nadia, West Bengal - 741235"}<br>
+            ${hotel.address || "Station Road, West Bengal"}<br>
             <strong>GSTIN:</strong> ${hotel.gstin || "19ABCDE1234F1Z5"} | <strong>Phone:</strong> ${hotel.phone || "+91 9876543210"}
           </div>
         </div>
@@ -278,33 +267,33 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
         </div>
       </div>
 
-      <!-- Guest and Stay Information Grid -->
+      <!-- Guest and Stay Grid -->
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px; font-size: 12px;">
         <div>
           <strong style="text-transform:uppercase; font-size:11px; color:#475569;">Guest Profile</strong>
           <p style="margin-top:4px;"><strong>Name:</strong> ${booking.guestName}</p>
           <p><strong>Phone:</strong> ${booking.phone || 'N/A'}</p>
-          <p><strong>Verification:</strong> <span style="background:#e2e8f0; padding:2px 6px; border-radius:4px; font-weight:bold;">${booking.idType || 'Aadhaar'} Verified</span></p>
+          <p><strong>Mandatory ID:</strong> <span style="background:#e2e8f0; padding:2px 6px; border-radius:4px; font-weight:bold;">${booking.idType} (${booking.idNumber})</span></p>
           <p><strong>Guests:</strong> ${booking.adults || 1} Adult(s), ${booking.children || 0} Child</p>
         </div>
         <div>
-          <strong style="text-transform:uppercase; font-size:11px; color:#475569;">Stay Timeline</strong>
+          <strong style="text-transform:uppercase; font-size:11px; color:#475569;">Stay Timeline & WiFi</strong>
           <p style="margin-top:4px;"><strong>Room:</strong> ${booking.roomNumber} (${booking.roomType || 'Standard'})</p>
           <p><strong>Actual Check-In:</strong> ${inTime}</p>
           <p><strong>Actual Check-Out:</strong> ${outTime}</p>
-          <p><strong>Policy Schedule:</strong> Check-In 12:00 PM | Check-Out 11:00 AM</p>
+          <p style="color:#0891b2;"><strong>Free WiFi (${booking.floor || 'Floor 1'}):</strong> ${(hotel.floorWifi && hotel.floorWifi[booking.floor]) ? hotel.floorWifi[booking.floor] : 'Welcome@123'}</p>
         </div>
       </div>
 
-      <!-- Itemized Billing Table -->
+      <!-- Itemized Table with Accurate SAC Codes -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12px;">
         <thead>
           <tr style="background:#0f172a; color:#fff;">
             <th style="padding:8px; text-align:center;">Sl.</th>
-            <th style="padding:8px; text-align:left;">Description</th>
+            <th style="padding:8px; text-align:left;">Service Particulars</th>
             <th style="padding:8px; text-align:center;">SAC</th>
             <th style="padding:8px; text-align:center;">Rate</th>
-            <th style="padding:8px; text-align:center;">Nights/Qty</th>
+            <th style="padding:8px; text-align:center;">Duration</th>
             <th style="padding:8px; text-align:right;">Taxable Amt (₹)</th>
           </tr>
         </thead>
@@ -331,7 +320,7 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
         </tbody>
       </table>
 
-      <!-- Split GST Summary -->
+      <!-- Tax Summary -->
       <div style="display:flex; justify-content:space-between; margin-top: 10px;">
         <div style="width: 48%; font-size: 11px; background: #f8fafc; border:1px solid #cbd5e1; padding: 10px; border-radius: 6px;">
           <strong>SAC-Wise GST Breakdown</strong>
@@ -373,18 +362,17 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
         </div>
       </div>
 
-      <!-- Monochrome SmartFix HMS Brand Footer at Bottom -->
+      <!-- Footer Brand -->
       <div style="position:absolute; bottom:15mm; left:20mm; right:20mm; border-top: 1px solid #000; padding-top: 10px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-end;">
           <div style="font-size: 10px; color: #444; max-width: 60%; line-height: 1.4;">
             <strong>Terms & Conditions:</strong><br>
-            1. All disputes subject to local jurisdiction.<br>
-            2. In-house guests must follow checkout guidelines.<br>
-            3. Computer-generated legal tax invoice.
+            1. Standard checkout time is 11:00 AM.<br>
+            2. High-speed guest WiFi credentials provided above.
           </div>
           <div style="text-align: center; font-size: 11px;">
             <div style="width: 140px; border-top: 1px solid #000; margin-bottom: 4px;"></div>
-            Reception / Authorized Sign
+            Authorized Signature
           </div>
         </div>
         ${MONO_FOOTER_LOGO}
