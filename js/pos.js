@@ -8,10 +8,8 @@ export function computeOrderTax(items = []) {
   const taxable = grossTotal / (1 + FOODING_GST_RATE / 100);
   const totalTax = grossTotal - taxable;
   return {
-    taxable: Number(taxable.toFixed(2)),
-    cgst: Number((totalTax / 2).toFixed(2)),
-    sgst: Number((totalTax / 2).toFixed(2)),
-    grandTotal: Number(grossTotal.toFixed(2))
+    taxable: Number(taxable.toFixed(2)), cgst: Number((totalTax / 2).toFixed(2)),
+    sgst: Number((totalTax / 2).toFixed(2)), grandTotal: Number(grossTotal.toFixed(2))
   };
 }
 
@@ -41,7 +39,6 @@ export async function getRoomUnsettledFoodOrders(hotelId, roomNumber) {
       totals.sgst += Number(t.sgst) || 0;
       totals.grandTotal += Number(t.grandTotal) || 0;
     });
-    
     Object.keys(totals).forEach(k => totals[k] = Number(totals[k].toFixed(2)));
     return { unsettledOrders, totals };
   } catch (e) { return { unsettledOrders: [], totals: { taxable: 0, cgst: 0, sgst: 0, grandTotal: 0 } }; }
