@@ -12,22 +12,98 @@ function openPrintWindow(htmlContent, title = "Print Bill") {
 
 const FOOTER = `<div style="text-align:center; margin-top:10px; border-top:1px solid #000; padding-top:6px; font-size:10px;">SmartFix HMS | Smart Cloud Property Management</div>`;
 
+function getFoodTotals(food) {
+  if (!food) return { taxable: 0, cgst: 0, sgst: 0, grandTotal: 0 };
+  if (food.totals) return food.totals;
+  if (typeof food.totalFoodCost === "number") {
+    const gross = food.totalFoodCost; const taxable = gross / 1.05; const tax = gross - taxable;
+    return { taxable, cgst: tax / 2, sgst: tax / 2, grandTotal: gross };
+  }
+  return { taxable: 0, cgst: 0, sgst: 0, grandTotal: 0 };
+}
+
+export function print58mmThermalReceipt(hotel, booking, foodOrders = []) {
+  let foodRows = ""; let foodGross = 0;
+  if (foodOrders) foodOrders.forEach(ord => (ord.items || []).forEach(it => {
+    const amt = (Number(it.price) || 0) * (Number(it.quantity) || 0); foodGross += amt;
+    foodRows += `<div style="display:flex; justify-content:space-between; font-size:10px;"><span>${esc(it.quantity)}x ${esc(String(it.name || "").substring(0, 13))}</span><span>₹${money(amt)}</span></div>`;
+  }));
+  const foodTotals = getFoodTotals({ totalFoodCost: foodGross });
+  const advance = booking.advancePaid || 0;
+  const grandTotal = (booking.summary?.grandTotal || 0) + foodGross;
+  const balance = grandTotal - advance;
+
+  const html = `<div style="width: 48mm; margin: 0 auto; padding: 2mm 0; font-size: 11px; line-height: 1.25; color: #000;">
+    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 4px;">
+      <div style="font-weight: 900; font-size: 15px;">${esc(hotel.hotelName || "HOTEL PARADISE")}</div>
+      <div style="font-size: 9px;">${esc(hotel.address || "")}</div>
+      <div style="font-size: 9px;">GSTIN: ${esc(hotel.gstin || "")} | Ph: ${esc(hotel.phone || "")}</div>
+    </div>
+    <div style="font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
+      <div>Inv: <b>${esc(booking.bookingId)}</b></div><div>Guest: <b>${esc(booking.guestName)}</b></div>
+      <div>Room: <b>${esc(booking.roomNumber)}</b></div>
+    </div>
+    <div style="border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
+      <div style="display:flex; justify-content:space-between; font-size:10px;"><span>Lodging</span><span>₹${money(booking.lodging?.taxable || 0)}</span></div>
+      ${booking.packageType === 'fooding_lodging' ? `<div style="display:flex; justify-content:space-between; font-size:10px;"><span>Meal Pkg</span><span>₹${money(booking.fooding?.taxable || 0)}</span></div>` : ""}
+      ${foodRows}
+    </div>
+    <div style="border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px; font-size: 10px;">
+      <div style="display:flex; justify-content:space-between;"><span>Taxable:</span><span>₹${money((booking.summary?.grandTaxable || 0) + foodTotals.taxable)}</span></div>
+      <div style="display:flex; justify-content:space-between; font-weight:900; font-size:12px; margin-top:2px;"><span>TOTAL:</span><span>₹${money(grandTotal)}</span></div>
+      ${advance > 0 ? `<div style="display:flex; justify-content:space-between; color:#16a34a;"><span>Advance:</span><span>-₹${money(advance)}</span></div>
+      <div style="display:flex; justify-content:space-between; font-weight:bold; color:#dc2626;"><span>Due:</span><span>₹${money(balance)}</span></div>` : ""}
+    </div>${FOOTER}</div>`;
+  openPrintWindow(html, `Thermal-58mm-${booking.bookingId}`);
+}
+
+export function print80mmThermalReceipt(hotel, booking, foodOrders = []) {
+  let foodRows = ""; let foodGross = 0;
+  if (foodOrders) foodOrders.forEach(ord => (ord.items || []).forEach(it => {
+    const amt = (Number(it.price) || 0) * (Number(it.quantity) || 0); foodGross += amt;
+    foodRows += `<tr style="font-size:11px;"><td>${esc(it.name)} (x${esc(it.quantity)})</td><td style="text-align:center;">996331</td><td style="text-align:right;">₹${money(amt)}</td></tr>`;
+  }));
+  const foodTotals = getFoodTotals({ totalFoodCost: foodGross });
+  const advance = booking.advancePaid || 0;
+  const grandTotal = (booking.summary?.grandTotal || 0) + foodGross;
+  const balance = grandTotal - advance;
+
+  const html = `<div style="width: 74mm; margin: 0 auto; padding: 2mm 0; font-size: 11px; color: #000;">
+    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px;">
+      <div style="font-weight: 900; font-size: 17px;">${esc(hotel.hotelName || "HOTEL PARADISE")}</div>
+      <div style="font-size: 10px;">${esc(hotel.address || "")}</div>
+      <div style="font-size: 10px;">GSTIN: ${esc(hotel.gstin || "")}</div>
+    </div>
+    <div style="font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">
+      <div style="display:flex; justify-content:space-between;"><span>Inv: <b>${esc(booking.bookingId)}</b></span><span>Date: ${esc(new Date().toLocaleDateString("en-IN"))}</span></div>
+      <div>Guest: <b>${esc(booking.guestName)}</b></div><div>Room: <b>${esc(booking.roomNumber)}</b></div>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 11px;"><thead><tr style="border-bottom: 1px solid #000;"><th style="text-align:left;">Service</th><th style="text-align:center;">SAC</th><th style="text-align:right;">Taxable</th></tr></thead><tbody>
+        <tr><td>Room Lodging</td><td style="text-align:center;">996311</td><td style="text-align:right;">₹${money(booking.lodging?.taxable || 0)}</td></tr>
+        ${booking.packageType === 'fooding_lodging' ? `<tr><td>Meal Package</td><td style="text-align:center;">996331</td><td style="text-align:right;">₹${money(booking.fooding?.taxable || 0)}</td></tr>` : ""}
+        ${foodRows}
+    </tbody></table>
+    <div style="border-top: 1px dashed #000; border-bottom: 2px solid #000; padding: 4px 0; margin-bottom: 6px;">
+      <div style="display:flex; justify-content:space-between;"><span>Taxable:</span><span>₹${money((booking.summary?.grandTaxable || 0) + foodTotals.taxable)}</span></div>
+      <div style="display:flex; justify-content:space-between;"><span>CGST:</span><span>₹${money((booking.summary?.totalCgst || 0) + foodTotals.cgst)}</span></div>
+      <div style="display:flex; justify-content:space-between;"><span>SGST:</span><span>₹${money((booking.summary?.totalSgst || 0) + foodTotals.sgst)}</span></div>
+      <div style="display:flex; justify-content:space-between; font-weight:900; font-size:13px; margin-top:3px;"><span>GRAND TOTAL:</span><span>₹${money(grandTotal)}</span></div>
+      ${advance > 0 ? `<div style="display:flex; justify-content:space-between; color:#16a34a;"><span>Advance:</span><span>₹${money(advance)}</span></div>` : ""}
+    </div>${FOOTER}</div>`;
+  openPrintWindow(html, `Thermal-80mm-${booking.bookingId}`);
+}
+
 export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
   const isFooding = booking.packageType === "fooding_lodging";
   let foodGross = 0, foodRows = "";
-  
-  if (foodOrders && foodOrders.length > 0) {
-    foodOrders.forEach(ord => (ord.items || []).forEach(it => {
-      const amt = (Number(it.price) || 0) * (Number(it.quantity) || 0); foodGross += amt;
-      foodRows += `<tr><td style="padding:6px; border-bottom:1px solid #ddd; text-align:center;">POS</td><td style="padding:6px; border-bottom:1px solid #ddd;">${esc(it.name)} x ${esc(it.quantity)}</td><td style="padding:6px; border-bottom:1px solid #ddd; text-align:center;">996331</td><td style="padding:6px; border-bottom:1px solid #ddd; text-align:right;">₹${money(amt)}</td></tr>`;
-    }));
-  }
+  if (foodOrders) foodOrders.forEach(ord => (ord.items || []).forEach(it => {
+    const amt = (Number(it.price) || 0) * (Number(it.quantity) || 0); foodGross += amt;
+    foodRows += `<tr><td style="padding:6px; border-bottom:1px solid #ddd; text-align:center;">POS</td><td style="padding:6px; border-bottom:1px solid #ddd;">${esc(it.name)} x ${esc(it.quantity)}</td><td style="padding:6px; border-bottom:1px solid #ddd; text-align:center;">996331</td><td style="padding:6px; border-bottom:1px solid #ddd; text-align:right;">₹${money(amt)}</td></tr>`;
+  }));
 
   const foodTaxable = foodGross / 1.05;
-  const foodTax = foodGross - foodTaxable;
   const advance = booking.advancePaid || 0;
   const grandTotal = (booking.summary?.grandTotal || 0) + foodGross;
-  const totalTax = (booking.summary?.grandTax || 0) + foodTax;
 
   const html = `
   <div style="width: 210mm; min-height: 290mm; padding: 15mm 20mm; margin: 0 auto; display: flex; flex-direction: column;">
@@ -41,12 +117,10 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
         <div style="font-size: 11px;">Inv: ${esc(booking.bookingId)}<br>Date: ${esc(new Date().toLocaleDateString("en-IN"))}</div>
       </div>
     </div>
-
     <div style="display:flex; justify-content:space-between; background: #f8fafc; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; font-size: 11px;">
-      <div><p><strong>Guest:</strong> ${esc(booking.guestName)}</p><p><strong>Phone:</strong> ${esc(booking.phone || 'N/A')}</p><p><strong>ID:</strong> ${esc(booking.idType)} (${esc(booking.idNumber)})</p></div>
+      <div><p><strong>Guest:</strong> ${esc(booking.guestName)}</p><p><strong>Phone:</strong> ${esc(booking.phone || 'N/A')}</p><p><strong>ID:</strong> ${esc(booking.idType || 'N/A')} (${esc(booking.idNumber || 'N/A')})</p></div>
       <div><p><strong>Room:</strong> ${esc(booking.roomNumber)}</p><p><strong>Check-In:</strong> ${esc(booking.checkInTime || '')}</p><p><strong>Check-Out:</strong> ${esc(booking.checkOutTime || new Date().toLocaleString("en-IN"))}</p></div>
     </div>
-
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
       <thead><tr style="background:#0f172a; color:#fff;"><th style="padding:8px;">Sl.</th><th style="padding:8px; text-align:left;">Particulars</th><th style="padding:8px;">SAC</th><th style="padding:8px; text-align:right;">Amount (₹)</th></tr></thead>
       <tbody>
@@ -55,31 +129,25 @@ export function printA4TaxInvoice(hotel, booking, foodOrders = []) {
         ${foodRows}
       </tbody>
     </table>
-
     <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
       <div style="width: 50%; font-size: 10px; border:1px solid #ddd; padding: 8px;">
-        <strong>GST Breakdown</strong>
-        <table style="width: 100%; margin-top: 4px;"><tr style="font-weight:bold; border-bottom:1px solid #ddd;"><td>Service</td><td>Taxable</td><td>CGST</td><td>SGST</td></tr>
+        <strong>GST Breakdown</strong><table style="width: 100%; margin-top: 4px;"><tr style="font-weight:bold; border-bottom:1px solid #ddd;"><td>Service</td><td>Taxable</td><td>CGST</td><td>SGST</td></tr>
         <tr><td>Lodging (12%)</td><td>₹${money(booking.lodging?.taxable)}</td><td>₹${money(booking.lodging?.cgst)}</td><td>₹${money(booking.lodging?.sgst)}</td></tr>
         ${isFooding ? `<tr><td>Fooding (5%)</td><td>₹${money(booking.fooding?.taxable)}</td><td>₹${money(booking.fooding?.cgst)}</td><td>₹${money(booking.fooding?.sgst)}</td></tr>` : ""}
-        ${foodGross > 0 ? `<tr><td>POS (5%)</td><td>₹${money(foodTaxable)}</td><td>₹${money(foodTax/2)}</td><td>₹${money(foodTax/2)}</td></tr>` : ""}
+        ${foodGross > 0 ? `<tr><td>POS (5%)</td><td>₹${money(foodTaxable)}</td><td>₹${money(foodTaxable*0.025)}</td><td>₹${money(foodTaxable*0.025)}</td></tr>` : ""}
         </table>
       </div>
       <div style="width: 45%; font-size: 12px; text-align: right;">
         <div style="display:flex; justify-content:space-between; padding:2px 0;"><span>Taxable:</span><strong>₹${money((booking.summary?.grandTaxable || 0) + foodTaxable)}</strong></div>
-        <div style="display:flex; justify-content:space-between; padding:2px 0;"><span>Total GST:</span><strong>₹${money(totalTax)}</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:2px 0;"><span>Total GST:</span><strong>₹${money((booking.summary?.grandTax || 0) + (foodGross-foodTaxable))}</strong></div>
         <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 0;"><span>Grand Total:</span><span>₹${money(grandTotal)}</span></div>
         ${advance > 0 ? `<div style="display:flex; justify-content:space-between; padding:2px 0; color:#16a34a;"><span>Advance:</span><strong>-₹${money(advance)}</strong></div><div style="display:flex; justify-content:space-between; padding:4px 0; color:#dc2626; font-weight:bold;"><span>Balance Due:</span><strong>₹${money(grandTotal - advance)}</strong></div>` : ""}
       </div>
     </div>
-
     <div style="margin-top: auto; border-top: 1px solid #000; padding-top: 10px; display:flex; justify-content:space-between;">
       <div style="font-size: 9px;">Check-out: ${esc(hotel.checkOutTime || '11:00 AM')}<br>WiFi: ${esc(hotel.defaultWifi || 'Welcome@123')}</div>
       <div style="text-align: center; font-size: 10px;"><div style="width: 120px; border-top: 1px solid #000; margin-bottom: 4px;"></div>Authorized Signatory</div>
-    </div>
-    ${FOOTER}
+    </div>${FOOTER}
   </div>`;
   openPrintWindow(html, `A4-Invoice-${booking.bookingId}`);
 }
-
-// (58mm এবং 80mm ফাংশন আগের মতোই কাজ করবে, এখানে স্পেস বাঁচাতে শুধু A4 দেওয়া হলো, আপনি চাইলে ৫৮ ও ৮০ মিমি ফাংশনও এখানে যোগ করে নিতে পারেন)
