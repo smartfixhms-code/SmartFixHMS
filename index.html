@@ -3,93 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartFix HMS - Hotel Management</title>
+  <title>SmartFix HMS - Next-Gen Hotel Management & Cloud POS</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='cyanGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3ClinearGradient id='mintGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300ffa3'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='100' fill='%23060913'/%3E%3Cg transform='translate(106, 96)'%3E%3Crect x='0' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Crect x='230' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Cpath d='M85 85 L150 30 L215 85 L215 310 L85 310 Z' stroke='url(%23cyanGrad)' stroke-width='10' fill='%2308182f'/%3E%3Ccircle cx='150' cy='175' r='60' fill='%23061426' stroke='url(%23mintGrad)' stroke-width='10'/%3E%3Cpolyline points='125,175 145,195 185,150' fill='none' stroke='%2300ffa3' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#060B14">
+  <meta name="theme-color" content="#060913">
+  <meta name="mobile-web-app-capable" content="yes">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Inter', sans-serif; background-color: #060B14; color: #E2E8F0; background-image: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #060B14 70%); } .glass { background: rgba(16, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); } </style>
-  <script> if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error)); </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #060913; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .neon-border { box-shadow: 0 0 25px rgba(0, 242, 254, 0.15); }
+  </style>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(console.error);
+      });
+    }
+  </script>
 </head>
-<body class="min-h-screen flex flex-col">
-  <svg style="display: none;">
-    <symbol id="logo" viewBox="0 0 460 110">
-      <g transform="translate(10, 5)"><rect x="0" y="32" width="22" height="58" rx="2" stroke="#00B4D8" stroke-width="4" fill="#061224" /><rect x="68" y="32" width="22" height="58" rx="2" stroke="#00B4D8" stroke-width="4" fill="#061224" /><path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="#00E676" stroke-width="5" fill="#08182f" /><circle cx="45" cy="50" r="18" fill="#061426" stroke="#00E676" stroke-width="4" /><polyline points="37,50 43,56 55,42" fill="none" stroke="#00E676" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" /></g>
-      <text x="110" y="52" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="#00B4D8">Fix</tspan></text><rect x="300" y="22" width="90" height="32" rx="16" fill="#00E676" /><text x="345" y="45" font-family="'Inter', sans-serif" font-weight="900" font-size="20" fill="#060B14" text-anchor="middle">HMS</text>
-    </symbol>
-  </svg>
-
-  <header class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-    <svg class="h-10 w-auto"><use href="#logo"></use></svg>
-    <div class="space-x-4">
-      <button onclick="openModal('login')" class="text-sm font-semibold text-slate-300 hover:text-white">Sign In</button>
-      <button onclick="openModal('register')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00E676] to-[#00B4D8] text-[#060B14] font-bold text-sm">Get 30 Days Free</button>
+<body class="text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="h-10 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00f2fe" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+            <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+          </defs>
+          <g transform="translate(10, 5)">
+            <rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#cyanGrad)" stroke-width="3" fill="#08182f" />
+            <circle cx="45" cy="50" r="18" fill="#061426" stroke="url(#mintGrad)" stroke-width="2.5" />
+            <polyline points="37,50 43,56 55,42" fill="none" stroke="#00ffa3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+          <text x="110" y="48" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#cyanGrad)">Fix</tspan></text>
+          <rect x="295" y="16" width="94" height="36" rx="8" fill="url(#mintGrad)" />
+          <text x="342" y="42" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#060913" text-anchor="middle" letter-spacing="1">HMS</text>
+          <text x="112" y="74" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7dd3fc" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+        </svg>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="openAuthModal('login')" class="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800">Sign In</button>
+        <button onclick="openAuthModal('register')" class="text-xs font-bold px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20">Get 30 Days Free</button>
+      </div>
     </div>
   </header>
+  
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-6">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Multi-Tenant Cloud PMS Architecture
+    </div>
+    <h1 class="text-3xl sm:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight">
+      Manage Rooms, Fooding & GST Billing. <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">All Inside One Fast PWA.</span>
+    </h1>
+    <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mt-6 leading-relaxed">
+      Customized for hoteliers. Complete control over building floors, room tariffs, per-head meal packages, restaurant KOT POS, floor-wise free guest WiFi, and CA-ready tax reports.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+      <button onclick="openAuthModal('register')" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-cyan-500/25">Start Instant 30-Day Free Trial</button>
+      <button onclick="openAuthModal('login')" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm border border-slate-800">Sign In to Hotel Dashboard →</button>
+    </div>
+  </section>
 
-  <main class="flex-1 flex flex-col items-center justify-center text-center px-4 mt-10">
-    <h1 class="text-4xl md:text-6xl font-black text-white max-w-4xl leading-tight">Manage Rooms, POS & GST Billing. <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00E676] to-[#00B4D8]">All Inside One Fast PWA.</span></h1>
-    <p class="mt-6 text-slate-400 max-w-2xl text-lg">Complete control over floors, room tariffs, per-head meal packages, restaurant KOT POS, and CA-ready tax reports.</p>
-    <button onclick="openModal('register')" class="mt-10 px-8 py-4 rounded-xl bg-[#00E676] text-[#060B14] font-black text-lg shadow-lg shadow-[#00E676]/20 hover:scale-105 transition">Start Instant 30-Day Free Trial</button>
-  </main>
-
-  <!-- Auth Modal -->
-  <div id="authModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="glass border border-slate-700 w-full max-w-md rounded-2xl p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h3 id="modalTitle" class="text-xl font-bold text-white">Sign In</h3>
-        <button onclick="document.getElementById('authModal').classList.add('hidden')" class="text-slate-400 text-2xl">&times;</button>
+  <!-- Dynamic Pricing Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-4xl font-black text-white">Simple, Transparent Pricing</h2>
+      <p class="text-slate-400 mt-2">Choose the plan that fits your property's scale.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <!-- 6 Months Plan -->
+      <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 bg-slate-800 text-cyan-400 border border-cyan-800 font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-wider">Flexible</div>
+        <h3 class="text-xl font-bold text-white mb-2">6 Months License</h3>
+        <p class="text-slate-400 text-sm mb-6">Perfect for seasonal or small-scale properties.</p>
+        <div class="text-4xl font-black text-white mb-6">₹<span id="price6M" class="font-mono">4,999</span></div>
+        <ul class="space-y-3 mb-8 text-sm text-slate-300 font-medium">
+          <li class="flex items-center gap-2"><span class="text-cyan-400">✓</span> Unlimited Rooms & Bookings</li>
+          <li class="flex items-center gap-2"><span class="text-cyan-400">✓</span> Restaurant POS & KOT</li>
+          <li class="flex items-center gap-2"><span class="text-cyan-400">✓</span> CA-Ready GST Reports</li>
+          <li class="flex items-center gap-2"><span class="text-cyan-400">✓</span> 58mm, 80mm & A4 Printing</li>
+        </ul>
+        <button onclick="openAuthModal('register')" class="w-full py-3 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-700 transition">Start 6-Month Trial</button>
       </div>
-      <form id="authForm" onsubmit="event.preventDefault(); handleAuth();" class="space-y-4">
-        <div id="regFields" class="hidden space-y-3">
-          <div><label class="block text-xs text-slate-400 mb-1">Hotel Name</label><input type="text" id="regHotelName" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white"></div>
-          <div><label class="block text-xs text-slate-400 mb-1">GSTIN</label><input type="text" id="regGstin" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white font-mono"></div>
+      <!-- 1 Year Plan -->
+      <div class="bg-slate-900 border border-cyan-500/50 p-8 rounded-2xl relative overflow-hidden shadow-2xl shadow-cyan-500/10">
+        <div class="absolute top-0 right-0 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-wider">Best Value</div>
+        <h3 class="text-xl font-bold text-white mb-2">1 Year License</h3>
+        <p class="text-slate-400 text-sm mb-6">Best value for established and growing hotels.</p>
+        <div class="text-4xl font-black text-white mb-6">₹<span id="price1Y" class="font-mono">8,999</span></div>
+        <ul class="space-y-3 mb-8 text-sm text-slate-300 font-medium">
+          <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Everything in 6 Months Plan</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Priority WhatsApp Support</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Free Staff Onboarding</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Dedicated Account Manager</li>
+        </ul>
+        <button onclick="openAuthModal('register')" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold hover:opacity-90 transition">Start 30-Day Free Trial</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="authModal" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl neon-border">
+      <div class="flex justify-between items-center mb-6">
+        <div><h3 id="modalTitle" class="text-lg font-bold text-white">Access SmartFix HMS</h3><p id="modalSub" class="text-xs text-slate-400">Sign in to your property dashboard.</p></div>
+        <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white text-xl font-bold">×</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-4 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <button id="tabBtnLogin" onclick="switchAuthMode('login')" class="py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950">Login</button>
+        <button id="tabBtnRegister" onclick="switchAuthMode('register')" class="py-1.5 text-xs font-semibold rounded-lg text-slate-400">Register</button>
+      </div>
+      <form id="authForm" onsubmit="event.preventDefault(); submitAuth();" class="space-y-3">
+        <div id="regExtraFields" class="hidden space-y-2.5">
+          <div><label class="block text-xs text-slate-400 mb-1">Hotel Name</label><input type="text" id="regHotelName" placeholder="Grand Palace Resort" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Hotel Address</label><input type="text" id="regHotelAddress" placeholder="Station Road, West Bengal" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-xs text-slate-400 mb-1">GSTIN Number</label><input type="text" id="regHotelGstin" placeholder="19ABCDE1234F1Z5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white font-mono outline-none"></div>
+            <div><label class="block text-xs text-slate-400 mb-1">Contact Phone</label><input type="text" id="regHotelPhone" placeholder="+91 98320 XXXXX" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
+          </div>
         </div>
-        <div><label class="block text-xs text-slate-400 mb-1">Email</label><input type="email" id="authEmail" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white"></div>
-        <div><label class="block text-xs text-slate-400 mb-1">Password</label><input type="password" id="authPassword" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white"></div>
-        <div id="authAlert" class="hidden text-xs p-3 rounded-lg bg-rose-500/20 text-rose-400"></div>
-        <button type="submit" id="authBtn" class="w-full py-3 bg-[#00E676] text-[#060B14] font-bold rounded-xl">Sign In</button>
+        <div><label class="block text-xs text-slate-400 mb-1">Email Address</label><input type="email" id="authEmail" required placeholder="manager@hotel.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
+        <div><label class="block text-xs text-slate-400 mb-1">Password</label><input type="password" id="authPassword" required placeholder="••••••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
+        <div id="authAlert" class="hidden text-xs p-3 rounded-xl border"></div>
+        <button type="submit" id="authSubmitBtn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">Sign In to Property</button>
       </form>
     </div>
   </div>
-
+  
+  <footer class="mt-auto border-t border-slate-900 py-6 text-center text-xs text-slate-600">© 2026 SmartFix HMS. Next-Gen Serverless Hotel Management Architecture.</footer>
+  
   <script type="module">
     import { loginUser, registerNewHotel, monitorAuthState } from "./js/auth.js";
-    let mode = 'login';
+    import { db } from "./js/firebase-config.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    monitorAuthState(state => {
-      if (state?.profile) window.location.href = state.profile.role === 'superadmin' ? 'super-admin.html' : 'dashboard.html';
+    let authMode = "login";
+
+    // Fetch Dynamic Pricing from Firestore
+    async function loadDynamicPricing() {
+      try {
+        const snap = await getDoc(doc(db, "system", "pricing"));
+        if (snap.exists()) {
+          const d = snap.data();
+          document.getElementById("price6M").innerText = d.price6M ? d.price6M.toLocaleString('en-IN') : "4,999";
+          document.getElementById("price1Y").innerText = d.price1Y ? d.price1Y.toLocaleString('en-IN') : "8,999";
+        }
+      } catch (e) {
+        console.error("Error loading pricing:", e);
+      }
+    }
+    loadDynamicPricing();
+
+    // Check auth state (Block unverified users)
+    monitorAuthState((state) => {
+      if (state && state.user && state.profile) {
+        if (!state.emailVerified) {
+          console.warn("Email not verified. Please check your inbox.");
+          // Optional: Show a non-intrusive banner here if needed
+        } else {
+          if (state.profile.role === "superadmin") window.location.href = "super-admin.html";
+          else window.location.href = "dashboard.html";
+        }
+      }
     });
 
-    window.openModal = (m) => {
-      mode = m;
-      document.getElementById('authModal').classList.remove('hidden');
-      document.getElementById('modalTitle').innerText = m === 'login' ? 'Sign In' : 'Register Hotel';
-      document.getElementById('regFields').classList.toggle('hidden', m === 'login');
-      document.getElementById('authBtn').innerText = m === 'login' ? 'Sign In' : 'Start Trial';
+    window.openAuthModal = (mode = "login") => {
+      document.getElementById("authModal").classList.remove("hidden");
+      switchAuthMode(mode);
+    };
+    window.closeAuthModal = () => document.getElementById("authModal").classList.add("hidden");
+    
+    window.switchAuthMode = (mode) => {
+      authMode = mode;
+      const f = document.getElementById("regExtraFields");
+      const bLog = document.getElementById("tabBtnLogin");
+      const bReg = document.getElementById("tabBtnRegister");
+      const sub = document.getElementById("authSubmitBtn");
+      
+      if (mode === "register") {
+        f.classList.remove("hidden");
+        bReg.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
+        bLog.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400";
+        sub.innerText = "Register Property & Start Trial";
+      } else {
+        f.classList.add("hidden");
+        bLog.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
+        bReg.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400";
+        sub.innerText = "Sign In to Property";
+      }
     };
 
-    window.handleAuth = async () => {
-      const email = document.getElementById('authEmail').value;
-      const pass = document.getElementById('authPassword').value;
-      const alert = document.getElementById('authAlert');
-      alert.classList.add('hidden');
+    window.submitAuth = async () => {
+      const email = document.getElementById("authEmail").value.trim();
+      const pass = document.getElementById("authPassword").value;
+      const alertBox = document.getElementById("authAlert");
+      const submitBtn = document.getElementById("authSubmitBtn");
+      
+      alertBox.classList.add("hidden");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Processing...";
+
       try {
-        if (mode === 'register') {
-          const name = document.getElementById('regHotelName').value;
-          const gstin = document.getElementById('regGstin').value;
-          if (!name || !gstin) throw new Error("Name & GSTIN required");
-          await registerNewHotel({ name, gstin }, email, pass);
-          alert.className = "text-xs p-3 rounded-lg bg-[#00E676]/20 text-[#00E676] block";
-          alert.innerText = "Registration successful! Please check your email to verify.";
+        if (authMode === "register") {
+          const name = document.getElementById("regHotelName").value.trim();
+          const address = document.getElementById("regHotelAddress").value.trim();
+          const gstin = document.getElementById("regHotelGstin").value.trim();
+          const phone = document.getElementById("regHotelPhone").value.trim();
+          
+          if (!name || !gstin) throw new Error("Hotel Name & GSTIN are required!");
+          
+          await registerNewHotel({ name, address, gstin, phone }, email, pass);
+          
+          alertBox.className = "text-xs p-3 rounded-xl border bg-emerald-950/40 border-emerald-800 text-emerald-300 block";
+          alertBox.innerText = "Registration successful! Please check your email inbox to verify your account before logging in.";
+          switchAuthMode("login");
         } else {
           const res = await loginUser(email, pass);
-          if (!res.user.emailVerified && res.profile.role !== 'superadmin') {
-            throw new Error("Please verify your email first. Check your inbox.");
+          
+          if (!res.emailVerified) {
+            throw new Error("Please verify your email address first. Check your inbox/spam folder.");
           }
-          window.location.href = res.profile.role === 'superadmin' ? 'super-admin.html' : 'dashboard.html';
+
+          if (res.profile.role === "superadmin") window.location.href = "super-admin.html";
+          else window.location.href = "dashboard.html";
         }
-      } catch (e) { alert.className = "text-xs p-3 rounded-lg bg-rose-500/20 text-rose-400 block"; alert.innerText = e.message; }
+      } catch (err) {
+        alertBox.className = "text-xs p-3 rounded-xl border bg-rose-950/40 border-rose-800 text-rose-300 block";
+        alertBox.innerText = err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = authMode === "register" ? "Register Property & Start Trial" : "Sign In to Property";
+      }
     };
   </script>
 </body>
