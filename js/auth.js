@@ -1,4 +1,4 @@
-// SmartFix HMS - Authentication & Email Verification Engine
+// SmartFix HMS - Authentication Engine
 import { auth, db } from "./firebase-config.js";
 import { 
   signInWithEmailAndPassword, 
@@ -23,8 +23,20 @@ export async function registerNewHotel(hotelData, email, password) {
     const user = userCredential.user;
     const hotelId = "hotel_" + user.uid.substring(0, 8);
 
-    // Send Real Verification Email Link
-    await sendEmailVerification(user);
+    // Explicit ActionCodeSettings ensuring delivery back to your GitHub domain
+    const actionCodeSettings = {
+      url: window.location.origin + window.location.pathname.replace("index.html", "") + "index.html",
+      handleCodeInApp: true
+    };
+
+    try {
+      await sendEmailVerification(user, actionCodeSettings);
+      console.log("SmartFix HMS: Verification email dispatched successfully to", email);
+    } catch (emailErr) {
+      console.error("SmartFix HMS: Email dispatch failed:", emailErr);
+      // If email fails due to domain/extension blocks, throw detailed error
+      throw new Error("Failed to send verification email: " + emailErr.message);
+    }
 
     // Initialize 30-Day trial profile
     await initializeTrialSubscription(hotelId, hotelData.name, email, user.uid);
@@ -52,7 +64,7 @@ export async function registerNewHotel(hotelData, email, password) {
       success: true, 
       hotelId, 
       emailSent: true,
-      message: "Registration successful! A verification link has been dispatched to your email." 
+      message: "Registration successful! A verification link has been sent to your email. Please check your Inbox and Spam folders." 
     };
   } catch (error) {
     console.error("Registration Error:", error);
@@ -61,19 +73,28 @@ export async function registerNewHotel(hotelData, email, password) {
 }
 
 /**
- * Sign in existing user with email verification gate
+ * Sign in existing user
  */
 export async function loginUser(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Super admin bypasses verification check
     const isSuper = email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
 
+    // Verification check
     if (!user.emailVerified && !isSuper) {
+      // Offer resend option directly
+      const actionCodeSettings = {
+        url: window.location.origin + window.location.pathname.replace("index.html", "") + "index.html",
+        handleCodeInApp: true
+      };
+      
+      // Auto-resend verification link on failed login attempt
+      await sendEmailVerification(user, actionCodeSettings).catch(console.error);
       await signOut(auth);
-      throw new Error("Email not verified! Please check your inbox and verify your email before signing in.");
+      
+      throw new Error("Email not verified! We have resent a fresh verification link to your email. Please check your Inbox/Spam.");
     }
 
     const userDocRef = doc(db, "users", user.uid);
