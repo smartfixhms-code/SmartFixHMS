@@ -106,6 +106,7 @@
     </div>
   </section>
 
+  <!-- Auth Modal -->
   <div id="authModal" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl neon-border">
       <div class="flex justify-between items-center mb-6">
@@ -157,16 +158,11 @@
     }
     loadDynamicPricing();
 
-    // Check auth state (Block unverified users)
+    // Check auth state (Email verification bypassed for now)
     monitorAuthState((state) => {
       if (state && state.user && state.profile) {
-        if (!state.emailVerified) {
-          console.warn("Email not verified. Please check your inbox.");
-          // Optional: Show a non-intrusive banner here if needed
-        } else {
-          if (state.profile.role === "superadmin") window.location.href = "super-admin.html";
-          else window.location.href = "dashboard.html";
-        }
+        if (state.profile.role === "superadmin") window.location.href = "super-admin.html";
+        else window.location.href = "dashboard.html";
       }
     });
 
@@ -218,15 +214,13 @@
           await registerNewHotel({ name, address, gstin, phone }, email, pass);
           
           alertBox.className = "text-xs p-3 rounded-xl border bg-emerald-950/40 border-emerald-800 text-emerald-300 block";
-          alertBox.innerText = "Registration successful! Please check your email inbox to verify your account before logging in.";
+          alertBox.innerText = "Registration successful! You can now log in.";
           switchAuthMode("login");
         } else {
           const res = await loginUser(email, pass);
           
-          if (!res.emailVerified) {
-            throw new Error("Please verify your email address first. Check your inbox/spam folder.");
-          }
-
+          // ইমেইল ভেরিফিকেশন চেক এখানে বন্ধ করা হয়েছে
+          
           if (res.profile.role === "superadmin") window.location.href = "super-admin.html";
           else window.location.href = "dashboard.html";
         }
