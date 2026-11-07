@@ -2,54 +2,235 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Super Admin - SmartFix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartFix HMS - Master Super-Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>body { background: #060B14; color: #fff; font-family: sans-serif; }</style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #040711; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
 </head>
-<body class="p-6">
-  <div class="max-w-6xl mx-auto">
-    <header class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-      <h1 class="text-2xl font-bold">Super Admin Console</h1>
-      <button onclick="logoutUser()" class="bg-slate-800 px-4 py-2 rounded-lg text-sm">Logout</button>
-    </header>
-    <div class="bg-slate-900 rounded-xl p-4 mb-6">
-      <h3 class="text-sm text-cyan-400 font-bold mb-2">Platform Pricing</h3>
-      <div class="flex gap-4">
-        <input type="number" id="p6" placeholder="6 Months Price" class="bg-slate-950 p-2 rounded border border-slate-700 text-sm">
-        <input type="number" id="p1" placeholder="1 Year Price" class="bg-slate-950 p-2 rounded border border-slate-700 text-sm">
-        <button onclick="savePricing()" class="bg-cyan-500 text-black px-4 py-2 font-bold rounded">Save</button>
+<body class="text-slate-100 min-h-screen flex flex-col antialiased">
+  <header class="border-b border-slate-800 bg-slate-950/90 h-16 flex items-center justify-between px-6 sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <span class="text-lg font-black text-white">Smart<span class="text-cyan-400">Fix</span> HMS</span>
+      <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Master Console</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="adminSessionEmail" class="hidden sm:block text-xs font-mono text-slate-400">Authenticating...</span>
+      <button onclick="handleAdminLogout()" id="logoutBtn" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition">Logout</button>
+    </div>
+  </header>
+  
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase text-cyan-400 mb-2">Platform Pricing Engine</h3>
+        <p class="text-xs text-slate-400 mb-4">Set pricing plans in INR (₹) displayed on user login portal.</p>
+        <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+          <div><label class="block text-slate-400 mb-1">6-Month License (₹)</label><input type="number" id="price6M" value="4999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none"></div>
+          <div><label class="block text-slate-400 mb-1">1-Year License (₹)</label><input type="number" id="price1Y" value="8999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none"></div>
+        </div>
+        <button onclick="savePlatformPricing()" id="savePriceBtn" class="mt-4 px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl hover:bg-cyan-400">Save Pricing</button>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-center">
+        <h3 class="text-sm font-bold uppercase text-emerald-400 mb-1">Developer Oversight</h3>
+        <p class="text-xs text-slate-400">Full control over hotel legal identities, GSTIN modifications, and lifetime subscription renewals.</p>
       </div>
     </div>
-    <table class="w-full text-left text-sm bg-slate-900 rounded-xl overflow-hidden">
-      <thead class="bg-slate-950 text-slate-400"><tr><th class="p-4">Hotel</th><th class="p-4">GSTIN</th><th class="p-4">Status</th><th class="p-4">Expiry</th><th class="p-4 text-right">Actions</th></tr></thead>
-      <tbody id="tenantBody"></tbody>
-    </table>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <h3 class="text-sm font-bold uppercase text-white">Registered Hotels Directory</h3>
+        <button onclick="loadTenants()" class="text-xs px-3 py-1.5 bg-slate-800 text-cyan-400 font-bold rounded-lg hover:bg-slate-700">Refresh List</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
+            <tr><th class="py-3 px-4">Hotel Profile</th><th class="py-3 px-4">GSTIN & Address</th><th class="py-3 px-4">Plan Status</th><th class="py-3 px-4">Expires At</th><th class="py-3 px-4 text-right">Actions</th></tr>
+          </thead>
+          <tbody id="tenantsTableBody" class="divide-y divide-slate-800/60">
+            <tr><td colspan="5" class="text-center py-8 text-slate-500">Loading hotels...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div id="superEditModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
+      <h3 class="text-sm font-bold uppercase text-cyan-400">Edit Hotel Legal Profile</h3>
+      <input type="hidden" id="editHotelId">
+      <div><label class="block text-xs text-slate-400 mb-1">Hotel Registered Name</label><input type="text" id="editHotelName" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Official GSTIN Number</label><input type="text" id="editHotelGstin" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white font-mono"></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Physical Address</label><input type="text" id="editHotelAddress" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"></div>
+      <div class="flex gap-2 pt-2"><button onclick="saveHotelLegalEdits()" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-cyan-400">Save Changes</button><button onclick="document.getElementById('superEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 rounded-lg text-xs hover:bg-slate-700">Cancel</button></div>
+    </div>
   </div>
+
   <script type="module">
     import { db } from "./js/firebase-config.js";
     import { monitorAuthState, logoutUser } from "./js/auth.js";
-    import { renewHotelLicense, listAllLicenseStatuses } from "./js/license.js";
-    import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { renewHotelLicense, SUPER_ADMIN_EMAIL } from "./js/license.js";
+    import { collection, doc, getDocs, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    monitorAuthState(state => {
-      if(!state || state.profile?.role !== 'superadmin') return window.location.href = 'index.html';
-      loadTenants(); loadPricing();
+    let tenantsList = [];
+
+    // 1. Logout Function Fixed
+    window.handleAdminLogout = async () => {
+      const btn = document.getElementById("logoutBtn");
+      btn.innerText = "Logging out...";
+      try {
+        await logoutUser();
+        window.location.href = "index.html";
+      } catch (err) {
+        alert("Logout failed: " + err.message);
+        btn.innerText = "Logout";
+      }
+    };
+
+    // 2. Auth State Check
+    monitorAuthState(async (state) => {
+      if (state && state.user && state.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+        document.getElementById("adminSessionEmail").innerText = state.user.email;
+        
+        // Check if role is correct in Firestore
+        if (state.profile && state.profile.role !== "superadmin") {
+          alert("Warning: Your Firestore user role is not set to 'superadmin'. Data fetching might be blocked by security rules.");
+        }
+
+        await loadTenants();
+        await loadPlatformPricing();
+      } else {
+        // Redirect unauthorized users
+        alert("Unauthorized Developer Access.");
+        window.location.href = "index.html";
+      }
     });
 
-    window.logoutUser = logoutUser;
-    async function loadPricing() {
-      const snap = await getDoc(doc(db, "system", "pricing"));
-      if(snap.exists()) { document.getElementById("p6").value = snap.data().price6M || 4999; document.getElementById("p1").value = snap.data().price1Y || 8999; }
-    }
-    window.savePricing = async () => {
-      await setDoc(doc(db, "system", "pricing"), { price6M: parseFloat(document.getElementById("p6").value), price1Y: parseFloat(document.getElementById("p1").value) });
-      alert("Pricing updated!");
-    }
-    async function loadTenants() {
-      const res = await listAllLicenseStatuses(); const tbody = document.getElementById("tenantBody");
-      tbody.innerHTML = res.rows.map(t => `<tr class="border-b border-slate-800"><td class="p-4 font-bold">${t.hotelName}</td><td class="p-4 font-mono">${t.gstin||'-'}</td><td class="p-4 ${t.status==='expired'?'text-rose-400':'text-[#00E676]'}">${t.status}</td><td class="p-4">${new Date(t.planExpiresAt).toLocaleDateString()}</td><td class="p-4 text-right"><button onclick="renew('${t.id}', 6)" class="bg-slate-800 text-xs px-2 py-1 rounded">+6M</button><button onclick="renew('${t.id}', 12)" class="bg-slate-800 text-xs px-2 py-1 rounded">+1Y</button></td></tr>`).join('');
-    }
-    window.renew = async (id, m) => { await renewHotelLicense(id, m); loadTenants(); alert("Renewed!"); }
+    // 3. Load Pricing (with error handling and default fallbacks)
+    window.loadPlatformPricing = async () => {
+      try {
+        const snap = await getDoc(doc(db, "system", "pricing"));
+        if (snap.exists()) {
+          const d = snap.data();
+          document.getElementById("price6M").value = d.price6M || 4999;
+          document.getElementById("price1Y").value = d.price1Y || 8999;
+        } else {
+          // Defaults if document doesn't exist yet
+          document.getElementById("price6M").value = 4999;
+          document.getElementById("price1Y").value = 8999;
+        }
+      } catch (err) {
+        console.error("Pricing Load Error:", err);
+        alert("Could not load pricing. Check console for Firestore permission errors.");
+      }
+    };
+
+    // 4. Save Pricing
+    window.savePlatformPricing = async () => {
+      const btn = document.getElementById("savePriceBtn");
+      btn.innerText = "Saving...";
+      try {
+        await setDoc(doc(db, "system", "pricing"), {
+          price6M: parseFloat(document.getElementById("price6M").value) || 4999,
+          price1Y: parseFloat(document.getElementById("price1Y").value) || 8999
+        }, { merge: true });
+        alert("Platform pricing updated across landing portal!");
+      } catch (err) {
+        alert("Error saving pricing: " + err.message);
+      } finally {
+        btn.innerText = "Save Pricing";
+      }
+    };
+
+    // 5. Load Tenants (with try-catch and empty state)
+    window.loadTenants = async () => {
+      const tbody = document.getElementById("tenantsTableBody");
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 font-mono animate-pulse">Fetching hotel directory...</td></tr>`;
+      
+      try {
+        const snap = await getDocs(collection(db, "hotels"));
+        tenantsList = [];
+        snap.forEach(d => tenantsList.push({ id: d.id, ...d.data() }));
+        
+        if (tenantsList.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No hotels registered yet.</td></tr>`;
+          return;
+        }
+
+        let html = "";
+        tenantsList.forEach(t => {
+          const statusColor = t.status === 'expired' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+          const expDate = t.planExpiresAt ? new Date(t.planExpiresAt).toLocaleDateString() : 'N/A';
+          
+          html += `<tr class="hover:bg-slate-800/40">
+            <td class="py-3 px-4">
+              <strong class="text-white block font-sans text-sm">${t.hotelName || 'Unnamed Property'}</strong>
+              <span class="text-slate-500 text-[10px]">${t.ownerEmail || 'No Email'}</span>
+            </td>
+            <td class="py-3 px-4">
+              <span class="text-cyan-400 block font-mono">${t.gstin || 'No GSTIN'}</span>
+              <span class="text-slate-400 truncate max-w-[200px] block font-sans text-[10px]">${t.address || 'No Address'}</span>
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusColor}">${(t.status || 'active').toUpperCase()}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-300 font-bold">${expDate}</td>
+            <td class="py-3 px-4 text-right space-x-1.5 font-sans">
+              <button onclick="openSuperEditModal('${t.id}')" class="px-2 py-1 bg-slate-800 text-cyan-300 rounded text-[11px] hover:bg-slate-700">Edit</button>
+              <button onclick="renewTenant('${t.id}', 6)" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 rounded text-[11px] hover:bg-cyan-900">+6M</button>
+              <button onclick="renewTenant('${t.id}', 12)" class="px-2 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded text-[11px] hover:bg-emerald-900">+1Y</button>
+            </td>
+          </tr>`;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        console.error("Tenant Load Error:", err);
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-rose-400 font-bold">Permission Denied or Network Error. Check Firestore Rules.</td></tr>`;
+      }
+    };
+
+    // 6. Edit Hotel Legal Details
+    window.openSuperEditModal = (hId) => {
+      const h = tenantsList.find(x => x.id === hId);
+      if (!h) return;
+      document.getElementById("editHotelId").value = h.id;
+      document.getElementById("editHotelName").value = h.hotelName || "";
+      document.getElementById("editHotelGstin").value = h.gstin || "";
+      document.getElementById("editHotelAddress").value = h.address || "";
+      document.getElementById("superEditModal").classList.remove("hidden");
+    };
+
+    window.saveHotelLegalEdits = async () => {
+      const hId = document.getElementById("editHotelId").value;
+      try {
+        await updateDoc(doc(db, "hotels", hId), {
+          hotelName: document.getElementById("editHotelName").value.trim(),
+          gstin: document.getElementById("editHotelGstin").value.trim(),
+          address: document.getElementById("editHotelAddress").value.trim()
+        });
+        alert("Hotel legal profile updated!");
+        document.getElementById("superEditModal").classList.add("hidden");
+        await loadTenants();
+      } catch (err) {
+        alert("Error saving details: " + err.message);
+      }
+    };
+
+    // 7. Renew License
+    window.renewTenant = async (hId, months) => {
+      if (!confirm(`Extend license by ${months} months?`)) return;
+      try {
+        await renewHotelLicense(hId, months);
+        alert("Subscription renewed successfully!");
+        await loadTenants();
+      } catch (err) {
+        alert("Error renewing license: " + err.message);
+      }
+    };
   </script>
 </body>
 </html>
