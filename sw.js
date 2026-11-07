@@ -1,5 +1,5 @@
-const CACHE_NAME = "smartfix-v5";
-const ASSETS = ["./", "./index.html", "./dashboard.html", "./manifest.json", "./js/firebase-config.js", "./js/auth.js", "./js/license.js", "./js/bookings.js", "./js/tape-chart.js", "./js/pos.js", "./js/thermal-print.js"];
+const CACHE_NAME = "smartfix-v7";
+const ASSETS = ["./", "./index.html", "./dashboard.html", "./manifest.json", "./js/firebase-config.js", "./js/auth.js", "./js/license.js", "./js/bookings.js", "./js/tape-chart.js", "./js/pos.js", "./js/thermal-print.js", "./super-admin.html"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
