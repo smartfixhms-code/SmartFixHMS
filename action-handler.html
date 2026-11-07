@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Verification</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, applyActionCode } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    
+    const app = initializeApp({ /* আপনার firebaseConfig এখানে */ });
+    const auth = getAuth(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const oobCode = urlParams.get('oobCode');
+    const mode = urlParams.get('mode');
+
+    if (mode === 'verifyEmail' && oobCode) {
+      applyActionCode(auth, oobCode)
+        .then(() => {
+          document.getElementById('msg').innerText = "✅ Email verified successfully! You can now log in.";
+        })
+        .catch((error) => {
+          document.getElementById('msg').innerText = "❌ Error: " + error.message;
+        });
+    } else {
+      document.getElementById('msg').innerText = "Invalid verification link.";
+    }
+  </script>
+</head>
+<body>
+  <p id="msg">Verifying...</p>
+</body>
+</html>
