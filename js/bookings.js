@@ -1,8 +1,8 @@
 import { db } from "./firebase-config.js";
 import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-export const LODGING_GST_RATE = 12; // SAC 996311
-export const FOODING_GST_RATE = 5;  // SAC 996331
+export const LODGING_GST_RATE = 12;
+export const FOODING_GST_RATE = 5;
 
 export function calculateBookingCharges({ 
   roomRatePerNight = 0, 
@@ -18,17 +18,14 @@ export function calculateBookingCharges({
   const isFood = packageType === "fooding_lodging";
   const rawFood = isFood ? (parseFloat(foodRatePerGuestPerNight) * guests) : 0;
 
-  // --- LODGING CALCULATION ---
   let lodgingTotalInput = rawRoom * nights;
   let lodgingTaxable = 0;
   let lodgingTaxAmount = 0;
 
   if (gstMode === "included") {
-    // Tax is already inside the room rate (e.g., Room rate ₹800 includes 12% GST)
     lodgingTaxable = lodgingTotalInput / (1 + (LODGING_GST_RATE / 100));
     lodgingTaxAmount = lodgingTotalInput - lodgingTaxable;
   } else {
-    // Tax is extra (e.g., Room rate ₹800 + 12% GST)
     lodgingTaxable = lodgingTotalInput;
     lodgingTaxAmount = lodgingTaxable * (LODGING_GST_RATE / 100);
   }
@@ -37,12 +34,10 @@ export function calculateBookingCharges({
   const lodgingSgst = lodgingTaxAmount / 2;
   const lodgingTotal = lodgingTaxable + lodgingTaxAmount;
 
-  // --- FOODING CALCULATION ---
   let foodingTaxable = 0, foodingCgst = 0, foodingSgst = 0, foodingTotal = 0, foodingTaxAmount = 0;
   
   if (isFood) {
     let foodingTotalInput = rawFood * nights;
-    
     if (gstMode === "included") {
       foodingTaxable = foodingTotalInput / (1 + (FOODING_GST_RATE / 100));
       foodingTaxAmount = foodingTotalInput - foodingTaxable;
@@ -50,7 +45,6 @@ export function calculateBookingCharges({
       foodingTaxable = foodingTotalInput;
       foodingTaxAmount = foodingTaxable * (FOODING_GST_RATE / 100);
     }
-    
     foodingCgst = foodingTaxAmount / 2;
     foodingSgst = foodingTaxAmount / 2;
     foodingTotal = foodingTaxable + foodingTaxAmount;
@@ -63,23 +57,14 @@ export function calculateBookingCharges({
   const grandTotal = lodgingTotal + foodingTotal;
 
   return {
-    packageType, 
-    gstMode, 
-    nights, 
-    guests,
+    packageType, gstMode, nights, guests,
     lodging: { 
-      ratePerNight: rawRoom, 
-      taxable: Number(lodgingTaxable.toFixed(2)), 
-      cgst: Number(lodgingCgst.toFixed(2)), 
-      sgst: Number(lodgingSgst.toFixed(2)), 
-      total: Number(lodgingTotal.toFixed(2)) 
+      ratePerNight: rawRoom, taxable: Number(lodgingTaxable.toFixed(2)), 
+      cgst: Number(lodgingCgst.toFixed(2)), sgst: Number(lodgingSgst.toFixed(2)), total: Number(lodgingTotal.toFixed(2)) 
     },
     fooding: { 
-      ratePerNight: rawFood, 
-      taxable: Number(foodingTaxable.toFixed(2)), 
-      cgst: Number(foodingCgst.toFixed(2)), 
-      sgst: Number(foodingSgst.toFixed(2)), 
-      total: Number(foodingTotal.toFixed(2)) 
+      ratePerNight: rawFood, taxable: Number(foodingTaxable.toFixed(2)), 
+      cgst: Number(foodingCgst.toFixed(2)), sgst: Number(foodingSgst.toFixed(2)), total: Number(foodingTotal.toFixed(2)) 
     },
     summary: {
       grandTaxable: Number(grandTaxable.toFixed(2)),
@@ -94,15 +79,21 @@ export function calculateBookingCharges({
 export async function createNewBooking(hotelId, bookingData) {
   const bookingId = "BK_" + Date.now().toString().slice(-6);
   
-  // Save booking with all details (including roomType which fixes the undefined print bug)
+  // Calculate Due Amount
+  const advancePaid = parseFloat(bookingData.advancePaid) || 0;
+  const balanceDue = bookingData.summary.grandTotal - advancePaid;
+  const isSettled = balanceDue <= 0;
+
   await setDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
     bookingId, 
     ...bookingData, 
+    advancePaid,
+    balanceDue,
+    isSettled,
     status: "checked_in", 
     createdAt: new Date().toISOString()
   });
   
-  // Update Room Status to Occupied
   await updateDoc(doc(db, "hotels", hotelId, "rooms", bookingData.roomId), {
     status: "occupied", 
     currentBookingId: bookingId, 
@@ -113,14 +104,17 @@ export async function createNewBooking(hotelId, bookingData) {
 }
 
 export async function processCheckOut(hotelId, bookingId, roomId, settlementData) {
-  // 1. Update Booking Status
+  // settlementData will contain finalPaidAmount, totalPaid, balanceDue, isSettled
   await updateDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
     status: "checked_out", 
     settledAt: new Date().toISOString(), 
-    ...settlementData
+    checkOutTime: settlementData.checkOutTime,
+    totalPaid: settlementData.totalPaid,
+    balanceDue: settlementData.balanceDue,
+    isSettled: settlementData.isSettled,
+    settled: settlementData.isSettled
   });
   
-  // 2. Move Room to Cleaning Status (Not Vacant immediately)
   await updateDoc(doc(db, "hotels", hotelId, "rooms", roomId), {
     status: "cleaning", 
     currentBookingId: null, 
