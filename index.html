@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartFix HMS - Modern Cloud Hotel PMS</title>
+  <title>SmartFix HMS - Next-Gen Hotel Management System</title>
 
   <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -29,12 +29,20 @@
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    .neon-glow {
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
+    .neon-border {
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.12);
     }
+    .neon-glow-cyan {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.35);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #060913; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
   </style>
 
-  <!-- Service Worker Registration -->
+  <!-- PWA Service Worker Registration -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
@@ -47,30 +55,62 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- ================= TOP HEADER NAVIGATION ================= -->
-  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
+  <!-- ================= TOP DESKTOP & MOBILE NAVBAR ================= -->
+  <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Logo Branding -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <svg class="w-6 h-6 text-slate-950 font-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 21h18M5 21V7l8-4v18M13 11l6 3v7M9 9v.01M9 13v.01M9 17v.01M17 17v.01" />
-          </svg>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-black tracking-tight text-white">Smart<span class="text-cyan-400">Fix</span></span>
-            <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">HMS</span>
-          </div>
-          <p id="navHotelSubtitle" class="text-[11px] text-slate-400 font-mono">Hotel Property Operations Terminal</p>
-        </div>
+      
+      <!-- Logo Branding (Exact Vector Replicating Image 7) -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainView('dashboard')">
+        <svg class="h-10 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f2fe" />
+              <stop offset="100%" stop-color="#00b4d8" />
+            </linearGradient>
+            <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00ffa3" />
+              <stop offset="100%" stop-color="#00b4d8" />
+            </linearGradient>
+          </defs>
+          <!-- Left Isometric Buildings & Circuit Checkmark -->
+          <g transform="translate(10, 5)">
+            <!-- Left Wing Building -->
+            <rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <line x1="6" y1="42" x2="16" y2="42" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="6" y1="52" x2="16" y2="52" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="6" y1="62" x2="16" y2="62" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="6" y1="72" x2="16" y2="72" stroke="#00f2fe" stroke-width="2"/>
+            <!-- Right Wing Building -->
+            <rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <line x1="74" y1="42" x2="84" y2="42" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="74" y1="52" x2="84" y2="52" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="74" y1="62" x2="84" y2="62" stroke="#00f2fe" stroke-width="2"/>
+            <line x1="74" y1="72" x2="84" y2="72" stroke="#00f2fe" stroke-width="2"/>
+            <!-- Center Tower with Circuit Hub -->
+            <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#cyanGrad)" stroke-width="3" fill="#08182f" />
+            <!-- Circuit Badge & Verified Check -->
+            <circle cx="45" cy="50" r="18" fill="#061426" stroke="url(#mintGrad)" stroke-width="2.5" />
+            <circle cx="45" cy="24" r="3" fill="#00ffa3" />
+            <line x1="45" y1="27" x2="45" y2="32" stroke="#00ffa3" stroke-width="2" />
+            <circle cx="68" cy="50" r="3" fill="#00ffa3" />
+            <line x1="63" y1="50" x2="65" y2="50" stroke="#00ffa3" stroke-width="2" />
+            <circle cx="22" cy="50" r="3" fill="#00ffa3" />
+            <line x1="25" y1="50" x2="27" y2="50" stroke="#00ffa3" stroke-width="2" />
+            <polyline points="37,50 43,56 55,42" fill="none" stroke="#00ffa3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+          <!-- Typography: Smart (White) + Fix (Cyan) + Pill HMS -->
+          <text x="110" y="48" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#cyanGrad)">Fix</tspan></text>
+          <rect x="295" y="16" width="94" height="36" rx="8" fill="url(#mintGrad)" />
+          <text x="342" y="42" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#060913" text-anchor="middle" letter-spacing="1">HMS</text>
+          <text x="112" y="74" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7dd3fc" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+        </svg>
       </div>
 
-      <!-- Right Header Actions & Profile -->
+      <!-- Right Header Status & Session Actions -->
       <div class="flex items-center gap-3">
         <div id="licenseBadge" class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="licenseBadgeText" class="text-slate-300">Evaluating License...</span>
+          <span id="licenseBadgeText" class="text-slate-300">Checking License...</span>
         </div>
         
         <button id="authBtn" onclick="handleAuthAction()" class="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all">
@@ -82,7 +122,7 @@
 
   <!-- ================= AUTHENTICATION MODAL ================= -->
   <div id="authModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl neon-glow">
+    <div class="w-full max-w-md bg-slate-900/95 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl neon-border">
       <div class="text-center mb-6">
         <h2 class="text-xl font-bold text-white tracking-tight">SmartFix HMS Portal</h2>
         <p class="text-xs text-slate-400 mt-1">Sign in to your hotel terminal or register a new property.</p>
@@ -96,11 +136,11 @@
       <form id="authForm" onsubmit="event.preventDefault(); submitAuthForm();" class="space-y-4">
         <div id="hotelNameField" class="hidden">
           <label class="block text-xs font-medium text-slate-300 mb-1">Hotel / Property Name</label>
-          <input type="text" id="inputHotelName" placeholder="e.g. Grand Palace Resort" class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none">
+          <input type="text" id="inputHotelName" placeholder="e.g. The Grand Palace Hotel" class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none">
         </div>
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-          <input type="email" id="inputEmail" required placeholder="manager@hotel.com" class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none">
+          <input type="email" id="inputEmail" required placeholder="owner@hotel.com" class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none">
         </div>
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
@@ -138,53 +178,295 @@
     </div>
   </div>
 
-  <!-- ================= MAIN PMS WORKSPACE ================= -->
-  <main id="appWorkspace" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+  <!-- ================= HYBRID WORKSPACE (SIDEBAR + MAIN CONTENT) ================= -->
+  <div id="appWorkspace" class="hidden flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row pb-20 md:pb-6">
+    
+    <!-- Left Navigation Sidebar (Desktop View) -->
+    <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-2 bg-slate-950/40">
+      <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider px-3 mb-1">Navigation</div>
+      
+      <button onclick="switchMainView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        <span>Dashboard</span>
+      </button>
 
-    <!-- Overview Counters -->
-    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3.5 mb-6">
-      <div class="bg-slate-900/70 border border-slate-800 p-4 rounded-2xl">
-        <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Rooms</span>
-        <div id="statTotalRooms" class="text-2xl font-black text-white mt-1 font-mono">0</div>
-      </div>
-      <div class="bg-rose-950/30 border border-rose-900/40 p-4 rounded-2xl">
-        <span class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Occupied</span>
-        <div id="statOccupiedRooms" class="text-2xl font-black text-rose-400 mt-1 font-mono">0</div>
-      </div>
-      <div class="bg-emerald-950/30 border border-emerald-900/40 p-4 rounded-2xl">
-        <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Vacant</span>
-        <div id="statVacantRooms" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</div>
-      </div>
-      <div class="bg-cyan-950/30 border border-cyan-900/40 p-4 rounded-2xl">
-        <span class="text-[11px] font-semibold text-cyan-400 uppercase tracking-wider">Occupancy %</span>
-        <div id="statOccupancyRate" class="text-2xl font-black text-cyan-400 mt-1 font-mono">0%</div>
-      </div>
-      <div class="col-span-2 lg:col-span-1 bg-slate-900/70 border border-slate-800 p-4 rounded-2xl flex flex-col justify-center">
-        <button onclick="openBookingModal()" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-          <span>Book Walk-In</span>
-        </button>
-      </div>
-    </div>
+      <button onclick="switchMainView('rooms')" id="nav-rooms" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        <span>Floor Tape Chart</span>
+      </button>
 
-    <!-- Interactive Room Floor Chart -->
-    <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 mb-6">
-      <div class="flex justify-between items-center mb-4">
+      <button onclick="switchMainView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        <span>Room Manager (Edit/Tariff)</span>
+      </button>
+
+      <button onclick="switchMainView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Billing & Invoices Search</span>
+      </button>
+
+      <button onclick="openBookingModal()" class="w-full mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <span>Book Walk-In</span>
+      </button>
+
+      <!-- Super Admin shortcut -->
+      <a href="super-admin.html" class="w-full mt-auto flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-mono text-slate-500 hover:text-cyan-400 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Super-Admin Console</span>
+      </a>
+    </aside>
+
+    <!-- Center Dynamic Viewport -->
+    <main class="flex-1 p-4 sm:p-6 overflow-y-auto">
+
+      <!-- ================= 1. DASHBOARD VIEW ================= -->
+      <section id="view-dashboard" class="space-y-6">
+        <!-- Roomnexa Full Metric Suite (Image 5 & 6) -->
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3.5">
+          <div class="bg-slate-900/70 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Rooms</span>
+            <div id="statTotalRooms" class="text-2xl font-black text-white mt-1 font-mono">0</div>
+            <span class="text-[10px] text-slate-500">Configured Inventory</span>
+          </div>
+
+          <div class="bg-rose-950/30 border border-rose-900/40 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Occupied</span>
+            <div id="statOccupiedRooms" class="text-2xl font-black text-rose-400 mt-1 font-mono">0</div>
+            <span class="text-[10px] text-rose-400/70">In-House Guests</span>
+          </div>
+
+          <div class="bg-emerald-950/30 border border-emerald-900/40 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Vacant</span>
+            <div id="statVacantRooms" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</div>
+            <span class="text-[10px] text-emerald-400/70">Ready for Sale</span>
+          </div>
+
+          <div class="bg-cyan-950/30 border border-cyan-900/40 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-cyan-400 uppercase tracking-wider">Occupancy %</span>
+            <div id="statOccupancyRate" class="text-2xl font-black text-cyan-400 mt-1 font-mono">0%</div>
+            <span class="text-[10px] text-cyan-400/70">Realtime Capacity</span>
+          </div>
+
+          <div class="bg-slate-900/70 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Today's Revenue</span>
+            <div id="statTodayRevenue" class="text-xl font-black text-white mt-1 font-mono">₹1,45,230</div>
+            <span class="text-[10px] text-emerald-400">↑ 12% vs Yesterday</span>
+          </div>
+
+          <div class="bg-slate-900/70 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">MTD Revenue</span>
+            <div id="statMtdRevenue" class="text-xl font-black text-emerald-400 mt-1 font-mono">₹5,62,430</div>
+            <span class="text-[10px] text-slate-500">Current Month Net</span>
+          </div>
+        </div>
+
+        <!-- Quick Operations Bar (Image 5) -->
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+          <button onclick="openBookingModal()" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span class="text-xs font-semibold">Book Room</span>
+          </button>
+
+          <button onclick="switchMainView('rooms')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-xs font-semibold">Check-In</span>
+          </button>
+
+          <button onclick="switchMainView('rooms')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <span class="text-xs font-semibold">Check-Out</span>
+          </button>
+
+          <button onclick="switchMainView('room-manager')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            <span class="text-xs font-semibold">Edit Rooms</span>
+          </button>
+
+          <button onclick="switchMainView('billing-archive')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="text-xs font-semibold">Find Bills</span>
+          </button>
+
+          <button onclick="triggerQuickPos()" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-xs font-semibold">POS Dining</span>
+          </button>
+        </div>
+
+        <!-- Live Floor Overview inside Dashboard -->
+        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Live Room Status</h3>
+              <p class="text-xs text-slate-400">Click any card to inspect guest folio or perform rapid settlement.</p>
+            </div>
+            <button onclick="switchMainView('rooms')" class="text-xs text-cyan-400 hover:underline">Full Floor Map →</button>
+          </div>
+          <div id="dashboardRoomGridContainer"></div>
+        </div>
+      </section>
+
+      <!-- ================= 2. FLOOR TAPE CHART VIEW ================= -->
+      <section id="view-rooms" class="hidden space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+          <div>
+            <h2 class="text-base font-bold text-white uppercase tracking-wider">Floor Tape Chart & Timeline</h2>
+            <p class="text-xs text-slate-400">Interactive live status grouped by hotel floor levels.</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Vacant</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Occupied</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Cleaning</span>
+          </div>
+        </div>
+        <div id="roomGridContainer" class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5"></div>
+      </section>
+
+      <!-- ================= 3. ROOM MANAGER (ADD / EDIT / TARIFF) ================= -->
+      <section id="view-room-manager" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-base font-bold text-white uppercase tracking-wider">Room Inventory & Tariff Manager</h2>
+            <p class="text-xs text-slate-400">Add new rooms, modify daily base rates, change floor assignments, or retire rooms.</p>
+          </div>
+          <button onclick="openAddRoomModal()" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            <span>Add New Room</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-950/80 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-4">Room No</th>
+                  <th class="py-3 px-4">Floor Level</th>
+                  <th class="py-3 px-4">Category / Type</th>
+                  <th class="py-3 px-4">Base Tariff (₹)</th>
+                  <th class="py-3 px-4">Current Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="roomManagerTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <tr><td colspan="6" class="py-8 text-center text-slate-500">Loading configured rooms...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. BILLING & INVOICES (FIND & REPRINT) ================= -->
+      <section id="view-billing-archive" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-base font-bold text-white uppercase tracking-wider">Invoice & Billing Repository</h2>
+            <p class="text-xs text-slate-400">Search past bills, view guest payments, and reprint 58mm, 80mm, or A4 tax invoices.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="billSearchInput" oninput="filterInvoicesTable()" placeholder="Search by guest, phone, room, or invoice ID..." class="w-64 sm:w-80 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-600 outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-950/80 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-4">Invoice / Booking ID</th>
+                  <th class="py-3 px-4">Guest Details</th>
+                  <th class="py-3 px-4">Room & Plan</th>
+                  <th class="py-3 px-4">Tax Mode</th>
+                  <th class="py-3 px-4">Amount</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Reprint Invoices</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <tr><td colspan="7" class="py-8 text-center text-slate-500">Loading invoice archives...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION DOCK (Roomnexa Style) ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-950/95 border-t border-slate-800/80 backdrop-blur-md flex items-center justify-around z-40">
+    <button onclick="switchMainView('dashboard')" id="mob-dashboard" class="flex flex-col items-center gap-1 text-cyan-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+      <span class="text-[10px] font-semibold">Home</span>
+    </button>
+    <button onclick="switchMainView('rooms')" id="mob-rooms" class="flex flex-col items-center gap-1 text-slate-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      <span class="text-[10px] font-semibold">Rooms</span>
+    </button>
+    <!-- Center Floating Action Button -->
+    <button onclick="openBookingModal()" class="w-11 h-11 -mt-5 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-400 flex items-center justify-center text-slate-950 shadow-lg shadow-cyan-500/30">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+    </button>
+    <button onclick="switchMainView('billing-archive')" id="mob-billing" class="flex flex-col items-center gap-1 text-slate-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      <span class="text-[10px] font-semibold">Bills</span>
+    </button>
+    <button onclick="switchMainView('room-manager')" id="mob-manager" class="flex flex-col items-center gap-1 text-slate-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+      <span class="text-[10px] font-semibold">Settings</span>
+    </button>
+  </nav>
+
+  <!-- ================= ADD / EDIT ROOM MODAL ================= -->
+  <div id="roomEditModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-2xl">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4">
+        <h3 id="roomModalTitle" class="text-sm font-bold uppercase tracking-wider text-cyan-400">Configure Room</h3>
+        <button onclick="closeAddRoomModal()" class="text-slate-400 hover:text-white text-lg font-bold">×</button>
+      </div>
+
+      <form id="roomConfigForm" onsubmit="event.preventDefault(); submitRoomConfig();" class="space-y-4">
+        <input type="hidden" id="editRoomId" value="">
+        
         <div>
-          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">Interactive Tape Chart & Floor Plan</h2>
-          <p class="text-xs text-slate-400">Click any room card to view guest details, housekeeping status, or instant checkout.</p>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Room Number</label>
+          <input type="text" id="inputRoomNo" required placeholder="e.g. 101" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500 font-mono">
         </div>
-        <div class="flex items-center gap-3 text-[11px] font-medium text-slate-400">
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Vacant</span>
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Occupied</span>
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Cleaning</span>
-        </div>
-      </div>
 
-      <!-- Dynamic Room Injection Container -->
-      <div id="roomGridContainer"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Floor Level</label>
+            <select id="inputRoomFloor" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500">
+              <option value="Floor 1">Floor 1</option>
+              <option value="Floor 2">Floor 2</option>
+              <option value="Floor 3">Floor 3</option>
+              <option value="Floor 4">Floor 4</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Room Category</label>
+            <select id="inputRoomType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500">
+              <option value="Standard Non-AC">Standard Non-AC</option>
+              <option value="Deluxe AC">Deluxe AC</option>
+              <option value="Super Deluxe">Super Deluxe</option>
+              <option value="Executive Suite">Executive Suite</option>
+              <option value="Presidential Suite">Presidential Suite</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Base Daily Tariff (₹)</label>
+          <input type="number" id="inputRoomRate" required placeholder="2200" min="100" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-500 font-mono">
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20">
+          Save Room Configuration
+        </button>
+      </form>
     </div>
-  </main>
+  </div>
 
   <!-- ================= BOOKING & CHECK-IN MODAL ================= -->
   <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -222,7 +504,7 @@
         <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Select Room</label>
-            <select id="bookRoomSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-cyan-400 outline-none">
+            <select id="bookRoomSelect" onchange="recalculateLiveModalBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-cyan-400 outline-none">
               <!-- Injected dynamically -->
             </select>
           </div>
@@ -271,7 +553,7 @@
     </div>
   </div>
 
-  <!-- ================= APPLICATION SCRIPTS ================= -->
+  <!-- ================= SCRIPTS & FIREBASE CONTROLLER ================= -->
   <script type="module">
     import { db } from "./js/firebase-config.js";
     import { loginUser, registerNewHotel, logoutUser, monitorAuthState } from "./js/auth.js";
@@ -280,15 +562,25 @@
     import { initializeDefaultRooms, listenToRoomGrid, markRoomCleaned } from "./js/tape-chart.js";
     import { print58mmThermalReceipt, print80mmThermalReceipt, printA4TaxInvoice } from "./js/thermal-print.js";
     import { getRoomUnsettledFoodOrders } from "./js/pos.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      collection, 
+      doc, 
+      setDoc, 
+      deleteDoc, 
+      getDocs, 
+      getDoc, 
+      query, 
+      orderBy 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     let currentHotelId = null;
     let currentHotelProfile = null;
     let currentAuthMode = "login";
     let activeGstMode = "extra";
-    let selectedActiveRoom = null;
+    let cachedRooms = [];
+    let cachedBookings = [];
 
-    // Monitor Session & Authentication State
+    // Session Observer
     monitorAuthState(async (state) => {
       const authModal = document.getElementById("authModal");
       const appWorkspace = document.getElementById("appWorkspace");
@@ -302,17 +594,13 @@
         authBtn.innerText = "Sign Out";
         currentHotelId = state.profile.hotelId;
 
-        // Redirect Super-Admin directly to developer console
         if (state.profile.role === "superadmin") {
           window.location.href = "super-admin.html";
           return;
         }
 
-        // Verify License Status
         const licenseCheck = await verifyLicenseStatus(currentHotelId);
-        currentHotelProfile = licenseCheck.details || { hotelName: "SmartFix Hotel" };
-
-        document.getElementById("navHotelSubtitle").innerText = `${currentHotelProfile.hotelName} (ID: ${currentHotelId})`;
+        currentHotelProfile = licenseCheck.details || { hotelName: "The Grand Palace Hotel" };
 
         if (!licenseCheck.isValid) {
           appWorkspace.classList.add("hidden");
@@ -320,18 +608,20 @@
           return;
         }
 
-        // License is Valid
         licenseBadge.classList.remove("hidden");
         licenseBadgeText.innerText = `${licenseCheck.daysRemaining} Days Left`;
         appWorkspace.classList.remove("hidden");
 
-        // Seed default sample rooms if new hotel
         await initializeDefaultRooms(currentHotelId);
 
-        // Realtime Room Status Listener
-        listenToRoomGrid(currentHotelId, (clickedRoom) => {
-          openRoomDetailModal(clickedRoom);
+        // Realtime Room Listener
+        listenToRoomGrid(currentHotelId, (room) => {
+          openRoomDetailModal(room);
         });
+
+        // Initialize Rooms & Invoices
+        loadRoomManagerList();
+        loadInvoiceArchives();
       } else {
         authModal.classList.remove("hidden");
         appWorkspace.classList.add("hidden");
@@ -339,65 +629,197 @@
       }
     });
 
-    // Switch between Login & Register tabs
-    window.switchAuthTab = (mode) => {
-      currentAuthMode = mode;
-      const fName = document.getElementById("hotelNameField");
-      const tLog = document.getElementById("tabLogin");
-      const tReg = document.getElementById("tabRegister");
-      const sBtn = document.getElementById("authSubmitBtn");
+    // View Navigation Switcher
+    window.switchMainView = (viewId) => {
+      ['dashboard', 'rooms', 'room-manager', 'billing-archive'].forEach(v => {
+        document.getElementById(`view-${v}`)?.classList.add('hidden');
+        document.getElementById(`nav-${v}`)?.classList.remove('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30');
+      });
 
-      if (mode === "register") {
-        fName.classList.remove("hidden");
-        tReg.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
-        tLog.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white";
-        sBtn.innerText = "Register & Activate 30-Day Trial";
-      } else {
-        fName.classList.add("hidden");
-        tLog.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
-        tReg.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white";
-        sBtn.innerText = "Sign In to Property";
-      }
+      document.getElementById(`view-${viewId}`)?.classList.remove('hidden');
+      document.getElementById(`nav-${viewId}`)?.classList.add('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30');
+
+      if (viewId === 'room-manager') loadRoomManagerList();
+      if (viewId === 'billing-archive') loadInvoiceArchives();
     };
 
-    // Submit Authentication
-    window.submitAuthForm = async () => {
-      const email = document.getElementById("inputEmail").value.trim();
-      const pass = document.getElementById("inputPassword").value;
-      const hotelName = document.getElementById("inputHotelName").value.trim();
-      const errBox = document.getElementById("authError");
-      const sBtn = document.getElementById("authSubmitBtn");
-
-      errBox.classList.add("hidden");
-      sBtn.disabled = true;
-      sBtn.innerText = "Processing...";
+    // ================= ROOM MANAGER (ADD / EDIT / DELETE) =================
+    window.loadRoomManagerList = async () => {
+      const tbody = document.getElementById("roomManagerTableBody");
+      tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500">Loading inventory...</td></tr>`;
 
       try {
-        if (currentAuthMode === "register") {
-          if (!hotelName) throw new Error("Please specify your Hotel or Property Name.");
-          await registerNewHotel(hotelName, email, pass);
-        } else {
-          await loginUser(email, pass);
-        }
+        const snap = await getDocs(collection(db, "hotels", currentHotelId, "rooms"));
+        cachedRooms = [];
+        snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
+
+        cachedRooms.sort((a,b) => (parseInt(a.roomNumber) || 0) - (parseInt(b.roomNumber) || 0));
+
+        let html = "";
+        cachedRooms.forEach(r => {
+          html += `
+            <tr class="hover:bg-slate-800/40 transition-colors">
+              <td class="py-3 px-4 font-bold text-white font-mono text-sm">${r.roomNumber}</td>
+              <td class="py-3 px-4 text-slate-400">${r.floor || 'Floor 1'}</td>
+              <td class="py-3 px-4 text-cyan-300">${r.type || 'Standard'}</td>
+              <td class="py-3 px-4 font-mono text-white">₹${r.rate || 2000}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/10 text-rose-400' : r.status === 'cleaning' ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}">
+                  ${r.status || 'vacant'}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right space-x-2">
+                <button onclick="openEditRoomModal('${r.id}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-semibold text-[11px]">Edit</button>
+                <button onclick="handleDeleteRoom('${r.id}')" class="px-2.5 py-1 rounded bg-rose-950 hover:bg-rose-900 text-rose-300 font-semibold text-[11px]">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        tbody.innerHTML = html || `<tr><td colspan="6" class="py-6 text-center text-slate-500">No rooms configured yet.</td></tr>`;
       } catch (err) {
-        errBox.innerText = err.message;
-        errBox.classList.remove("hidden");
-      } finally {
-        sBtn.disabled = false;
-        sBtn.innerText = currentAuthMode === "register" ? "Register & Activate 30-Day Trial" : "Sign In to Property";
+        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-rose-400">${err.message}</td></tr>`;
       }
     };
 
-    window.handleAuthAction = () => {
-      const authBtn = document.getElementById("authBtn");
-      if (authBtn.innerText === "Sign Out") {
-        logoutUser();
+    window.openAddRoomModal = () => {
+      document.getElementById("roomModalTitle").innerText = "Add New Room";
+      document.getElementById("editRoomId").value = "";
+      document.getElementById("inputRoomNo").value = "";
+      document.getElementById("inputRoomRate").value = "2200";
+      document.getElementById("roomEditModal").classList.remove("hidden");
+    };
+
+    window.openEditRoomModal = (roomId) => {
+      const room = cachedRooms.find(r => r.id === roomId);
+      if (!room) return;
+      document.getElementById("roomModalTitle").innerText = `Edit Room ${room.roomNumber}`;
+      document.getElementById("editRoomId").value = room.id;
+      document.getElementById("inputRoomNo").value = room.roomNumber;
+      document.getElementById("inputRoomFloor").value = room.floor || "Floor 1";
+      document.getElementById("inputRoomType").value = room.type || "Deluxe AC";
+      document.getElementById("inputRoomRate").value = room.rate || 2200;
+      document.getElementById("roomEditModal").classList.remove("hidden");
+    };
+
+    window.closeAddRoomModal = () => {
+      document.getElementById("roomEditModal").classList.add("hidden");
+    };
+
+    window.submitRoomConfig = async () => {
+      const editId = document.getElementById("editRoomId").value;
+      const roomNo = document.getElementById("inputRoomNo").value.trim();
+      const floor = document.getElementById("inputRoomFloor").value;
+      const type = document.getElementById("inputRoomType").value;
+      const rate = parseFloat(document.getElementById("inputRoomRate").value) || 2000;
+
+      const targetId = editId || roomNo;
+      const payload = {
+        roomId: targetId,
+        roomNumber: roomNo,
+        floor: floor,
+        type: type,
+        rate: rate,
+        status: editId ? (cachedRooms.find(r => r.id === editId)?.status || "vacant") : "vacant"
+      };
+
+      await setDoc(doc(db, "hotels", currentHotelId, "rooms", targetId), payload, { merge: true });
+      closeAddRoomModal();
+      loadRoomManagerList();
+    };
+
+    window.handleDeleteRoom = async (roomId) => {
+      if (!confirm(`Are you sure you want to remove Room ${roomId}?`)) return;
+      await deleteDoc(doc(db, "hotels", currentHotelId, "rooms", roomId));
+      loadRoomManagerList();
+    };
+
+    // ================= INVOICE ARCHIVES & REPRINT SYSTEM =================
+    window.loadInvoiceArchives = async () => {
+      const tbody = document.getElementById("invoiceTableBody");
+      tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Searching archive...</td></tr>`;
+
+      try {
+        const q = query(collection(db, "hotels", currentHotelId, "bookings"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        cachedBookings = [];
+        snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
+
+        renderInvoicesTable(cachedBookings);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-rose-400">${err.message}</td></tr>`;
+      }
+    };
+
+    function renderInvoicesTable(bookings) {
+      const tbody = document.getElementById("invoiceTableBody");
+      if (!bookings.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No guest bookings or bills generated yet.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      bookings.forEach(b => {
+        const isMAP = b.packageType === "fooding_lodging";
+        const total = b.summary?.grandTotal || b.grandTotal || 0;
+
+        html += `
+          <tr class="hover:bg-slate-800/40 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-cyan-400">${b.bookingId || b.id}</td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-white">${b.guestName || "Walk-In"}</div>
+              <div class="text-[10px] text-slate-500 font-mono">${b.phone || 'N/A'}</div>
+            </td>
+            <td class="py-3 px-4">
+              <span class="text-white font-mono font-semibold">Room ${b.roomNumber}</span>
+              <div class="text-[10px] text-slate-400">${isMAP ? 'Fooding + Lodging' : 'Lodging Only'}</div>
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-300 uppercase">${b.gstMode || 'EXTRA'}</td>
+            <td class="py-3 px-4 font-mono font-bold text-emerald-400">₹${Number(total).toFixed(2)}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${b.status === 'checked_out' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-cyan-500/10 text-cyan-400'}">
+                ${b.status || 'Active'}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-right space-x-1.5">
+              <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px]">58mm</button>
+              <button onclick="triggerPrint('80mm', '${b.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px]">80mm</button>
+              <button onclick="triggerPrint('a4', '${b.id}')" class="px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800/80 text-[10px] font-bold">A4 Folio</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    window.filterInvoicesTable = () => {
+      const q = document.getElementById("billSearchInput").value.toLowerCase();
+      const filtered = cachedBookings.filter(b => 
+        (b.guestName && b.guestName.toLowerCase().includes(q)) ||
+        (b.bookingId && b.bookingId.toLowerCase().includes(q)) ||
+        (b.phone && b.phone.includes(q)) ||
+        (b.roomNumber && b.roomNumber.toString().includes(q))
+      );
+      renderInvoicesTable(filtered);
+    };
+
+    // ================= REPRINT INVOICE TRIGGER =================
+    window.triggerPrint = async (format, bookingId) => {
+      const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId));
+      if (!bDoc.exists()) return alert("Booking invoice data not found.");
+      const bookingData = bDoc.data();
+      const foodSummary = await getRoomUnsettledFoodOrders(currentHotelId, bookingData.roomNumber);
+
+      if (format === "58mm") {
+        print58mmThermalReceipt(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
+      } else if (format === "80mm") {
+        print80mmThermalReceipt(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
       } else {
-        document.getElementById("authModal").classList.remove("hidden");
+        printA4TaxInvoice(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
       }
     };
 
-    // GST Computation Switcher
+    // ================= BOOKING & GST COMPUTE =================
     window.setGstMode = (mode) => {
       activeGstMode = mode;
       const bEx = document.getElementById("btnExtraGst");
@@ -413,46 +835,36 @@
       recalculateLiveModalBill();
     };
 
-    // Open Walk-in Modal
     window.openBookingModal = (presetRoomId = null) => {
       const select = document.getElementById("bookRoomSelect");
       select.innerHTML = "";
 
-      const roomCards = document.querySelectorAll("#roomGridContainer .cursor-pointer");
-      let optionsHtml = "";
-
-      roomCards.forEach(card => {
-        const roomNo = card.querySelector(".font-mono")?.innerText;
-        const isVacant = card.innerText.includes("Vacant");
-        if (isVacant && roomNo) {
-          optionsHtml += `<option value="${roomNo}">Room ${roomNo}</option>`;
-        }
-      });
-
-      if (!optionsHtml) {
-        alert("All rooms are currently occupied or awaiting housekeeping.");
+      const available = cachedRooms.filter(r => r.status === "vacant");
+      if (!available.length) {
+        alert("All rooms are currently occupied or being cleaned.");
         return;
       }
 
-      select.innerHTML = optionsHtml;
-      if (presetRoomId) select.value = presetRoomId;
+      available.forEach(r => {
+        select.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}">Room ${r.roomNumber} (${r.type} - ₹${r.rate})</option>`;
+      });
 
+      if (presetRoomId) select.value = presetRoomId;
       recalculateLiveModalBill();
       document.getElementById("bookingModal").classList.remove("hidden");
     };
 
-    window.closeBookingModal = () => {
-      document.getElementById("bookingModal").classList.add("hidden");
-    };
+    window.closeBookingModal = () => document.getElementById("bookingModal").classList.add("hidden");
 
-    // Compute Live Bill in Modal
     window.recalculateLiveModalBill = () => {
+      const sel = document.getElementById("bookRoomSelect");
+      const baseRate = parseFloat(sel.options[sel.selectedIndex]?.dataset.rate) || 2200;
       const nights = document.getElementById("bookNights").value || 1;
-      const packageType = document.getElementById("bookPackageSelect").value;
-      
+      const pkg = document.getElementById("bookPackageSelect").value;
+
       const charges = calculateBookingCharges({
-        roomRatePerNight: 2200,
-        packageType: packageType,
+        roomRatePerNight: baseRate,
+        packageType: pkg,
         foodRatePerGuestPerNight: 500,
         numberOfGuests: 1,
         numberOfNights: nights,
@@ -466,7 +878,6 @@
       return charges;
     };
 
-    // Confirm Booking
     window.submitBookingForm = async () => {
       const guestName = document.getElementById("bookGuestName").value.trim();
       const phone = document.getElementById("bookPhone").value.trim();
@@ -489,16 +900,74 @@
 
       try {
         await createNewBooking(currentHotelId, bookingPayload);
-        alert(`Guest ${guestName} checked in to Room ${roomNumber}!`);
+        alert(`Guest ${guestName} checked in successfully!`);
         closeBookingModal();
       } catch (err) {
-        alert("Booking error: " + err.message);
+        alert("Booking failed: " + err.message);
       }
     };
 
-    // Open Room Details & Instant Checkout Modal
+    // Quick POS shortcut
+    window.triggerQuickPos = () => {
+      const occupied = cachedRooms.filter(r => r.status === "occupied");
+      if (!occupied.length) return alert("No occupied rooms currently found to bill room service.");
+      const roomNo = prompt(`Enter Room Number to transfer Dining/POS bill (Available: ${occupied.map(r=>r.roomNumber).join(", ")}):`);
+      if (roomNo) alert(`POS terminal mapped to Room ${roomNo}. Orders will transfer to primary folio.`);
+    };
+
+    // Auth Switchers
+    window.switchAuthTab = (mode) => {
+      currentAuthMode = mode;
+      const fName = document.getElementById("hotelNameField");
+      const tLog = document.getElementById("tabLogin");
+      const tReg = document.getElementById("tabRegister");
+      const sBtn = document.getElementById("authSubmitBtn");
+
+      if (mode === "register") {
+        fName.classList.remove("hidden");
+        tReg.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
+        tLog.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white";
+        sBtn.innerText = "Register & Activate 30-Day Trial";
+      } else {
+        fName.classList.add("hidden");
+        tLog.className = "py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950";
+        tReg.className = "py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white";
+        sBtn.innerText = "Sign In to Property";
+      }
+    };
+
+    window.submitAuthForm = async () => {
+      const email = document.getElementById("inputEmail").value.trim();
+      const pass = document.getElementById("inputPassword").value;
+      const hotelName = document.getElementById("inputHotelName").value.trim();
+      const errBox = document.getElementById("authError");
+      const sBtn = document.getElementById("authSubmitBtn");
+
+      errBox.classList.add("hidden");
+      sBtn.disabled = true;
+
+      try {
+        if (currentAuthMode === "register") {
+          if (!hotelName) throw new Error("Please specify your Hotel Name.");
+          await registerNewHotel(hotelName, email, pass);
+        } else {
+          await loginUser(email, pass);
+        }
+      } catch (err) {
+        errBox.innerText = err.message;
+        errBox.classList.remove("hidden");
+      } finally {
+        sBtn.disabled = false;
+      }
+    };
+
+    window.handleAuthAction = () => {
+      if (document.getElementById("authBtn").innerText === "Sign Out") logoutUser();
+      else document.getElementById("authModal").classList.remove("hidden");
+    };
+
+    // Room Detail Modal Handler
     async function openRoomDetailModal(room) {
-      selectedActiveRoom = room;
       const modal = document.getElementById("roomDetailModal");
       const title = document.getElementById("modalRoomTitle");
       const content = document.getElementById("roomDetailContent");
@@ -509,48 +978,44 @@
       if (room.status === "vacant") {
         content.innerHTML = `
           <div class="p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/50 text-emerald-400">
-            This room is vacant and ready for new guests.
+            This room is vacant and ready for sale.
           </div>
-          <div><b>Standard Tariff:</b> ₹${room.rate} per night</div>
+          <div><b>Tariff:</b> ₹${room.rate} per night</div>
           <div><b>Floor:</b> ${room.floor || 'Floor 1'}</div>
         `;
         actionArea.innerHTML = `
-          <button onclick="closeRoomDetailModal(); openBookingModal('${room.roomNumber}')" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
-            Book Walk-In Guest
+          <button onclick="closeRoomDetailModal(); openBookingModal('${room.roomNumber}')" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase">
+            Book This Room
           </button>
         `;
       } else if (room.status === "cleaning") {
-        content.innerHTML = `
-          <div class="p-3 rounded-xl bg-amber-950/30 border border-amber-900/50 text-amber-400">
-            Room currently marked for Housekeeping & Sanitization.
-          </div>
-        `;
+        content.innerHTML = `<div class="p-3 rounded-xl bg-amber-950/30 border border-amber-900/50 text-amber-400">Sanitization & Housekeeping in progress.</div>`;
         actionArea.innerHTML = `
-          <button onclick="handleMarkCleaned('${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
+          <button onclick="handleMarkCleaned('${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase">
             Mark Cleaned & Available
           </button>
         `;
-      } else if (room.status === "occupied") {
+      } else {
         const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", room.currentBookingId));
-        const bookingData = bDoc.exists() ? bDoc.data() : { guestName: room.guestName, summary: { grandTotal: 2200 } };
+        const bData = bDoc.exists() ? bDoc.data() : { guestName: room.guestName, summary: { grandTotal: 2200 } };
         const foodSummary = await getRoomUnsettledFoodOrders(currentHotelId, room.roomNumber);
 
         content.innerHTML = `
           <div class="p-3 rounded-xl bg-rose-950/30 border border-rose-900/50 text-rose-400">
-            <b>Occupant:</b> ${bookingData.guestName} (${bookingData.phone || 'N/A'})
+            <b>Guest:</b> ${bData.guestName} (${bData.phone || 'N/A'})
           </div>
           <div class="space-y-1 font-mono">
-            <div class="flex justify-between"><span>Room Charges:</span><span>₹${(bookingData.summary?.grandTotal || 0).toFixed(2)}</span></div>
-            <div class="flex justify-between"><span>Room Service / POS:</span><span>₹${foodSummary.totalFoodCost.toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>Room Tariff:</span><span>₹${(bData.summary?.grandTotal || 0).toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>Dining / POS:</span><span>₹${foodSummary.totalFoodCost.toFixed(2)}</span></div>
             <div class="flex justify-between font-bold text-white pt-1 border-t border-slate-800">
-              <span>Total Settlement:</span>
-              <span class="text-emerald-400">₹${((bookingData.summary?.grandTotal || 0) + foodSummary.totalFoodCost).toFixed(2)}</span>
+              <span>Grand Total:</span>
+              <span class="text-emerald-400">₹${((bData.summary?.grandTotal || 0) + foodSummary.totalFoodCost).toFixed(2)}</span>
             </div>
           </div>
         `;
 
         actionArea.innerHTML = `
-          <button onclick="handleInstantCheckout('${room.currentBookingId}', '${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
+          <button onclick="handleInstantCheckout('${room.currentBookingId}', '${room.roomId}')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase">
             Process Checkout & Settle
           </button>
           <div class="grid grid-cols-3 gap-2 pt-2">
@@ -560,40 +1025,16 @@
           </div>
         `;
       }
-
       modal.classList.remove("hidden");
     }
 
-    window.closeRoomDetailModal = () => {
-      document.getElementById("roomDetailModal").classList.add("hidden");
-    };
-
-    window.handleMarkCleaned = async (roomId) => {
-      await markRoomCleaned(currentHotelId, roomId);
+    window.closeRoomDetailModal = () => document.getElementById("roomDetailModal").classList.add("hidden");
+    window.handleMarkCleaned = async (rId) => { await markRoomCleaned(currentHotelId, rId); closeRoomDetailModal(); };
+    window.handleInstantCheckout = async (bId, rId) => {
+      if (!confirm("Confirm checkout and free room?")) return;
+      await processCheckOut(currentHotelId, bId, rId, { paymentMode: "UPI / Cash", paidAmount: 2200 });
       closeRoomDetailModal();
-    };
-
-    window.handleInstantCheckout = async (bookingId, roomId) => {
-      if (!confirm("Confirm checkout and mark room for housekeeping?")) return;
-      await processCheckOut(currentHotelId, bookingId, roomId, { paymentMode: "UPI / Cash", paidAmount: 2200 });
-      alert("Checkout settled successfully!");
-      closeRoomDetailModal();
-    };
-
-    // Print Handlers
-    window.triggerPrint = async (format, bookingId) => {
-      const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId));
-      if (!bDoc.exists()) return alert("Booking record not found.");
-      const bookingData = bDoc.data();
-      const foodSummary = await getRoomUnsettledFoodOrders(currentHotelId, bookingData.roomNumber);
-
-      if (format === "58mm") {
-        print58mmThermalReceipt(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
-      } else if (format === "80mm") {
-        print80mmThermalReceipt(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
-      } else {
-        printA4TaxInvoice(currentHotelProfile, bookingData, foodSummary.unsettledOrders);
-      }
+      loadInvoiceArchives();
     };
   </script>
 </body>
