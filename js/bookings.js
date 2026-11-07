@@ -5,27 +5,20 @@ export const LODGING_GST_RATE = 12; // SAC 996311
 export const FOODING_GST_RATE = 5;  // SAC 996331
 
 export function calculateBookingCharges({
-  roomRatePerNight = 0,
-  packageType = "lodging_only",
-  foodRatePerHead = 500,
-  numberOfAdults = 1,
-  numberOfNights = 1
+  roomRatePerNight = 0, packageType = "lodging_only", foodRatePerHead = 500, numberOfAdults = 1, numberOfNights = 1
 }) {
   const nights = Math.max(1, parseInt(numberOfNights) || 1);
   const adults = Math.max(1, parseInt(numberOfAdults) || 1);
-  
   const rawRoomRate = parseFloat(roomRatePerNight) || 0;
   const isFood = packageType === "fooding_lodging";
   const rawFoodRate = isFood ? (parseFloat(foodRatePerHead) * adults) : 0;
 
-  // Lodging
   let lodgingTaxable = rawRoomRate * nights;
   let lTax = (lodgingTaxable * LODGING_GST_RATE) / 100;
   let lodgingCgst = lTax / 2;
   let lodgingSgst = lTax / 2;
   let lodgingTotal = lodgingTaxable + lTax;
 
-  // Fooding
   let foodingTaxable = 0, foodingCgst = 0, foodingSgst = 0, foodingTotal = 0;
   if (isFood) {
     foodingTaxable = rawFoodRate * nights;
@@ -51,7 +44,7 @@ export function calculateBookingCharges({
 
 export async function createNewBooking(hotelId, bookingData) {
   const roomDocId = bookingData.roomDocId;
-  const bookingId = "BK_" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+  const bookingId = "BK_" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase();
   const now = new Date().toISOString();
   const batch = writeBatch(db);
 
@@ -84,6 +77,6 @@ export async function processCheckOut(hotelId, bookingId, roomDocId, settlementD
         await posBatch.commit();
       }
     }
-  } catch (e) { console.warn("POS Auto-settle skipped:", e.message); }
+  } catch (e) {}
   return { success: true };
 }
