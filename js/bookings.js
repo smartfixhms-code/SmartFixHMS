@@ -1,5 +1,6 @@
 import { db } from "./firebase-config.js";
-import { doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { settleRoomFoodOrders } from "./pos.js"; // খাবারের বিল সেটেল করার জন্য ইমপোর্ট
 
 export const LODGING_GST_RATE = 12;
 export const FOODING_GST_RATE = 5;
@@ -11,19 +12,21 @@ export function calculateBookingCharges({
   numberOfGuests = 1, 
   numberOfNights = 1, 
   gstMode = "extra",
-  discount = 0 // নতুন: ডিসকাউন্ট
+  discount = 0 
 }) {
   const nights = Math.max(1, parseInt(numberOfNights) || 1);
   const guests = Math.max(1, parseInt(numberOfGuests) || 1);
-  const disc = Math.max(0, parseFloat(discount) || 0);
-
-  // Apply discount on the base room rate
-  const rawRoom = Math.max(0, (parseFloat(roomRatePerNight) || 0) - disc);
+  const disc = Math.max(0, parseFloat(discount) || 0); // ফ্ল্যাট ডিসকাউন্ট
   
+  // ১. প্রথমে মোট রুম ভাড়া বের করা হবে
+  let lodgingTotalInput = (parseFloat(roomRatePerNight) || 0) * nights;
+  
+  // ২. মোট রুম ভাড়া থেকে ডিসকাউন্ট বাদ দেওয়া হবে (যাতে ডিসকাউন্ট সঠিকভাবে প্রয়োগ হয়)
+  lodgingTotalInput = Math.max(0, lodgingTotalInput - disc);
+
   const isFood = packageType === "fooding_lodging";
   const rawFood = isFood ? (parseFloat(foodRatePerGuestPerNight) * guests) : 0;
 
-  let lodgingTotalInput = rawRoom * nights;
   let lodgingTaxable = 0;
   let lodgingTaxAmount = 0;
 
@@ -64,12 +67,18 @@ export function calculateBookingCharges({
   return {
     packageType, gstMode, nights, guests, discount: disc,
     lodging: { 
-      ratePerNight: rawRoom, taxable: Number(lodgingTaxable.toFixed(2)), 
-      cgst: Number(lodgingCgst.toFixed(2)), sgst: Number(lodgingSgst.toFixed(2)), total: Number(lodgingTotal.toFixed(2)) 
+      ratePerNight: Number(roomRatePerNight), 
+      taxable: Number(lodgingTaxable.toFixed(2)), 
+      cgst: Number(lodgingCgst.toFixed(2)), 
+      sgst: Number(lodgingSgst.toFixed(2)), 
+      total: Number(lodgingTotal.toFixed(2)) 
     },
     fooding: { 
-      ratePerNight: rawFood, taxable: Number(foodingTaxable.toFixed(2)), 
-      cgst: Number(foodingCgst.toFixed(2)), sgst: Number(foodingSgst.toFixed(2)), total: Number(foodingTotal.toFixed(2)) 
+      ratePerNight: rawFood, 
+      taxable: Number(foodingTaxable.toFixed(2)), 
+      cgst: Number(foodingCgst.toFixed(2)), 
+      sgst: Number(foodingSgst.toFixed(2)), 
+      total: Number(foodingTotal.toFixed(2)) 
     },
     summary: {
       grandTaxable: Number(grandTaxable.toFixed(2)),
@@ -83,29 +92,60 @@ export function calculateBookingCharges({
 
 export async function createNewBooking(hotelId, bookingData) {
   const bookingId = "BK_" + Date.now().toString().slice(-6);
+  
   const advancePaid = parseFloat(bookingData.advancePaid) || 0;
-  const balanceDue = bookingData.summary.grandTotal - advancePaid;
+  // বাকি টাকা কখনোই মাইনাস (Negative) হবে না
+  const balanceDue = Math.max(0, bookingData.summary.grandTotal - advancePaid);
   const isSettled = balanceDue <= 0;
 
-  await setDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
-    bookingId, ...bookingData, advancePaid, balanceDue, isSettled,
-    status: "checked_in", createdAt: new Date().toISOString()
-  });
+  const payload = {
+    ...bookingData,
+    bookingId,
+    advancePaid,
+    balanceDue,
+    isSettled,
+    status: "checked_in", 
+    createdAt: new Date().toISOString()
+  };
+
+  await setDoc(doc(db, "hotels", hotelId, "bookings", bookingId), payload);
   
   await updateDoc(doc(db, "hotels", hotelId, "rooms", bookingData.roomId), {
-    status: "occupied", currentBookingId: bookingId, guestName: bookingData.guestName
+    status: "occupied", 
+    currentBookingId: bookingId, 
+    guestName: bookingData.guestName
   });
   
   return { success: true, bookingId };
 }
 
 export async function processCheckOut(hotelId, bookingId, roomId, settlementData) {
-  await updateDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
-    status: "checked_out", settledAt: new Date().toISOString(), 
-    ...settlementData
-  });
-  await updateDoc(doc(db, "hotels", hotelId, "rooms", roomId), {
-    status: "cleaning", currentBookingId: null, guestName: null
-  });
-  return { success: true };
+  try {
+    // ১. চেকআউট করার আগে ওই রুমের সমস্ত খাবারের (POS) বিল সেটেল করে দেওয়া হবে, 
+    // যাতে পরের গেস্টের বিলে আগের গেস্টের খাবারের বিল যোগ না হয়।
+    const bookingDoc = await getDoc(doc(db, "hotels", hotelId, "bookings", bookingId));
+    if (bookingDoc.exists()) {
+      const roomNumber = bookingDoc.data().roomNumber;
+      await settleRoomFoodOrders(hotelId, roomNumber);
+    }
+
+    // ২. বুকিং স্ট্যাটাস চেক-আউট এবং পেমেন্ট আপডেট করা
+    await updateDoc(doc(db, "hotels", hotelId, "bookings", bookingId), {
+      status: "checked_out", 
+      settledAt: new Date().toISOString(), 
+      ...settlementData
+    });
+    
+    // ৩. রুম ক্লিনিং স্টেটে নেওয়া
+    await updateDoc(doc(db, "hotels", hotelId, "rooms", roomId), {
+      status: "cleaning", 
+      currentBookingId: null, 
+      guestName: null
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Checkout Error:", error);
+    throw new Error("Checkout failed: " + error.message);
+  }
 }
