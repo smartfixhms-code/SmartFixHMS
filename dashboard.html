@@ -4,384 +4,201 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartFix HMS - Operations Dashboard</title>
-
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='cyanGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3ClinearGradient id='mintGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300ffa3'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='100' fill='%23060913'/%3E%3Cg transform='translate(106, 96)'%3E%3Crect x='0' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Crect x='230' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Cpath d='M85 85 L150 30 L215 85 L215 310 L85 310 Z' stroke='url(%23cyanGrad)' stroke-width='10' fill='%2308182f'/%3E%3Ccircle cx='150' cy='175' r='60' fill='%23061426' stroke='url(%23mintGrad)' stroke-width='10'/%3E%3Cpolyline points='125,175 145,195 185,150' fill='none' stroke='%2300ffa3' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#060913">
   <meta name="mobile-web-app-capable" content="yes">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #060913; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased">
-
-  <!-- ================= TOP BAR ================= -->
   <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="text-lg font-black text-white">Smart<span class="text-cyan-400">Fix</span></span>
         <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">HMS Workspace</span>
       </div>
-
       <div class="flex items-center gap-3">
         <div class="flex flex-col text-right">
           <span id="navHotelTitle" class="text-xs font-bold text-white">Hotel Paradise</span>
           <span id="licenseBadgeText" class="text-[10px] font-mono text-cyan-400">Checking...</span>
         </div>
-        <button onclick="handleSignOut()" class="text-xs px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800">
-          Sign Out
-        </button>
+        <button onclick="handleSignOut()" class="text-xs px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800">Sign Out</button>
       </div>
     </div>
   </header>
-
-  <!-- ================= MAIN WORKSPACE ================= -->
   <div class="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row pb-20 md:pb-6">
-    
-    <!-- Sidebar -->
     <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-2 bg-slate-950/40">
-      <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400">
-        <span>Dashboard</span>
-      </button>
-      <button onclick="switchView('rooms')" id="nav-rooms" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>Floor Tape Chart</span>
-      </button>
-      <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>Rooms & Tariffs</span>
-      </button>
-      <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>Invoices Archive</span>
-      </button>
-      <button onclick="switchView('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>P&L & Expenses</span>
-      </button>
-      <button onclick="switchView('gst-audit')" id="nav-gst-audit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>GST CA Audit</span>
-      </button>
-      <button onclick="switchView('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-        <span>WiFi & Settings</span>
-      </button>
-      <button onclick="openBookingModal()" class="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">
-        + Book Walk-In
-      </button>
+      <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400"><span>Dashboard</span></button>
+      <button onclick="switchView('rooms')" id="nav-rooms" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Floor Tape Chart</span></button>
+      <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Rooms & Tariffs</span></button>
+      <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Invoices Archive</span></button>
+      <button onclick="switchView('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>P&L & Expenses</span></button>
+      <button onclick="switchView('gst-audit')" id="nav-gst-audit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>GST CA Audit</span></button>
+      <button onclick="switchView('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>WiFi & Settings</span></button>
+      <button onclick="openBookingModal()" class="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider">+ Book Walk-In</button>
     </aside>
-
-    <!-- Center Viewports -->
     <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
-
-      <!-- ================= 1. DASHBOARD VIEW ================= -->
       <section id="view-dashboard" class="space-y-6">
-        <!-- Metric Cards -->
         <div class="grid grid-cols-2 lg:grid-cols-6 gap-3.5">
           <div onclick="filterRoomsStatus('all')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl hover:border-cyan-500">
-            <span class="text-[11px] font-semibold text-slate-400 uppercase">Total Rooms</span>
-            <div id="statTotalRooms" class="text-2xl font-black text-white mt-1 font-mono">0</div>
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Total Rooms</span><div id="statTotalRooms" class="text-2xl font-black text-white mt-1 font-mono">0</div>
           </div>
           <div onclick="filterRoomsStatus('occupied')" class="cursor-pointer bg-rose-950/30 border border-rose-900 p-4 rounded-2xl hover:border-rose-500">
-            <span class="text-[11px] font-semibold text-rose-400 uppercase">Occupied</span>
-            <div id="statOccupiedRooms" class="text-2xl font-black text-rose-400 mt-1 font-mono">0</div>
+            <span class="text-[11px] font-semibold text-rose-400 uppercase">Occupied</span><div id="statOccupiedRooms" class="text-2xl font-black text-rose-400 mt-1 font-mono">0</div>
           </div>
           <div onclick="filterRoomsStatus('vacant')" class="cursor-pointer bg-emerald-950/30 border border-emerald-900 p-4 rounded-2xl hover:border-emerald-500">
-            <span class="text-[11px] font-semibold text-emerald-400 uppercase">Vacant</span>
-            <div id="statVacantRooms" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</div>
+            <span class="text-[11px] font-semibold text-emerald-400 uppercase">Vacant</span><div id="statVacantRooms" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</div>
           </div>
           <div class="bg-cyan-950/30 border border-cyan-900 p-4 rounded-2xl">
-            <span class="text-[11px] font-semibold text-cyan-400 uppercase">Occupancy</span>
-            <div id="statOccupancyRate" class="text-2xl font-black text-cyan-400 mt-1 font-mono">0%</div>
+            <span class="text-[11px] font-semibold text-cyan-400 uppercase">Occupancy</span><div id="statOccupancyRate" class="text-2xl font-black text-cyan-400 mt-1 font-mono">0%</div>
           </div>
           <div onclick="switchView('reports')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-            <span class="text-[11px] font-semibold text-slate-400 uppercase">Revenue</span>
-            <div id="statTodayRevenue" class="text-xl font-black text-white mt-1 font-mono">₹0.00</div>
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Today's Revenue</span><div id="statTodayRevenue" class="text-xl font-black text-white mt-1 font-mono">₹0.00</div>
           </div>
           <div onclick="switchView('reports')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-            <span class="text-[11px] font-semibold text-slate-400 uppercase">Net Profit</span>
-            <div id="statNetProfit" class="text-xl font-black text-emerald-400 mt-1 font-mono">₹0.00</div>
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Net Profit</span><div id="statNetProfit" class="text-xl font-black text-emerald-400 mt-1 font-mono">₹0.00</div>
           </div>
         </div>
-
-        <!-- Master Floor Tape Grid -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Floor Status Grid</h3>
-            <span class="text-xs text-cyan-400">Live Synchronized</span>
-          </div>
+          <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Floor Status Grid</h3><span class="text-xs text-cyan-400">Live Synchronized</span></div>
           <div id="roomGridContainer" class="space-y-4"></div>
         </div>
       </section>
-
-      <!-- ================= 2. ROOM MANAGER ================= -->
       <section id="view-room-manager" class="hidden space-y-6">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white uppercase tracking-wider">Room Tariffs & Meal Rates</h2>
-          <button onclick="openAddRoomModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Add Room</button>
-        </div>
+        <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Room Tariffs & Meal Rates</h2><button onclick="openAddRoomModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Add Room</button></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-              <tr>
-                <th class="py-3 px-4">Room</th><th class="py-3 px-4">Floor</th><th class="py-3 px-4">Category</th>
-                <th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Meal / Head (₹)</th><th class="py-3 px-4">Status</th>
-                <th class="py-3 px-4 text-right">Actions</th>
-              </tr>
+              <tr><th class="py-3 px-4">Room</th><th class="py-3 px-4">Floor</th><th class="py-3 px-4">Category</th><th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Meal / Head (₹)</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right">Actions</th></tr>
             </thead>
             <tbody id="roomManagerTableBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </section>
-
-      <!-- ================= 3. INVOICES ARCHIVE & SETTLEMENT ================= -->
       <section id="view-billing-archive" class="hidden space-y-6">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white uppercase tracking-wider">Bills & Settlements</h2>
-          <input type="text" id="billSearchInput" oninput="filterInvoicesTable()" placeholder="Search guest or invoice..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white">
-        </div>
+        <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Bills & Settlements</h2><input type="text" id="billSearchInput" oninput="filterInvoicesTable()" placeholder="Search guest or invoice..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white"></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-              <tr>
-                <th class="py-3 px-4">Invoice</th>
-                <th class="py-3 px-4 font-sans">Guest Name</th>
-                <th class="py-3 px-4">Room & Duration</th>
-                <th class="py-3 px-4">Settlement Status</th>
-                <th class="py-3 px-4">Grand Total</th>
-                <th class="py-3 px-4 text-right font-sans">Reprint</th>
-              </tr>
+              <tr><th class="py-3 px-4">Invoice</th><th class="py-3 px-4 font-sans">Guest Name</th><th class="py-3 px-4">Room & Duration</th><th class="py-3 px-4">Settlement Status</th><th class="py-3 px-4">Grand Total</th><th class="py-3 px-4 text-right font-sans">Reprint</th></tr>
             </thead>
             <tbody id="invoiceTableBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </section>
-
-      <!-- ================= 4. P&L & EXPENSES ================= -->
       <section id="view-reports" class="hidden space-y-6">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white uppercase tracking-wider">Financial P&L Journal</h2>
-          <button onclick="openAddExpenseModal()" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Log Expense</button>
-        </div>
+        <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Financial P&L Journal</h2><button onclick="openAddExpenseModal()" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Log Expense</button></div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span class="text-xs text-slate-400 uppercase">Revenue</span>
-            <div id="repTotalRevenue" class="text-2xl font-bold text-white font-mono mt-1">₹0.00</div>
-          </div>
-          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span class="text-xs text-rose-400 uppercase">Expenses</span>
-            <div id="repTotalExpenses" class="text-2xl font-bold text-rose-400 font-mono mt-1">₹0.00</div>
-          </div>
-          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span class="text-xs text-emerald-400 uppercase">Net Profit</span>
-            <div id="repNetProfit" class="text-2xl font-bold text-emerald-400 font-mono mt-1">₹0.00</div>
-          </div>
+          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-slate-400 uppercase">Total Revenue</span><div id="repTotalRevenue" class="text-2xl font-bold text-white font-mono mt-1">₹0.00</div></div>
+          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-rose-400 uppercase">Expenses</span><div id="repTotalExpenses" class="text-2xl font-bold text-rose-400 font-mono mt-1">₹0.00</div></div>
+          <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-emerald-400 uppercase">Net Profit</span><div id="repNetProfit" class="text-2xl font-bold text-emerald-400 font-mono mt-1">₹0.00</div></div>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
-              <tr><th class="py-2 px-3">Date</th><th class="py-2 px-3">Category</th><th class="py-2 px-3">Note</th><th class="py-2 px-3 text-right">Amount (₹)</th></tr>
-            </thead>
-            <tbody id="expenseTableBody" class="divide-y divide-slate-800/60"></tbody>
-          </table>
+          <table class="w-full text-left text-xs font-mono"><thead class="bg-slate-950 text-slate-400 border-b border-slate-800"><tr><th class="py-2 px-3">Date</th><th class="py-2 px-3">Category</th><th class="py-2 px-3">Note</th><th class="py-2 px-3 text-right">Amount (₹)</th></tr></thead><tbody id="expenseTableBody" class="divide-y divide-slate-800/60"></tbody></table>
         </div>
       </section>
-
-      <!-- ================= 5. GST AUDIT ================= -->
       <section id="view-gst-audit" class="hidden space-y-6">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white uppercase tracking-wider">GST Audit & Ledger</h2>
-          <button onclick="exportGstToCsv()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">📥 Export CA CSV</button>
-        </div>
+        <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">GST Audit & Ledger</h2><button onclick="exportGstToCsv()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">📥 Export CA CSV</button></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-              <tr>
-                <th class="py-3 px-3">Date</th><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">SAC</th>
-                <th class="py-3 px-3">Taxable (₹)</th><th class="py-3 px-3">CGST (₹)</th><th class="py-3 px-3">SGST (₹)</th>
-                <th class="py-3 px-3 text-right">Total (₹)</th>
-              </tr>
+              <tr><th class="py-3 px-3">Date</th><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">SAC</th><th class="py-3 px-3">Taxable (₹)</th><th class="py-3 px-3">CGST (₹)</th><th class="py-3 px-3">SGST (₹)</th><th class="py-3 px-3 text-right">Total (₹)</th></tr>
             </thead>
             <tbody id="gstAuditTableBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </section>
-
-      <!-- ================= 6. SETTINGS & MULTI-FLOOR MANAGEMENT ================= -->
       <section id="view-settings" class="hidden space-y-6">
         <h2 class="text-base font-bold text-white uppercase tracking-wider">Hotel Operational Settings</h2>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Floor Manager (Add / Remove Floor) -->
           <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
             <h3 class="text-sm font-bold text-cyan-400 uppercase">Building Floor Manager</h3>
-            <p class="text-xs text-slate-400">Add or remove floors according to your building architecture.</p>
             <form onsubmit="event.preventDefault(); addNewFloor();" class="flex gap-2">
               <input type="text" id="newFloorName" required placeholder="e.g. 4th Floor" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white">
               <button type="submit" class="px-3 bg-cyan-500 text-slate-950 font-bold text-xs rounded-lg">+ Add Floor</button>
             </form>
             <div id="floorsList" class="space-y-1.5 max-h-48 overflow-y-auto"></div>
           </div>
-
-          <!-- Floor WiFi Passwords -->
           <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
             <h3 class="text-sm font-bold text-emerald-400 uppercase">Floor-Wise Free WiFi</h3>
-            <p class="text-xs text-slate-400">Set WiFi password per floor to print on guest bills.</p>
             <div id="floorWifiInputs" class="space-y-2 text-xs font-mono"></div>
             <button onclick="saveFloorWifi()" class="py-2 px-4 bg-emerald-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save WiFi</button>
           </div>
         </div>
       </section>
-
     </main>
   </div>
-
-  <!-- ================= BOOKING MODAL (MANDATORY ID) ================= -->
   <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-xl bg-slate-900 border border-slate-800 p-6 rounded-2xl max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4">
-        <h3 class="text-sm font-bold uppercase text-cyan-400">New Guest Reservation</h3>
-        <button onclick="closeBookingModal()" class="text-slate-400 text-lg">×</button>
-      </div>
-
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4"><h3 class="text-sm font-bold uppercase text-cyan-400">New Guest Reservation</h3><button onclick="closeBookingModal()" class="text-slate-400 text-lg">×</button></div>
       <form id="bookingForm" onsubmit="event.preventDefault(); submitBooking();" class="space-y-3">
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Guest Full Name</label>
-            <input type="text" id="bookGuestName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Phone Number</label>
-            <input type="text" id="bookPhone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
+          <div><label class="block text-xs text-slate-400 mb-1">Guest Full Name</label><input type="text" id="bookGuestName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Phone Number</label><input type="text" id="bookPhone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
         </div>
-
         <div class="grid grid-cols-2 gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl">
           <div>
             <label class="block text-xs text-cyan-400 font-bold mb-1">ID Document Type *</label>
             <select id="bookIdType" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
-              <option value="Aadhaar">Aadhaar Card</option>
-              <option value="Voter ID">Voter ID</option>
-              <option value="Driving License">Driving License</option>
-              <option value="Passport">Passport</option>
+              <option value="Aadhaar">Aadhaar Card</option><option value="Voter ID">Voter ID</option><option value="Driving License">Driving License</option><option value="Passport">Passport</option>
             </select>
           </div>
-          <div>
-            <label class="block text-xs text-cyan-400 font-bold mb-1">Mandatory ID Number *</label>
-            <input type="text" id="bookIdNumber" required placeholder="Exact ID Number" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono">
-          </div>
+          <div><label class="block text-xs text-cyan-400 font-bold mb-1">Mandatory ID Number *</label><input type="text" id="bookIdNumber" required placeholder="Exact ID Number" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono"></div>
         </div>
-
         <div class="grid grid-cols-3 gap-2.5">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Adults</label>
-            <input type="number" id="bookAdults" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Children</label>
-            <input type="number" id="bookChildren" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Nights</label>
-            <input type="number" id="bookNights" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
+          <div><label class="block text-xs text-slate-400 mb-1">Adults</label><input type="number" id="bookAdults" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Children</label><input type="number" id="bookChildren" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Nights</label><input type="number" id="bookNights" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
         </div>
-
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Select Room</label>
-            <select id="bookRoomSelect" onchange="handleRoomSelectChange()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400"></select>
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Lodging Rate / Night (Editable)</label>
-            <input type="number" id="bookRoomRate" value="800" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-emerald-400 font-mono font-bold">
-          </div>
+          <div><label class="block text-xs text-slate-400 mb-1">Select Room</label><select id="bookRoomSelect" onchange="handleRoomSelectChange()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400"></select></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Lodging Rate / Night</label><input type="number" id="bookRoomRate" value="800" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-emerald-400 font-mono font-bold"></div>
         </div>
-
         <div>
           <label class="block text-xs text-slate-400 mb-1">Stay Package</label>
           <select id="bookPackageSelect" onchange="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-            <option value="lodging_only">Room Only (EP Plan)</option>
-            <option value="fooding_lodging">Fooding + Lodging (MAP Plan - Per Head Applied)</option>
+            <option value="lodging_only">Room Only (EP Plan)</option><option value="fooding_lodging">Fooding + Lodging (MAP Plan - Per Head Applied)</option>
           </select>
         </div>
-
-        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-xs flex justify-between">
-          <span>Grand Total:</span>
-          <span id="liveTotal" class="text-emerald-400 font-bold">₹0.00</span>
-        </div>
-
-        <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase rounded-xl">
-          Confirm Check-In
-        </button>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-xs flex justify-between"><span>Grand Total:</span><span id="liveTotal" class="text-emerald-400 font-bold">₹0.00</span></div>
+        <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase rounded-xl">Confirm Check-In</button>
       </form>
     </div>
   </div>
-
-  <!-- ================= ADD ROOM MODAL ================= -->
   <div id="roomEditModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
       <h3 id="roomModalTitle" class="text-sm font-bold uppercase text-cyan-400">Configure Room</h3>
       <form onsubmit="event.preventDefault(); submitRoom();" class="space-y-3">
         <input type="hidden" id="editRoomId">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Room Number</label>
-          <input type="text" id="inputRoomNo" required placeholder="104" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
+        <div><label class="block text-xs text-slate-400 mb-1">Room Number</label><input type="text" id="inputRoomNo" required placeholder="104" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs text-slate-400 mb-1">Floor</label><select id="inputRoomFloor" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></select></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Category</label><select id="inputRoomType" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"><option value="Standard Non-AC">Standard Non-AC</option><option value="Deluxe AC">Deluxe AC</option><option value="Super Deluxe">Super Deluxe</option></select></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Floor</label>
-            <select id="inputRoomFloor" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></select>
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Category</label>
-            <select id="inputRoomType" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-              <option value="Standard Non-AC">Standard Non-AC</option><option value="Deluxe AC">Deluxe AC</option><option value="Super Deluxe">Super Deluxe</option>
-            </select>
-          </div>
+          <div><label class="block text-xs text-slate-400 mb-1">Lodging Tariff (₹)</label><input type="number" id="inputRoomRate" required min="100" placeholder="800" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+          <div><label class="block text-xs text-slate-400 mb-1">Fooding Per Head (₹)</label><input type="number" id="inputFoodRate" required min="0" placeholder="1000" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Lodging Tariff (₹)</label>
-            <input type="number" id="inputRoomRate" required min="100" placeholder="800" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Fooding Per Head (₹)</label>
-            <input type="number" id="inputFoodRate" required min="0" placeholder="1000" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-          </div>
-        </div>
-        <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save Room</button>
-          <button type="button" onclick="document.getElementById('roomEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button>
-        </div>
+        <div class="flex gap-2 pt-2"><button type="submit" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save Room</button><button type="button" onclick="document.getElementById('roomEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button></div>
       </form>
     </div>
   </div>
-
-  <!-- ================= ADD EXPENSE MODAL ================= -->
   <div id="expenseModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
       <h3 class="text-sm font-bold uppercase text-emerald-400">Log Property Expense</h3>
       <form onsubmit="event.preventDefault(); submitExpense();" class="space-y-3">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Category (Custom)</label>
-          <input type="text" id="expCategory" required placeholder="Staff Salary, Electricity, Market" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Description</label>
-          <input type="text" id="expDescription" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Amount (₹)</label>
-          <input type="number" id="expAmount" required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
-        </div>
-        <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 py-2 bg-emerald-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save</button>
-          <button type="button" onclick="document.getElementById('expenseModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button>
-        </div>
+        <div><label class="block text-xs text-slate-400 mb-1">Category (Custom)</label><input type="text" id="expCategory" required placeholder="Staff Salary, Electricity, Market" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+        <div><label class="block text-xs text-slate-400 mb-1">Description</label><input type="text" id="expDescription" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+        <div><label class="block text-xs text-slate-400 mb-1">Amount (₹)</label><input type="number" id="expAmount" required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+        <div class="flex gap-2 pt-2"><button type="submit" class="flex-1 py-2 bg-emerald-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save</button><button type="button" onclick="document.getElementById('expenseModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button></div>
       </form>
     </div>
   </div>
-
-  <!-- ================= SCRIPTS ================= -->
   <script type="module">
     import { db } from "./js/firebase-config.js";
     import { monitorAuthState, logoutUser } from "./js/auth.js";
@@ -390,10 +207,7 @@
     import { initializeDefaultRooms, markRoomCleaned } from "./js/tape-chart.js";
     import { print58mmThermalReceipt, print80mmThermalReceipt, printA4TaxInvoice } from "./js/thermal-print.js";
     import { getRoomUnsettledFoodOrders } from "./js/pos.js";
-    import { 
-      collection, doc, setDoc, deleteDoc, updateDoc, 
-      getDocs, getDoc, query, orderBy, onSnapshot 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { collection, doc, setDoc, deleteDoc, updateDoc, getDocs, getDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     let currentHotelId = null;
     let currentHotelProfile = null;
@@ -401,40 +215,89 @@
     let cachedBookings = [];
     let cachedExpenses = [];
     let hotelFloors = ["Floor 1", "Floor 2", "Floor 3"];
+    let unsubRooms = null, unsubBookings = null, unsubExpenses = null;
+
+    // ---------- HELPER: HTML escape (XSS protection) ----------
+    function esc(v) {
+      if (v === null || v === undefined) return "";
+      return String(v)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    // ---------- HELPER: Natural floor sort ----------
+    function floorSortKey(name) {
+      const m = String(name).match(/\d+/);
+      return m ? parseInt(m[0]) : 9999;
+    }
 
     monitorAuthState(async (state) => {
-      if (state && state.user && state.profile) {
-        if (!state.user.emailVerified && state.profile.role !== "superadmin") {
-          window.location.href = "index.html";
-          return;
-        }
-
-        currentHotelId = state.profile.hotelId;
-        const lic = await verifyLicenseStatus(currentHotelId);
-        currentHotelProfile = lic.details || { hotelName: "Hotel Paradise" };
-
-        document.getElementById("navHotelTitle").innerText = currentHotelProfile.hotelName || "Property";
-        document.getElementById("licenseBadgeText").innerText = `${lic.daysRemaining} Days License`;
-
-        await initializeDefaultRooms(currentHotelId);
-        await loadHotelFloors();
-
-        // Realtime Room Floor Chart
-        onSnapshot(collection(db, "hotels", currentHotelId, "rooms"), (snap) => {
-          cachedRooms = [];
-          snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
-          renderFloorGrid(cachedRooms);
-          updateMetrics(cachedRooms);
-        });
-
-        loadInvoiceArchives();
-        loadFinancialReports();
-      } else {
+      if (!state || !state.user || !state.profile) {
         window.location.href = "index.html";
+        return;
       }
+      // BUG FIX #5: Block super-admin from regular dashboard
+      if (state.profile.role === "superadmin") {
+        window.location.href = "super-admin.html";
+        return;
+      }
+      currentHotelId = state.profile.hotelId;
+      const lic = await verifyLicenseStatus(currentHotelId);
+
+      // BUG FIX #7: Block access if license is explicitly invalid
+      // (isValid === false means definite expiry; null/undefined means network issue → allow)
+      if (lic.isValid === false) {
+        alert(`Your subscription has expired (${lic.daysRemaining} days remaining). Please contact admin to renew.`);
+        await logoutUser();
+        return;
+      }
+
+      currentHotelProfile = lic.details || { hotelName: "Hotel Paradise" };
+      document.getElementById("navHotelTitle").innerText = currentHotelProfile.hotelName || "Property";
+      document.getElementById("licenseBadgeText").innerText = `${lic.daysRemaining ?? 0} Days License`;
+
+      await initializeDefaultRooms(currentHotelId);
+      await loadHotelFloors();
+
+      // ---------- Rooms realtime ----------
+      if (unsubRooms) unsubRooms();
+      unsubRooms = onSnapshot(collection(db, "hotels", currentHotelId, "rooms"), (snap) => {
+        cachedRooms = [];
+        snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
+        renderFloorGrid(cachedRooms);
+        updateMetrics(cachedRooms);
+      });
+
+      // ---------- BUG FIX #16: Bookings realtime ----------
+      if (unsubBookings) unsubBookings();
+      unsubBookings = onSnapshot(
+        query(collection(db, "hotels", currentHotelId, "bookings"), orderBy("createdAt", "desc")),
+        (snap) => {
+          cachedBookings = [];
+          snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
+          renderInvoiceArchive();
+          renderGstAudit();
+          updateFinancialCards();
+        },
+        (err) => console.warn("Bookings listener:", err.message)
+      );
+
+      // ---------- BUG FIX #16: Expenses realtime ----------
+      if (unsubExpenses) unsubExpenses();
+      unsubExpenses = onSnapshot(collection(db, "hotels", currentHotelId, "expenses"), (snap) => {
+        cachedExpenses = [];
+        snap.forEach(d => cachedExpenses.push({ id: d.id, ...d.data() }));
+        renderExpenseTable();
+        updateFinancialCards();
+      });
     });
 
-    window.handleSignOut = () => logoutUser();
+    window.handleSignOut = () => {
+      if (unsubRooms) unsubRooms();
+      if (unsubBookings) unsubBookings();
+      if (unsubExpenses) unsubExpenses();
+      logoutUser();
+    };
 
     window.switchView = (vId) => {
       ['dashboard', 'rooms', 'room-manager', 'billing-archive', 'reports', 'gst-audit', 'settings'].forEach(v => {
@@ -443,57 +306,41 @@
       });
       document.getElementById(`view-${vId}`)?.classList.remove('hidden');
       document.getElementById(`nav-${vId}`)?.classList.add('bg-cyan-500/10', 'text-cyan-400');
-
       if (vId === 'room-manager') loadRoomManager();
       if (vId === 'gst-audit') renderGstAudit();
     };
 
-    // ================= FLOOR GRID & INSTANT CHECKOUT =================
+    // ---------- Floor grid render ----------
     function renderFloorGrid(rooms) {
       const container = document.getElementById("roomGridContainer");
       if (!container) return;
-
       const grouped = {};
       rooms.forEach(r => {
         const f = r.floor || "Floor 1";
         if (!grouped[f]) grouped[f] = [];
         grouped[f].push(r);
       });
-
       let html = "";
-      Object.keys(grouped).sort().forEach(fl => {
-        grouped[fl].sort((a,b) => (parseInt(a.roomNumber) || 0) - (parseInt(b.roomNumber) || 0));
-        html += `
-          <div>
-            <div class="text-xs font-semibold text-cyan-400 uppercase mb-2 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-cyan-400"></span> ${fl}
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
-        `;
-        grouped[fl].forEach(r => {
-          let bg = "bg-emerald-950/40 border-emerald-500/40 text-emerald-300";
-          let badge = "Vacant";
-          if (r.status === "occupied") {
-            bg = "bg-rose-950/40 border-rose-500/40 text-rose-300";
-            badge = r.guestName || "Occupied";
-          } else if (r.status === "cleaning") {
-            bg = "bg-amber-950/40 border-amber-500/40 text-amber-300";
-            badge = "Cleaning";
-          }
-
-          html += `
-            <div onclick="handleRoomAction('${r.id}')" class="cursor-pointer border rounded-xl p-3 ${bg} hover:shadow-lg transition-all">
-              <div class="flex justify-between items-start mb-1">
-                <span class="text-lg font-black font-mono text-white">${r.roomNumber}</span>
-                <span class="text-[9px] px-2 py-0.5 rounded-full bg-slate-950/60 font-bold">${badge}</span>
-              </div>
-              <div class="text-[11px] text-slate-400 truncate">${r.type}</div>
-              <div class="text-xs font-bold text-cyan-300 mt-1 font-mono">₹${r.rate}/N (Meal: ₹${r.foodRate || 500})</div>
-            </div>
-          `;
+      // BUG FIX #17: numeric floor sort
+      Object.keys(grouped)
+        .sort((a, b) => floorSortKey(a) - floorSortKey(b))
+        .forEach(fl => {
+          grouped[fl].sort((a, b) => (parseInt(a.roomNumber) || 0) - (parseInt(b.roomNumber) || 0));
+          html += `<div><div class="text-xs font-semibold text-cyan-400 uppercase mb-2 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> ${esc(fl)}</div><div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">`;
+          grouped[fl].forEach(r => {
+            let bg = "bg-emerald-950/40 border-emerald-500/40 text-emerald-300";
+            let badge = "Vacant";
+            if (r.status === "occupied") {
+              bg = "bg-rose-950/40 border-rose-500/40 text-rose-300";
+              badge = r.guestName ? esc(r.guestName) : "Occupied";
+            } else if (r.status === "cleaning") {
+              bg = "bg-amber-950/40 border-amber-500/40 text-amber-300";
+              badge = "Cleaning";
+            }
+            html += `<div onclick="handleRoomAction('${esc(r.id)}')" class="cursor-pointer border rounded-xl p-3 ${bg} hover:shadow-lg transition-all"><div class="flex justify-between items-start mb-1"><span class="text-lg font-black font-mono text-white">${esc(r.roomNumber)}</span><span class="text-[9px] px-2 py-0.5 rounded-full bg-slate-950/60 font-bold">${badge}</span></div><div class="text-[11px] text-slate-400 truncate">${esc(r.type)}</div><div class="text-xs font-bold text-cyan-300 mt-1 font-mono">₹${esc(r.rate)}/N (Meal: ₹${esc(r.foodRate || 500)})</div></div>`;
+          });
+          html += `</div></div>`;
         });
-        html += `</div></div>`;
-      });
       container.innerHTML = html;
     }
 
@@ -504,7 +351,7 @@
       document.getElementById("statTotalRooms").innerText = tot;
       document.getElementById("statOccupiedRooms").innerText = occ;
       document.getElementById("statVacantRooms").innerText = vac;
-      document.getElementById("statOccupancyRate").innerText = tot > 0 ? `${Math.round((occ/tot)*100)}%` : "0%";
+      document.getElementById("statOccupancyRate").innerText = tot > 0 ? `${Math.round((occ / tot) * 100)}%` : "0%";
     }
 
     window.filterRoomsStatus = (st) => {
@@ -512,76 +359,80 @@
       else renderFloorGrid(cachedRooms.filter(r => r.status === st));
     };
 
+    // ---------- BUG FIX #3: Checkout with correct grandTotal ----------
     window.handleRoomAction = async (rId) => {
       const r = cachedRooms.find(x => x.id === rId);
       if (!r) return;
-
       if (r.status === "vacant") {
-        openBookingModal(r.roomNumber);
-      } else if (r.status === "cleaning") {
+        return openBookingModal(r.roomNumber);
+      }
+      if (r.status === "cleaning") {
         if (confirm(`Room ${r.roomNumber} cleaned? Mark as Vacant?`)) {
           await markRoomCleaned(currentHotelId, r.id);
         }
-      } else {
-        const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-        if (confirm(`Settle bill & check out Room ${r.roomNumber} (${r.guestName})?\nTime: ${outTime}`)) {
-          await processCheckOut(currentHotelId, r.currentBookingId, r.id, {
-            paymentMode: "UPI / Cash",
-            checkOutTime: outTime,
-            settled: true,
-            paidAmount: r.rate || 0
-          });
-          alert(`Room ${r.roomNumber} moved to Cleaning! Mark cleaned when ready.`);
-          loadInvoiceArchives();
+        return;
+      }
+      // occupied → checkout
+      const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+      if (!confirm(`Settle bill & check out Room ${r.roomNumber} (${r.guestName})?\nTime: ${outTime}`)) return;
+
+      try {
+        // Load actual booking to get correct grandTotal
+        let grand = 0;
+        let settlement = { paymentMode: "UPI / Cash", checkOutTime: outTime, settled: true };
+        if (r.currentBookingId) {
+          const bSnap = await getDoc(doc(db, "hotels", currentHotelId, "bookings", r.currentBookingId));
+          if (bSnap.exists()) {
+            const bData = bSnap.data();
+            grand = Number(bData.summary?.grandTotal ?? bData.grandTotal ?? 0);
+          }
         }
+        settlement.paidAmount = grand;
+        await processCheckOut(currentHotelId, r.currentBookingId, r.id, settlement);
+        alert(`Room ${r.roomNumber} checked out. Settled: ₹${grand.toFixed(2)}`);
+      } catch (e) {
+        alert("Checkout failed: " + e.message);
       }
     };
 
-    // ================= BOOKING LOGIC =================
+    // ---------- Booking modal ----------
     window.openBookingModal = (presetRoomNo = null) => {
       const sel = document.getElementById("bookRoomSelect");
       sel.innerHTML = "";
       const vac = cachedRooms.filter(r => r.status === "vacant");
       if (!vac.length) return alert("All rooms occupied or cleaning.");
-
       vac.forEach(r => {
-        sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 500}">Room ${r.roomNumber} (${r.type})</option>`;
+        sel.innerHTML += `<option value="${esc(r.roomNumber)}" data-rate="${esc(r.rate)}" data-food="${esc(r.foodRate || 500)}" data-docid="${esc(r.id)}">Room ${esc(r.roomNumber)} (${esc(r.type)})</option>`;
       });
-
       if (presetRoomNo) sel.value = presetRoomNo;
       handleRoomSelectChange();
       document.getElementById("bookingModal").classList.remove("hidden");
     };
-
     window.closeBookingModal = () => document.getElementById("bookingModal").classList.add("hidden");
-
     window.handleRoomSelectChange = () => {
       const sel = document.getElementById("bookRoomSelect");
-      document.getElementById("bookRoomRate").value = sel.options[sel.selectedIndex]?.dataset.rate || 800;
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById("bookRoomRate").value = opt?.dataset.rate || 800;
       recalcBill();
     };
-
     window.recalcBill = () => {
       const sel = document.getElementById("bookRoomSelect");
+      const opt = sel.options[sel.selectedIndex];
       const roomRate = parseFloat(document.getElementById("bookRoomRate").value) || 800;
-      const foodRate = parseFloat(sel.options[sel.selectedIndex]?.dataset.food) || 1000;
+      const foodRate = parseFloat(opt?.dataset.food) || 1000;
       const nights = parseInt(document.getElementById("bookNights").value) || 1;
       const adults = parseInt(document.getElementById("bookAdults").value) || 1;
       const pkg = document.getElementById("bookPackageSelect").value;
-
       const charges = calculateBookingCharges({
-        roomRatePerNight: roomRate,
-        packageType: pkg,
-        foodRatePerGuestPerNight: foodRate,
-        numberOfGuests: adults,
-        numberOfNights: nights,
-        gstMode: "extra"
+        roomRatePerNight: roomRate, packageType: pkg,
+        foodRatePerGuestPerNight: foodRate, numberOfGuests: adults,
+        numberOfNights: nights, gstMode: "extra"
       });
-
       document.getElementById("liveTotal").innerText = `₹${charges.summary.grandTotal.toFixed(2)}`;
       return charges;
     };
 
+    // ---------- BUG FIX #4: roomDocId in booking payload ----------
     window.submitBooking = async () => {
       const guestName = document.getElementById("bookGuestName").value.trim();
       const phone = document.getElementById("bookPhone").value.trim();
@@ -589,75 +440,56 @@
       const idNumber = document.getElementById("bookIdNumber").value.trim();
       const adults = parseInt(document.getElementById("bookAdults").value) || 1;
       const children = parseInt(document.getElementById("bookChildren").value) || 0;
-      const roomNo = document.getElementById("bookRoomSelect").value;
+      const sel = document.getElementById("bookRoomSelect");
+      const roomNo = sel.value;
+      const roomDocId = sel.options[sel.selectedIndex]?.dataset.docid;
       const nights = parseInt(document.getElementById("bookNights").value) || 1;
       const pkg = document.getElementById("bookPackageSelect").value;
-
       if (!idNumber) return alert("ID Document Number is mandatory!");
-
-      const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
+      if (!roomDocId) return alert("Room not selected properly. Please try again.");
+      const roomData = cachedRooms.find(r => r.id === roomDocId);
       const charges = recalcBill();
       const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-
       const payload = {
-        roomId: roomNo,
-        roomNumber: roomNo,
+        roomId: roomDocId,        // Firestore doc ID for room update
+        roomDocId: roomDocId,     // explicit alias for safety
+        roomNumber: roomNo,       // display
         floor: roomData?.floor || "Floor 1",
-        guestName,
-        phone,
-        idType,
-        idNumber,
-        adults,
-        children,
-        packageType: pkg,
-        nights,
-        checkInTime: inTime,
-        settled: true,
+        guestName, phone, idType, idNumber, adults, children,
+        packageType: pkg, nights, checkInTime: inTime, settled: true,
         ...charges
       };
-
       try {
         const res = await createNewBooking(currentHotelId, payload);
         alert(`Guest checked in to Room ${roomNo}! Bill #${res.bookingId}`);
         closeBookingModal();
-        loadInvoiceArchives();
       } catch (e) {
         alert("Error: " + e.message);
       }
     };
 
-    // ================= INVOICE ARCHIVES & SETTLED BADGE =================
-    window.loadInvoiceArchives = async () => {
-      const snap = await getDocs(query(collection(db, "hotels", currentHotelId, "bookings"), orderBy("createdAt", "desc")));
-      cachedBookings = [];
-      snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
-
+    // ---------- Invoices (rendered from realtime cache) ----------
+    function renderInvoiceArchive() {
       const tbody = document.getElementById("invoiceTableBody");
+      if (!tbody) return;
       let html = "";
       cachedBookings.forEach(b => {
         const isSettled = b.status === "checked_out" || b.settled === true;
         const total = (b.summary?.grandTotal || b.grandTotal || 0).toFixed(2);
-
-        html += `
-          <tr class="hover:bg-slate-800/40">
-            <td class="py-3 px-4 font-bold text-cyan-400">${b.bookingId || b.id}</td>
-            <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName}</td>
-            <td class="py-3 px-4">Room ${b.roomNumber} (${b.nights || 1}N)</td>
-            <td class="py-3 px-4 font-sans">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isSettled ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'}">
-                ${isSettled ? '✓ SETTLED' : 'DUE / UNPAID'}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-emerald-400 font-bold">₹${total}</td>
-            <td class="py-3 px-4 text-right space-x-1 font-sans">
-              <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded">58mm</button>
-              <button onclick="triggerPrint('80mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded">80mm</button>
-              <button onclick="triggerPrint('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold">A4</button>
-            </td>
-          </tr>
-        `;
+        html += `<tr class="hover:bg-slate-800/40"><td class="py-3 px-4 font-bold text-cyan-400">${esc(b.bookingId || b.id)}</td><td class="py-3 px-4 font-sans text-white font-bold">${esc(b.guestName)}</td><td class="py-3 px-4">Room ${esc(b.roomNumber)} (${esc(b.nights || 1)}N)</td><td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${isSettled ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'}">${isSettled ? '✓ SETTLED' : 'DUE / UNPAID'}</span></td><td class="py-3 px-4 text-emerald-400 font-bold">₹${total}</td><td class="py-3 px-4 text-right space-x-1 font-sans"><button onclick="triggerPrint('58mm', '${esc(b.id)}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded">58mm</button><button onclick="triggerPrint('80mm', '${esc(b.id)}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded">80mm</button><button onclick="triggerPrint('a4', '${esc(b.id)}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold">A4</button></td></tr>`;
       });
       tbody.innerHTML = html;
+      filterInvoicesTable(); // reapply active filter
+    }
+
+    // ---------- BUG FIX #1: filterInvoicesTable ----------
+    window.filterInvoicesTable = () => {
+      const input = document.getElementById("billSearchInput");
+      if (!input) return;
+      const q = input.value.toLowerCase();
+      document.querySelectorAll("#invoiceTableBody tr").forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(q) ? "" : "none";
+      });
     };
 
     window.triggerPrint = async (format, bId) => {
@@ -665,45 +497,34 @@
       if (!bDoc.exists()) return alert("Bill not found.");
       const bData = bDoc.data();
       const food = await getRoomUnsettledFoodOrders(currentHotelId, bData.roomNumber);
-
       if (format === "58mm") print58mmThermalReceipt(currentHotelProfile, bData, food.unsettledOrders);
       else if (format === "80mm") print80mmThermalReceipt(currentHotelProfile, bData, food.unsettledOrders);
       else printA4TaxInvoice(currentHotelProfile, bData, food.unsettledOrders);
     };
 
-    // ================= FLOOR MANAGER (ADD / REMOVE FLOORS) =================
+    // ---------- Floors & WiFi ----------
     async function loadHotelFloors() {
       const snap = await getDoc(doc(db, "hotels", currentHotelId));
-      if (snap.exists() && snap.data().floors) {
-        hotelFloors = snap.data().floors;
-      }
+      if (snap.exists() && snap.data().floors) hotelFloors = snap.data().floors;
       renderFloorsList();
       populateFloorOptions();
       renderFloorWifiInputs();
     }
-
     function renderFloorsList() {
       const list = document.getElementById("floorsList");
       if (!list) return;
       let html = "";
       hotelFloors.forEach(f => {
-        html += `
-          <div class="flex justify-between items-center p-2 bg-slate-950 border border-slate-800 rounded-lg text-xs">
-            <span>${f}</span>
-            <button onclick="removeFloor('${f}')" class="text-rose-400 font-bold">Remove</button>
-          </div>
-        `;
+        html += `<div class="flex justify-between items-center p-2 bg-slate-950 border border-slate-800 rounded-lg text-xs"><span>${esc(f)}</span><button onclick="removeFloor('${esc(f)}')" class="text-rose-400 font-bold">Remove</button></div>`;
       });
       list.innerHTML = html;
     }
-
     function populateFloorOptions() {
       const sel = document.getElementById("inputRoomFloor");
       if (!sel) return;
       sel.innerHTML = "";
-      hotelFloors.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
+      hotelFloors.forEach(f => sel.innerHTML += `<option value="${esc(f)}">${esc(f)}</option>`);
     }
-
     window.addNewFloor = async () => {
       const fName = document.getElementById("newFloorName").value.trim();
       if (!fName || hotelFloors.includes(fName)) return;
@@ -712,34 +533,28 @@
       document.getElementById("newFloorName").value = "";
       loadHotelFloors();
     };
-
     window.removeFloor = async (fName) => {
       if (hotelFloors.length <= 1) return alert("Must keep at least 1 floor.");
       hotelFloors = hotelFloors.filter(x => x !== fName);
       await updateDoc(doc(db, "hotels", currentHotelId), { floors: hotelFloors });
       loadHotelFloors();
     };
-
     function renderFloorWifiInputs() {
       const container = document.getElementById("floorWifiInputs");
       if (!container) return;
       let html = "";
       hotelFloors.forEach(f => {
         const pass = (currentHotelProfile.floorWifi && currentHotelProfile.floorWifi[f]) ? currentHotelProfile.floorWifi[f] : "Paradise@123";
-        html += `
-          <div>
-            <label class="block text-slate-400 mb-0.5">${f} WiFi Password</label>
-            <input type="text" id="wifi_${f.replace(/\s+/g, '_')}" value="${pass}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
-          </div>
-        `;
+        const safeId = `wifi_${f.replace(/\s+/g, '_').replace(/[^\w\-]/g, '')}`;
+        html += `<div><label class="block text-slate-400 mb-0.5">${esc(f)} WiFi Password</label><input type="text" id="${safeId}" value="${esc(pass)}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"></div>`;
       });
       container.innerHTML = html;
     }
-
     window.saveFloorWifi = async () => {
       const wifiObj = {};
       hotelFloors.forEach(f => {
-        const val = document.getElementById(`wifi_${f.replace(/\s+/g, '_')}`)?.value || "Paradise@123";
+        const safeId = `wifi_${f.replace(/\s+/g, '_').replace(/[^\w\-]/g, '')}`;
+        const val = document.getElementById(safeId)?.value || "Paradise@123";
         wifiObj[f] = val;
       });
       await updateDoc(doc(db, "hotels", currentHotelId), { floorWifi: wifiObj });
@@ -747,29 +562,16 @@
       alert("Floor WiFi credentials updated!");
     };
 
-    // ================= ROOM MANAGER =================
+    // ---------- Room manager ----------
     window.loadRoomManager = () => {
       const tbody = document.getElementById("roomManagerTableBody");
+      if (!tbody) return;
       let html = "";
       cachedRooms.forEach(r => {
-        html += `
-          <tr class="hover:bg-slate-800/40">
-            <td class="py-3 px-4 font-bold text-white">${r.roomNumber}</td>
-            <td class="py-3 px-4 text-slate-400">${r.floor}</td>
-            <td class="py-3 px-4 text-cyan-300 font-sans">${r.type}</td>
-            <td class="py-3 px-4 text-emerald-400">₹${r.rate}</td>
-            <td class="py-3 px-4 text-amber-400">₹${r.foodRate || 1000}</td>
-            <td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${r.status}</span></td>
-            <td class="py-3 px-4 text-right space-x-2 font-sans">
-              <button onclick="openEditRoomModal('${r.id}')" class="px-2 py-1 bg-slate-800 text-cyan-400 rounded">Edit</button>
-              <button onclick="deleteRoom('${r.id}')" class="px-2 py-1 bg-rose-950 text-rose-300 rounded">Delete</button>
-            </td>
-          </tr>
-        `;
+        html += `<tr class="hover:bg-slate-800/40"><td class="py-3 px-4 font-bold text-white">${esc(r.roomNumber)}</td><td class="py-3 px-4 text-slate-400">${esc(r.floor)}</td><td class="py-3 px-4 text-cyan-300 font-sans">${esc(r.type)}</td><td class="py-3 px-4 text-emerald-400">₹${esc(r.rate)}</td><td class="py-3 px-4 text-amber-400">₹${esc(r.foodRate || 1000)}</td><td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${esc(r.status)}</span></td><td class="py-3 px-4 text-right space-x-2 font-sans"><button onclick="openEditRoomModal('${esc(r.id)}')" class="px-2 py-1 bg-slate-800 text-cyan-400 rounded">Edit</button><button onclick="deleteRoom('${esc(r.id)}')" class="px-2 py-1 bg-rose-950 text-rose-300 rounded">Delete</button></td></tr>`;
       });
       tbody.innerHTML = html;
     };
-
     window.openAddRoomModal = () => {
       document.getElementById("editRoomId").value = "";
       document.getElementById("inputRoomNo").value = "";
@@ -778,7 +580,6 @@
       populateFloorOptions();
       document.getElementById("roomEditModal").classList.remove("hidden");
     };
-
     window.openEditRoomModal = (rId) => {
       const r = cachedRooms.find(x => x.id === rId);
       if (!r) return;
@@ -791,7 +592,6 @@
       document.getElementById("inputFoodRate").value = r.foodRate || 1000;
       document.getElementById("roomEditModal").classList.remove("hidden");
     };
-
     window.submitRoom = async () => {
       const eId = document.getElementById("editRoomId").value;
       const rNo = document.getElementById("inputRoomNo").value.trim();
@@ -799,109 +599,102 @@
       const tp = document.getElementById("inputRoomType").value;
       const rt = parseFloat(document.getElementById("inputRoomRate").value) || 800;
       const fr = parseFloat(document.getElementById("inputFoodRate").value) || 1000;
-
       const tId = eId || rNo;
       await setDoc(doc(db, "hotels", currentHotelId, "rooms", tId), {
-        roomId: tId,
-        roomNumber: rNo,
-        floor: fl,
-        type: tp,
-        rate: rt,
-        foodRate: fr,
+        roomId: tId, roomNumber: rNo, floor: fl, type: tp, rate: rt, foodRate: fr,
         status: eId ? (cachedRooms.find(r => r.id === eId)?.status || 'vacant') : 'vacant'
       }, { merge: true });
-
       document.getElementById("roomEditModal").classList.add("hidden");
       loadRoomManager();
     };
 
+    // ---------- BUG FIX #8: Block delete of non-vacant room ----------
     window.deleteRoom = async (rId) => {
-      if (!confirm(`Delete Room ${rId}?`)) return;
+      const r = cachedRooms.find(x => x.id === rId);
+      if (!r) return;
+      if (r.status === "occupied") return alert(`Cannot delete Room ${r.roomNumber} — guest is currently checked in.`);
+      if (r.status === "cleaning") return alert(`Cannot delete Room ${r.roomNumber} — cleaning in progress.`);
+      if (!confirm(`Delete Room ${r.roomNumber}?`)) return;
       await deleteDoc(doc(db, "hotels", currentHotelId, "rooms", rId));
+      loadRoomManager();
     };
 
-    // ================= P&L EXPENSES =================
-    window.loadFinancialReports = async () => {
-      const snap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
-      cachedExpenses = [];
-      let totalExp = 0;
-      snap.forEach(d => {
-        const dat = d.data();
-        cachedExpenses.push(dat);
-        totalExp += (parseFloat(dat.amount) || 0);
-      });
-
+    // ---------- Financial reports ----------
+    function updateFinancialCards() {
       let totalRev = 0;
-      cachedBookings.forEach(b => totalRev += (b.summary?.grandTotal || b.grandTotal || 0));
+      cachedBookings.forEach(b => totalRev += Number(b.summary?.grandTotal || b.grandTotal || 0));
+      let totalExp = 0;
+      cachedExpenses.forEach(e => totalExp += Number(e.amount) || 0);
       const netProfit = totalRev - totalExp;
 
-      document.getElementById("statTodayRevenue").innerText = `₹${totalRev.toFixed(2)}`;
-      document.getElementById("statNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
-      document.getElementById("repTotalRevenue").innerText = `₹${totalRev.toFixed(2)}`;
-      document.getElementById("repTotalExpenses").innerText = `₹${totalExp.toFixed(2)}`;
-      document.getElementById("repNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
+      // BUG FIX #11: Today's revenue only (using createdAt ISO prefix)
+      const todayPrefix = new Date().toISOString().split("T")[0];
+      const todayRev = cachedBookings
+        .filter(b => (b.createdAt || "").startsWith(todayPrefix))
+        .reduce((s, b) => s + Number(b.summary?.grandTotal || b.grandTotal || 0), 0);
 
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      setTxt("statTodayRevenue", `₹${todayRev.toFixed(2)}`);
+      setTxt("statNetProfit", `₹${netProfit.toFixed(2)}`);
+      setTxt("repTotalRevenue", `₹${totalRev.toFixed(2)}`);
+      setTxt("repTotalExpenses", `₹${totalExp.toFixed(2)}`);
+      setTxt("repNetProfit", `₹${netProfit.toFixed(2)}`);
+    }
+
+    function renderExpenseTable() {
       const tbody = document.getElementById("expenseTableBody");
+      if (!tbody) return;
       let html = "";
       cachedExpenses.forEach(e => {
-        html += `
-          <tr class="hover:bg-slate-800/40">
-            <td class="py-2 px-3 text-slate-400">${e.date}</td>
-            <td class="py-2 px-3 font-bold text-cyan-400 font-sans">${e.category}</td>
-            <td class="py-2 px-3 text-white font-sans">${e.description}</td>
-            <td class="py-2 px-3 text-rose-400 text-right font-bold">₹${parseFloat(e.amount).toFixed(2)}</td>
-          </tr>
-        `;
+        html += `<tr class="hover:bg-slate-800/40"><td class="py-2 px-3 text-slate-400">${esc(e.date)}</td><td class="py-2 px-3 font-bold text-cyan-400 font-sans">${esc(e.category)}</td><td class="py-2 px-3 text-white font-sans">${esc(e.description)}</td><td class="py-2 px-3 text-rose-400 text-right font-bold">₹${(Number(e.amount) || 0).toFixed(2)}</td></tr>`;
       });
       tbody.innerHTML = html;
-    };
+    }
 
     window.openAddExpenseModal = () => document.getElementById("expenseModal").classList.remove("hidden");
-
     window.submitExpense = async () => {
       const cat = document.getElementById("expCategory").value.trim();
       const desc = document.getElementById("expDescription").value.trim();
       const amt = parseFloat(document.getElementById("expAmount").value) || 0;
-      const id = "EXP_" + Date.now().toString().slice(-4);
-
+      const id = "EXP_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       await setDoc(doc(db, "hotels", currentHotelId, "expenses", id), {
-        id, category: cat, description: desc, amount: amt, date: new Date().toLocaleDateString("en-IN")
+        id, category: cat, description: desc, amount: amt,
+        date: new Date().toLocaleDateString("en-IN")
       });
-
       document.getElementById("expenseModal").classList.add("hidden");
-      loadFinancialReports();
+      // realtime listener refreshes tables automatically
     };
 
-    // ================= GST AUDIT =================
-    window.renderGstAudit = () => {
+    // ---------- GST audit ----------
+    function renderGstAudit() {
       const tbody = document.getElementById("gstAuditTableBody");
+      if (!tbody) return;
       let html = "";
       cachedBookings.forEach(b => {
-        html += `
-          <tr class="hover:bg-slate-800/40">
-            <td class="py-2.5 px-3 text-slate-400">${b.checkInTime?.split(",")[0] || 'Today'}</td>
-            <td class="py-2.5 px-3 text-cyan-400 font-bold">${b.bookingId}</td>
-            <td class="py-2.5 px-3 text-amber-400">996311 / 996331</td>
-            <td class="py-2.5 px-3">₹${(b.summary?.grandTaxable || 0).toFixed(2)}</td>
-            <td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalCgst || 0).toFixed(2)}</td>
-            <td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalSgst || 0).toFixed(2)}</td>
-            <td class="py-2.5 px-3 text-emerald-400 font-bold text-right">₹${(b.summary?.grandTotal || 0).toFixed(2)}</td>
-          </tr>
-        `;
+        const safeId = esc(b.bookingId || b.id);
+        html += `<tr class="hover:bg-slate-800/40"><td class="py-2.5 px-3 text-slate-400">${esc((b.checkInTime || 'Today').split(",")[0])}</td><td class="py-2.5 px-3 text-cyan-400 font-bold">${safeId}</td><td class="py-2.5 px-3 text-amber-400">996311 / 996331</td><td class="py-2.5 px-3">₹${(b.summary?.grandTaxable || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalCgst || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalSgst || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-emerald-400 font-bold text-right">₹${(b.summary?.grandTotal || 0).toFixed(2)}</td></tr>`;
       });
       tbody.innerHTML = html;
-    };
+    }
 
+    // ---------- BUG FIX #21: revokeObjectURL ----------
     window.exportGstToCsv = () => {
+      const csvEsc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
       let csv = "Date,Invoice,Guest,Phone,ID,Taxable,CGST,SGST,Grand Total\n";
       cachedBookings.forEach(b => {
-        csv += `"${b.checkInTime || ''}","${b.bookingId}","${b.guestName}","${b.phone || ''}","${b.idType} (${b.idNumber})",${b.summary?.grandTaxable || 0},${b.summary?.totalCgst || 0},${b.summary?.totalSgst || 0},${b.summary?.grandTotal || 0}\n`;
+        csv += [b.checkInTime || '', b.bookingId || '', b.guestName || '', b.phone || '',
+                `${b.idType || ''} (${b.idNumber || ''})`,
+                b.summary?.grandTaxable || 0, b.summary?.totalCgst || 0,
+                b.summary?.totalSgst || 0, b.summary?.grandTotal || 0]
+                .map(csvEsc).join(",") + "\n";
       });
-      const blob = new Blob([csv], { type: 'text/csv;' });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `GST_Audit_${currentHotelId}.csv`;
+      a.href = url;
+      a.download = `GST_Audit_${currentHotelId}_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
     };
   </script>
 </body>
