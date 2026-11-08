@@ -17,56 +17,51 @@
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .glow-btn { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
     .glass-nav { background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(30, 41, 59, 0.8); }
-    /* Make tables scrollable on mobile */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .table-responsive table { min-width: 800px; }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased pb-20 md:pb-0">
   
-  <!-- Header -->
-<header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-    <!-- Logo & Hotel Name Area -->
-    <div class="flex items-center gap-3 sm:gap-5">
-      <!-- Original SmartFix HMS SVG Logo -->
-      <svg class="h-9 sm:h-11 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00f2fe" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
-          <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
-        </defs>
-        <g transform="translate(10, 5)">
-          <rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
-          <rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
-          <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#cyanGrad)" stroke-width="3" fill="#08182f" />
-          <circle cx="45" cy="50" r="18" fill="#061426" stroke="url(#mintGrad)" stroke-width="2.5" />
-          <polyline points="37,50 43,56 55,42" fill="none" stroke="#00ffa3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-        </g>
-        <text x="110" y="48" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#cyanGrad)">Fix</tspan></text>
-        <rect x="295" y="16" width="94" height="36" rx="8" fill="url(#mintGrad)" />
-        <text x="342" y="42" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#060913" text-anchor="middle" letter-spacing="1">HMS</text>
-        <text x="112" y="74" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7dd3fc" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
-      </svg>
-      
-      <!-- Hotel Workspace Name -->
-      <div class="flex flex-col border-l border-slate-700 pl-3 sm:pl-5">
-        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Workspace</span>
-        <span id="navHotelTitle" class="text-xs sm:text-sm font-black text-white uppercase tracking-wider leading-none">Loading...</span>
+  <!-- Header with Original SVG Logo -->
+  <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 sm:gap-5">
+        <svg class="h-9 sm:h-11 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00f2fe" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+            <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+          </defs>
+          <g transform="translate(10, 5)">
+            <rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+            <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#cyanGrad)" stroke-width="3" fill="#08182f" />
+            <circle cx="45" cy="50" r="18" fill="#061426" stroke="url(#mintGrad)" stroke-width="2.5" />
+            <polyline points="37,50 43,56 55,42" fill="none" stroke="#00ffa3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+          <text x="110" y="48" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#cyanGrad)">Fix</tspan></text>
+          <rect x="295" y="16" width="94" height="36" rx="8" fill="url(#mintGrad)" />
+          <text x="342" y="42" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#060913" text-anchor="middle" letter-spacing="1">HMS</text>
+          <text x="112" y="74" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7dd3fc" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+        </svg>
+        
+        <div class="flex flex-col border-l border-slate-700 pl-3 sm:pl-5">
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Workspace</span>
+          <span id="navHotelTitle" class="text-xs sm:text-sm font-black text-white uppercase tracking-wider leading-none">Loading...</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
+        <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Download Data Backup">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        </button>
+        <button onclick="handleSignOut()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-400 hover:text-rose-300 border border-slate-800 transition" title="Sign Out">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        </button>
       </div>
     </div>
-
-    <!-- Right Side Actions -->
-    <div class="flex items-center gap-2">
-      <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
-      <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Download Data Backup">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      </button>
-      <button onclick="handleSignOut()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-400 hover:text-rose-300 border border-slate-800 transition" title="Sign Out">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-      </button>
-    </div>
-  </div>
-</header>
+  </header>
 
   <div class="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row">
     <!-- Sidebar -->
@@ -91,7 +86,7 @@
     <!-- Main Content -->
     <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
       
-      <!-- DASHBOARD -->
+      <!-- DASHBOARD VIEW -->
       <section id="view-dashboard" class="space-y-6">
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-3.5">
           <div onclick="filterRoomsStatus('all')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl hover:border-cyan-500/50 transition">
@@ -122,7 +117,7 @@
           </div>
         </div>
 
-        <!-- 13 Quick Actions Grid -->
+        <!-- Quick Actions Grid -->
         <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-3">
           <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -420,7 +415,7 @@
     </button>
   </div>
 
-  <!-- ALL MODALS (Check-in List, Check-out List, Cleaning List, Booking, Checkout, Due, Settings Auth, Room Edit, Expense, Menu, Staff, Salary) -->
+  <!-- MODALS -->
   <!-- Check-In List Modal -->
   <div id="checkinModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
@@ -1280,7 +1275,7 @@
       document.getElementById("bookDiscount").value = "0";
       document.getElementById("crmStatus").classList.add("hidden");
       
-      const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+      const today = new Date().toLocaleDateString('en-CA');
       document.getElementById("bookCheckInDate").value = today;
       
       handleRoomSelectChange();
@@ -1294,7 +1289,6 @@
       const opt = sel.options[sel.selectedIndex];
       document.getElementById("bookRoomRate").value = opt.dataset.rate || 800;
       
-      // Auto-set package based on room setup
       const roomPkg = opt.dataset.package || 'lodging_only';
       document.getElementById("bookPackageSelect").value = roomPkg;
       
@@ -1359,8 +1353,7 @@
       const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
       const charges = recalcBill();
       
-      // Date Check Logic
-      const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+      const todayStr = new Date().toLocaleDateString('en-CA');
       const isFutureBooking = checkInDate > todayStr;
       
       const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
@@ -1372,7 +1365,7 @@
         phone, idType, idNumber, adults, children, packageType: pkg, gstMode, nights, 
         checkInTime: isFutureBooking ? null : inTime, 
         checkInDate: checkInDate,
-        isFutureBooking: isFutureBooking, // Pass flag to bookings.js
+        isFutureBooking: isFutureBooking, 
         isGroup, groupName, advancePaid, discount,
         ...charges 
       };
@@ -1390,11 +1383,16 @@
       } catch (e) { alert("Error: " + e.message); }
     };
 
-    // --- STAFF LOGIC ---
+    // --- STAFF LOGIC (UPDATED) ---
     async function loadStaff() {
-      const snap = await getDocs(collection(db, "hotels", currentHotelId, "staff"));
-      cachedStaff = [];
-      snap.forEach(d => cachedStaff.push({ id: d.id, ...d.data() }));
+      try {
+        const snap = await getDocs(collection(db, "hotels", currentHotelId, "staff"));
+        cachedStaff = [];
+        snap.forEach(d => cachedStaff.push({ id: d.id, ...d.data() }));
+      } catch(e) {
+        console.error("Error loading staff:", e);
+        cachedStaff = [];
+      }
     }
 
     window.loadStaffTable = () => {
@@ -1436,15 +1434,21 @@
       if(!name || !idNo || !salary) return alert("Fill required fields");
 
       const staffId = "STF_" + Date.now().toString().slice(-4);
-      await setDoc(doc(db, "hotels", currentHotelId, "staff", staffId), {
-        id: staffId, name, idType, idNo, phone, address, salary,
-        createdAt: new Date().toISOString()
-      });
       
-      document.getElementById("staffModal").classList.add("hidden");
-      await loadStaff();
-      loadStaffTable();
-      alert("Staff added successfully!");
+      try {
+        await setDoc(doc(db, "hotels", currentHotelId, "staff", staffId), {
+          id: staffId, name, idType, idNo, phone, address, salary,
+          createdAt: new Date().toISOString()
+        });
+        
+        document.getElementById("staffModal").classList.add("hidden");
+        await loadStaff();
+        loadStaffTable();
+        alert("Staff added successfully!");
+      } catch (error) {
+        console.error("Staff creation error:", error);
+        alert("Failed to add staff: " + error.message);
+      }
     };
 
     window.openSalaryModal = (staffId) => {
@@ -1471,7 +1475,6 @@
       if(!staff) return;
 
       try {
-        // 1. Log as an expense
         const expId = "EXP_" + Date.now().toString().slice(-4);
         await setDoc(doc(db, "hotels", currentHotelId, "expenses", expId), {
           id: expId, 
@@ -1481,20 +1484,18 @@
           date: new Date().toLocaleDateString("en-IN")
         });
         
-        // 2. Add to salary history for the staff
         await updateDoc(doc(db, "hotels", currentHotelId, "staff", staffId), {
            lastPaidMonth: month,
            lastPaidDate: new Date().toISOString()
         });
         
-        // 3. Show Print Slip Alert
         const wantPrint = confirm(`Salary of ₹${amount} paid to ${staff.name}.\n\nDo you want to print the salary slip?`);
         if(wantPrint) {
            printSalarySlip(staff, month, amount);
         }
         
         document.getElementById("salaryModal").classList.add("hidden");
-        await loadFinancialReports(); // update P&L
+        await loadFinancialReports();
       } catch(e) {
         alert("Error paying salary: " + e.message);
       }
@@ -1503,7 +1504,6 @@
     window.printSalarySlip = (staff, month, amount) => {
       const hotel = currentHotelProfile;
       const html = `<div style="width: 210mm; min-height: 297mm; display: flex; flex-direction: column; padding: 20mm; margin: 0 auto; background: #fff; color: #000; font-family: 'Segoe UI', sans-serif;">
-        
         <div style="flex: 1;">
           <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
             <h1 style="font-size: 28px; font-weight: 900; text-transform: uppercase;">${hotel.hotelName || "HOTEL"}</h1>
@@ -1518,6 +1518,7 @@
               <p><strong>Staff Name:</strong> ${staff.name}</p>
               <p><strong>ID Proof:</strong> ${staff.idType} (${staff.idNo})</p>
               <p><strong>Phone:</strong> ${staff.phone}</p>
+              <p><strong>Address:</strong> ${staff.address}</p>
             </div>
             <div>
               <p><strong>Date:</strong> ${new Date().toLocaleDateString("en-IN")}</p>
@@ -1552,7 +1553,6 @@
             </tbody>
           </table>
         </div>
-
         <div style="margin-top: 50px; display: flex; justify-content: space-between; align-items: flex-end;">
           <div style="font-size: 12px; color: #555;">
             <p>This is a computer-generated salary slip.</p>
@@ -1888,23 +1888,19 @@
       start.setHours(0,0,0,0);
       end.setHours(23,59,59,999);
 
-      // Filter Bookings
       const filteredBookings = cachedBookings.filter(b => {
         if(!b.createdAt) return false;
         const d = new Date(b.createdAt);
         return d >= start && d <= end;
       });
 
-      // Filter Expenses
       const filteredExpenses = cachedExpenses.filter(e => {
-        // date is stored as "DD/MM/YYYY"
         const parts = e.date.split("/");
         if(parts.length !== 3) return false;
         const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
         return d >= start && d <= end;
       });
 
-      // Calculate Totals
       let totalRev = 0;
       filteredBookings.forEach(b => totalRev += (b.totalPaid || b.advancePaid || 0));
       
@@ -1918,16 +1914,13 @@
         expenseByCategory[e.category] += amt;
       });
 
-      // Update Stats
       document.getElementById("repTotalRevenue").innerText = `₹${totalRev.toFixed(2)}`;
       document.getElementById("repTotalExpenses").innerText = `₹${totalExp.toFixed(2)}`;
       document.getElementById("repNetProfit").innerText = `₹${(totalRev - totalExp).toFixed(2)}`;
 
-      // 1. Profit Chart (Bar/Line over time)
       const ctxProfit = document.getElementById('profitChart').getContext('2d');
       if(profitChartInstance) profitChartInstance.destroy();
       
-      // Group by day for the chart
       const days = {};
       filteredBookings.forEach(b => { days[b.checkInDate || new Date().toISOString().split('T')[0]] = true; });
       const sortedDays = Object.keys(days).sort();
@@ -1952,7 +1945,6 @@
         options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
       });
 
-      // 2. Expense Chart (Doughnut)
       const ctxExpense = document.getElementById('expenseChart').getContext('2d');
       if(expenseChartInstance) expenseChartInstance.destroy();
       
@@ -1984,7 +1976,7 @@
       });
       document.getElementById("expenseModal").classList.add("hidden");
       await loadFinancialReports();
-      renderCharts(); // Refresh chart after adding
+      renderCharts();
     };
 
     // --- GST AUDIT ---
