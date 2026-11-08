@@ -89,7 +89,6 @@
           </div>
         </div>
 
-        <!-- 13 Quick Actions Grid -->
         <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-3">
           <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -233,7 +232,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-              <tr><th class="py-3 px-4">Room</th><th class="py-3 px-4">Floor</th><th class="py-3 px-4">Category</th><th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Meal / Head (₹)</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right">Actions</th></tr>
+              <tr><th class="py-3 px-4">Room</th><th class="py-3 px-4">Floor</th><th class="py-3 px-4">Category</th><th class="py-3 px-4">Lodging (₹)</th><th class="py-3 px-4">Meal / Adult (₹)</th><th class="py-3 px-4">Status</th><th class="py-3 px-4 text-right">Actions</th></tr>
             </thead>
             <tbody id="roomManagerTableBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
@@ -396,7 +395,7 @@
     </div>
   </div>
 
-  <!-- Booking Modal (Responsive & Close Button Fixed) -->
+  <!-- Booking Modal -->
   <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
     <div class="w-full max-w-xl bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl my-auto max-h-[95vh] overflow-y-auto hide-scrollbar relative">
       <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4 sticky top-0 bg-slate-900 z-10">
@@ -408,7 +407,7 @@
         <div class="flex items-center justify-between p-2 bg-slate-950 border border-slate-800 rounded-xl">
           <div>
             <label class="block text-xs font-bold text-white mb-0.5">Group Booking?</label>
-            <span class="text-[10px] text-slate-400">Overrides room rate for bulk booking</span>
+            <span class="text-[10px] text-slate-400">Overrides room rate</span>
           </div>
           <input type="checkbox" id="bookIsGroup" onchange="toggleGroupMode()" class="w-4 h-4 accent-cyan-500">
         </div>
@@ -580,10 +579,23 @@
           <div><label class="block text-xs text-slate-400 mb-1">Floor</label><select id="inputRoomFloor" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></select></div>
           <div><label class="block text-xs text-slate-400 mb-1">Category</label><select id="inputRoomType" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"><option value="Standard Non-AC">Standard Non-AC</option><option value="Deluxe AC">Deluxe AC</option><option value="Super Deluxe">Super Deluxe</option></select></div>
         </div>
+        
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block text-xs text-slate-400 mb-1">Lodging Tariff (₹)</label><input type="number" id="inputRoomRate" required min="100" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
-          <div><label class="block text-xs text-slate-400 mb-1">Fooding Per Head (₹)</label><input type="number" id="inputFoodRate" required min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Room Package Setup</label>
+            <select id="inputRoomPackage" onchange="toggleFoodRateInput()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
+              <option value="lodging_only">Room Only (No Food)</option>
+              <option value="fooding_lodging">Food + Lodging (MAP)</option>
+            </select>
+          </div>
         </div>
+
+        <div id="foodRateDiv" class="hidden">
+          <label class="block text-xs text-slate-400 mb-1">Fooding Per Adult (₹) (Excludes Children)</label>
+          <input type="number" id="inputFoodRate" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
+        </div>
+
         <div class="flex gap-2 pt-2"><button type="submit" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">Save Room</button><button type="button" onclick="document.getElementById('roomEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">Cancel</button></div>
       </form>
     </div>
@@ -700,8 +712,8 @@
     window.forceSeedRooms = async () => {
       try {
         const defaults = [
-          { roomId: "101", roomNumber: "101", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 1000, status: "vacant" },
-          { roomId: "102", roomNumber: "102", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 1000, status: "vacant" }
+          { roomId: "101", roomNumber: "101", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 0, packageType: "lodging_only", status: "vacant" },
+          { roomId: "102", roomNumber: "102", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 0, packageType: "lodging_only", status: "vacant" }
         ];
         for (const r of defaults) {
           await setDoc(doc(db, "hotels", currentHotelId, "rooms", r.roomId), r);
@@ -920,15 +932,14 @@
       const bookingId = checkoutBookingData.bookingId;
 
       try {
-        // Update booking with the final grand total (Room + Food)
         await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), {
           "summary.grandTotal": liveTotalBill,
           "foodTotal": liveFoodBill,
+          "totalPaid": totalPaid,
           "balanceDue": newBal > 0 ? newBal : 0,
           "isSettled": isFullySettled
         });
 
-        // Process checkout
         await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { 
           checkOutTime: outTime, 
           totalPaid: totalPaid,
@@ -937,7 +948,6 @@
           collectedBy: collectedBy
         });
         
-        // Settle food orders so they don't carry over to the next guest
         await settleRoomFoodOrders(currentHotelId, checkoutBookingData.roomNumber);
         
         document.getElementById("checkoutModal").classList.add("hidden");
@@ -973,7 +983,7 @@
       }
 
       tbody.innerHTML = upcoming.map(b => {
-        const due = (b.summary?.grandTotal || 0) - (b.advancePaid || 0);
+        const due = (b.balanceDue || 0);
         return `<tr class="hover:bg-slate-800/40">
           <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName}</td>
           <td class="py-3 px-4 text-cyan-400 font-bold">${b.checkInDate}</td>
@@ -1126,7 +1136,9 @@
         return alert("No vacant rooms available! If rooms are stuck, go to 'Rooms' menu and click 'Force Vacant'.");
       }
       
-      vac.forEach(r => sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 500}" data-type="${r.type}">Room ${r.roomNumber} (${r.type})</option>`);
+      vac.forEach(r => {
+        sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 0}" data-type="${r.type}" data-package="${r.packageType || 'lodging_only'}">Room ${r.roomNumber} (${r.type})</option>`;
+      });
       if (presetRoomNo) sel.value = presetRoomNo;
       
       document.getElementById("bookAdvancePaid").value = "0";
@@ -1148,7 +1160,13 @@
     
     window.handleRoomSelectChange = () => {
       const sel = document.getElementById("bookRoomSelect");
-      document.getElementById("bookRoomRate").value = sel.options[sel.selectedIndex]?.dataset.rate || 800;
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById("bookRoomRate").value = opt.dataset.rate || 800;
+      
+      // Auto-set package based on room setup
+      const roomPkg = opt.dataset.package || 'lodging_only';
+      document.getElementById("bookPackageSelect").value = roomPkg;
+      
       recalcBill();
     };
     
@@ -1163,7 +1181,7 @@
         document.getElementById("bookRoomRate").value = manualGrpRate;
       }
 
-      const foodRate = parseFloat(sel.options[sel.selectedIndex]?.dataset.food) || 1000;
+      const foodRate = parseFloat(sel.options[sel.selectedIndex]?.dataset.food) || 0;
       const nights = parseInt(document.getElementById("bookNights").value) || 1;
       const adults = parseInt(document.getElementById("bookAdults").value) || 1;
       const pkg = document.getElementById("bookPackageSelect").value; 
@@ -1171,8 +1189,8 @@
       const discount = parseFloat(document.getElementById("bookDiscount").value) || 0;
       
       const charges = calculateBookingCharges({ 
-        roomRatePerNight: roomRate, packageType: pkg, foodRatePerGuestPerNight: foodRate, 
-        numberOfGuests: adults, numberOfNights: nights, gstMode: gstMode, discount: discount
+        roomRatePerNight: roomRate, packageType: pkg, foodRatePerAdult: foodRate, 
+        numberOfAdults: adults, numberOfNights: nights, gstMode: gstMode, discount: discount
       });
       
       document.getElementById("liveTotal").innerText = `₹${charges.summary.grandTotal.toFixed(2)}`;
@@ -1210,8 +1228,9 @@
       const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
       const charges = recalcBill();
       
-      const today = new Date().toISOString().split('T')[0];
-      const isFutureBooking = checkInDate > today;
+      // Date Check Logic
+      const todayStr = new Date().toLocaleDateString('en-CA'); // Format: YYYY-MM-DD
+      const isFutureBooking = checkInDate > todayStr;
       
       const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
       
@@ -1222,6 +1241,7 @@
         phone, idType, idNumber, adults, children, packageType: pkg, gstMode, nights, 
         checkInTime: isFutureBooking ? null : inTime, 
         checkInDate: checkInDate,
+        isFutureBooking: isFutureBooking, // Pass flag to bookings.js
         isGroup, groupName, advancePaid, discount,
         ...charges 
       };
@@ -1349,7 +1369,7 @@
       else printA4TaxInvoice(currentHotelProfile, bData, food.unsettledOrders);
     };
 
-    // --- POS ORDER LOGIC (CORRECTED TO AVOID DOUBLE COUNTING) ---
+    // --- POS ORDER LOGIC ---
     window.populatePosRooms = () => {
       const sel = document.getElementById("posRoomSelect");
       sel.innerHTML = "";
@@ -1405,15 +1425,13 @@
       const orderId = "KOT_" + Date.now().toString().slice(-6);
       
       try {
-        // Save the POS order. We do NOT update the booking document here to prevent double-counting.
-        // The checkout process will pull these unsettled orders and add them to the final bill.
         await setDoc(doc(db, "hotels", currentHotelId, "pos_orders", orderId), {
           orderId, 
           bookingId: bid, 
           roomNumber: roomNo, 
           items: currentPosOrder, 
           status: "served", 
-          isSettled: false, // Important: This flag ensures checkout picks it up
+          isSettled: false,
           createdAt: new Date().toISOString()
         });
         
@@ -1432,7 +1450,7 @@
           <td class="py-3 px-4 text-slate-400">${r.floor}</td>
           <td class="py-3 px-4 text-cyan-300 font-sans">${r.type}</td>
           <td class="py-3 px-4 text-emerald-400">₹${r.rate}</td>
-          <td class="py-3 px-4 text-amber-400">₹${r.foodRate || 1000}</td>
+          <td class="py-3 px-4 text-amber-400">₹${r.packageType === 'fooding_lodging' ? (r.foodRate || 0) : 'N/A'}</td>
           <td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : (r.status === 'cleaning' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400')}">${r.status.toUpperCase()}</span></td>
           <td class="py-3 px-4 text-right space-x-2 font-sans">
             ${r.status !== 'vacant' ? `<button onclick="forceVacant('${r.id}')" class="px-2 py-1 bg-amber-600 text-white rounded text-[10px] font-bold">Force Vacant</button>` : ''}
@@ -1452,14 +1470,32 @@
       } catch(e) { alert("Error: " + e.message); }
     };
 
+    window.toggleFoodRateInput = () => {
+      const pkg = document.getElementById("inputRoomPackage").value;
+      const div = document.getElementById("foodRateDiv");
+      const inp = document.getElementById("inputFoodRate");
+      if (pkg === "fooding_lodging") {
+        div.classList.remove("hidden");
+        inp.required = true;
+        if (inp.value == "0") inp.value = "500"; 
+      } else {
+        div.classList.add("hidden");
+        inp.required = false;
+        inp.value = "0";
+      }
+    };
+
     window.openAddRoomModal = () => {
       document.getElementById("editRoomId").value = "";
       document.getElementById("inputRoomNo").value = "";
       document.getElementById("inputRoomRate").value = "800";
-      document.getElementById("inputFoodRate").value = "1000";
+      document.getElementById("inputRoomPackage").value = "lodging_only";
+      document.getElementById("inputFoodRate").value = "0";
+      toggleFoodRateInput();
       populateFloorOptions();
       document.getElementById("roomEditModal").classList.remove("hidden");
     };
+    
     window.openEditRoomModal = (rId) => {
       const r = cachedRooms.find(x => x.id === rId);
       if (!r) return;
@@ -1469,24 +1505,31 @@
       document.getElementById("inputRoomFloor").value = r.floor;
       document.getElementById("inputRoomType").value = r.type;
       document.getElementById("inputRoomRate").value = r.rate;
-      document.getElementById("inputFoodRate").value = r.foodRate || 1000;
+      document.getElementById("inputRoomPackage").value = r.packageType || "lodging_only";
+      document.getElementById("inputFoodRate").value = r.foodRate || 0;
+      toggleFoodRateInput();
       document.getElementById("roomEditModal").classList.remove("hidden");
     };
+    
     window.submitRoom = async () => {
       const eId = document.getElementById("editRoomId").value;
       const rNo = document.getElementById("inputRoomNo").value.trim();
       const fl = document.getElementById("inputRoomFloor").value;
       const tp = document.getElementById("inputRoomType").value;
       const rt = parseFloat(document.getElementById("inputRoomRate").value) || 800;
-      const fr = parseFloat(document.getElementById("inputFoodRate").value) || 1000;
+      const pkg = document.getElementById("inputRoomPackage").value;
+      const fr = parseFloat(document.getElementById("inputFoodRate").value) || 0;
+      
       const tId = eId || rNo;
       await setDoc(doc(db, "hotels", currentHotelId, "rooms", tId), {
-        roomId: tId, roomNumber: rNo, floor: fl, type: tp, rate: rt, foodRate: fr,
+        roomId: tId, roomNumber: rNo, floor: fl, type: tp, rate: rt, 
+        packageType: pkg, foodRate: fr,
         status: eId ? (cachedRooms.find(r => r.id === eId)?.status || 'vacant') : 'vacant'
       }, { merge: true });
       document.getElementById("roomEditModal").classList.add("hidden");
       loadRoomManager();
     };
+    
     window.deleteRoom = async (rId) => {
       if (!confirm(`Delete Room ${rId}?`)) return;
       await deleteDoc(doc(db, "hotels", currentHotelId, "rooms", rId));
