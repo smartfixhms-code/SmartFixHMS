@@ -1,11 +1,11 @@
-// ক্যাশ ভার্সন v4 এ আপডেট করা হলো যাতে নতুন কোড ব্রাউজারে লোড হয়
-const CACHE_NAME = "smartfix-hms-v4";
+const CACHE_NAME = "smartfix-hms-v5";
 const ASSETS_TO_CACHE = [
   "./", 
   "./index.html", 
   "./dashboard.html", 
   "./super-admin.html", 
   "./manifest.json",
+  "./icon.svg",
   "./js/firebase-config.js", 
   "./js/auth.js", 
   "./js/license.js",
@@ -30,7 +30,6 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  // ফায়ারবেস বা পোস্ট রিকোয়েস্ট ক্যাশ করবেন না
   if (e.request.method !== "GET" || e.request.url.includes("firestore.googleapis.com") || e.request.url.includes("firebase")) {
     return;
   }
@@ -38,11 +37,10 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        // সফলভাবে ফেচ হলে ক্যাশে কপি সেভ করুন
         const resClone = res.clone();
         caches.open(CACHE_NAME).then(c => { c.put(e.request, resClone); });
         return res;
       })
-      .catch(() => caches.match(e.request)) // অফলাইন হলে ক্যাশ থেকে দেখান
+      .catch(() => caches.match(e.request)) 
   );
 });
