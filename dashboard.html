@@ -15,8 +15,6 @@
     body { font-family: 'Inter', sans-serif; background-color: #060913; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
-    
-    /* Custom glow for mobile bottom nav */
     .glow-btn { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
     .glass-nav { background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(30, 41, 59, 0.8); }
   </style>
@@ -42,7 +40,6 @@
   </header>
 
   <div class="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row">
-    <!-- Desktop Sidebar -->
     <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-1 bg-slate-950/40">
       <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Main Menu</div>
       <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400"><span>Dashboard</span></button>
@@ -60,12 +57,10 @@
       <button onclick="openBookingModal()" class="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">+ Book Walk-In</button>
     </aside>
     
-    <!-- Main Content -->
     <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
       
       <section id="view-dashboard" class="space-y-6">
         
-        <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-3.5">
           <div onclick="filterRoomsStatus('all')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl hover:border-cyan-500/50 transition">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Rooms</span>
@@ -95,100 +90,71 @@
           </div>
         </div>
 
-        <!-- 13 Quick Actions Grid -->
         <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-3">
-          <!-- 1. Book Room -->
           <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Book Room</span>
           </button>
-          
-          <!-- 2. Check-In List -->
           <button onclick="openCheckInList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-In</span>
           </button>
-
-          <!-- 3. Check-Out List -->
           <button onclick="openCheckOutList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-rose-500/50 transition">
             <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-Out</span>
           </button>
-
-          <!-- 4. Cleaning -->
           <button onclick="openCleaningList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-amber-500/50 transition">
             <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Cleaning</span>
           </button>
-
-          <!-- 5. Follow-up -->
           <button onclick="switchView('followup')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Follow-up</span>
           </button>
-
-          <!-- 6. Market Due -->
           <button onclick="switchView('marketdue')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-rose-500/50 transition">
             <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Market Due</span>
           </button>
-
-          <!-- 7. POS -->
           <button onclick="switchView('pos')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">POS</span>
           </button>
-
-          <!-- 8. Rooms -->
           <button onclick="switchView('room-manager')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Rooms</span>
           </button>
-
-          <!-- 9. Invoices -->
           <button onclick="switchView('billing-archive')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Invoices</span>
           </button>
-
-          <!-- 10. Expenses -->
           <button onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Expenses</span>
           </button>
-
-          <!-- 11. Reports -->
           <button onclick="switchView('reports')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Reports</span>
           </button>
-
-          <!-- 12. GST Audit -->
           <button onclick="switchView('gst-audit')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">GST</span>
           </button>
-
-          <!-- 13. Settings -->
           <button onclick="switchView('settings')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Settings</span>
           </button>
         </div>
 
-        <!-- Live Floor Status -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-sm font-black uppercase tracking-wider text-white">Live Floor Status</h3>
             <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Syncing</span>
           </div>
-          <div id="roomGridContainer" class="space-y-6">
-            <!-- Room grid loads here -->
-          </div>
+          <div id="roomGridContainer" class="space-y-6"></div>
         </div>
       </section>
 
-      <!-- FOLLOW UP SECTION -->
+      <!-- Other Views (Follow-up, Market Due, POS, etc.) remain same, just copied internally for safety -->
       <section id="view-followup" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-white uppercase tracking-wider">Follow-up & Upcoming Bookings</h2>
@@ -204,7 +170,6 @@
         </div>
       </section>
 
-      <!-- MARKET DUE SECTION -->
       <section id="view-marketdue" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-white uppercase tracking-wider">Market Due / Outstanding Balances</h2>
@@ -220,7 +185,6 @@
         </div>
       </section>
 
-      <!-- POS SECTION -->
       <section id="view-pos" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-white uppercase tracking-wider">Restaurant POS & Room Service</h2>
@@ -261,7 +225,6 @@
         </div>
       </section>
 
-      <!-- Room Manager -->
       <section id="view-room-manager" class="hidden space-y-6">
         <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Room Tariffs & Meal Rates</h2><button onclick="openAddRoomModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Add Room</button></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -274,7 +237,6 @@
         </div>
       </section>
 
-      <!-- Billing Archive -->
       <section id="view-billing-archive" class="hidden space-y-6">
         <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Bookings & Settlements</h2><input type="text" id="billSearchInput" oninput="filterInvoicesTable()" placeholder="Search guest..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white"></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -287,7 +249,6 @@
         </div>
       </section>
 
-      <!-- P&L Reports & Charts -->
       <section id="view-reports" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-white uppercase tracking-wider">Financial P&L Analytics</h2>
@@ -320,7 +281,6 @@
         </div>
       </section>
 
-      <!-- GST Audit -->
       <section id="view-gst-audit" class="hidden space-y-6">
         <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">GST Audit & Ledger</h2><button onclick="exportGstToCsv()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">📥 Export CA CSV</button></div>
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -333,15 +293,12 @@
         </div>
       </section>
 
-      <!-- Settings -->
       <section id="view-settings" class="hidden space-y-6">
         <h2 class="text-base font-bold text-white uppercase tracking-wider">Hotel Operational Settings</h2>
-        
         <div class="bg-yellow-950/30 border border-yellow-800/50 p-4 rounded-xl flex gap-3 text-yellow-400 text-xs">
           <span>⚠️</span>
           <p>Saving changes in this section requires your current login password for security verification.</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
             <h3 class="text-sm font-bold text-cyan-400 uppercase">Hotel Profile & Policy</h3>
@@ -368,11 +325,10 @@
           </div>
         </div>
       </section>
-
     </main>
   </div>
 
-  <!-- Mobile Bottom Navigation (Kept exactly the same, just styled) -->
+  <!-- Mobile Nav (Same as before) -->
   <div class="md:hidden fixed bottom-0 left-0 w-full glass-nav z-40 flex justify-between items-center px-4 py-2 pb-safe">
     <button onclick="switchView('dashboard')" class="flex flex-col items-center gap-1 text-cyan-400">
       <svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -397,50 +353,47 @@
     </button>
   </div>
 
-  <!-- MODAL: Check-In List -->
+  <!-- Modals: Check-In List -->
   <div id="checkinModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-sm font-bold uppercase text-cyan-400">In-House Guests</h3>
         <button onclick="document.getElementById('checkinModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
       </div>
-      <div id="checkinList" class="space-y-2">
-        <!-- Loaded via JS -->
-      </div>
+      <div id="checkinList" class="space-y-2"></div>
     </div>
   </div>
 
-  <!-- MODAL: Check-Out List -->
+  <!-- Modals: Check-Out List -->
   <div id="checkoutListModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-sm font-bold uppercase text-rose-400">Select Guest for Check-Out</h3>
         <button onclick="document.getElementById('checkoutListModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
       </div>
-      <div id="checkoutList" class="space-y-2">
-        <!-- Loaded via JS -->
-      </div>
+      <div id="checkoutList" class="space-y-2"></div>
     </div>
   </div>
 
-  <!-- MODAL: Cleaning List -->
+  <!-- Modals: Cleaning List -->
   <div id="cleaningModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-sm font-bold uppercase text-amber-400">Housekeeping / Cleaning</h3>
         <button onclick="document.getElementById('cleaningModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
       </div>
-      <div id="cleaningList" class="space-y-2">
-        <!-- Loaded via JS -->
-      </div>
+      <div id="cleaningList" class="space-y-2"></div>
     </div>
   </div>
 
-  <!-- Booking Modal -->
-  <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-slate-900 border border-slate-800 p-6 rounded-2xl max-h-[92vh] overflow-y-auto hide-scrollbar">
-      <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4"><h3 class="text-sm font-bold uppercase text-cyan-400">New Reservation</h3><button onclick="closeBookingModal()" class="text-slate-400 text-lg">×</button></div>
-      <form id="bookingForm" onsubmit="event.preventDefault(); submitBooking();" class="space-y-3">
+  <!-- Booking Modal (Responsive & Close Button Fixed) -->
+  <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="w-full max-w-xl bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl my-auto max-h-[95vh] overflow-y-auto hide-scrollbar relative">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4 sticky top-0 bg-slate-900 z-10">
+        <h3 class="text-sm font-bold uppercase text-cyan-400">New Reservation</h3>
+        <button type="button" onclick="closeBookingModal()" class="text-rose-400 hover:text-rose-300 font-bold text-2xl leading-none bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center border border-slate-700">×</button>
+      </div>
+      <form id="bookingForm" onsubmit="event.preventDefault(); submitBooking();" class="space-y-4">
         
         <div class="flex items-center justify-between p-2 bg-slate-950 border border-slate-800 rounded-xl">
           <div>
@@ -450,12 +403,12 @@
           <input type="checkbox" id="bookIsGroup" onchange="toggleGroupMode()" class="w-4 h-4 accent-cyan-500">
         </div>
 
-        <div id="groupNameDiv" class="hidden grid grid-cols-2 gap-2">
+        <div id="groupNameDiv" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div><label class="block text-xs text-cyan-400 font-bold mb-1">Group Name</label><input type="text" id="bookGroupName" placeholder="Ex: TCS Meet" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
-          <div><label class="block text-xs text-cyan-400 font-bold mb-1">Group Manual Rate (₹)</label><input type="number" id="bookGroupRate" oninput="recalcBill()" placeholder="Ex: 500" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400 font-bold font-mono"></div>
+          <div><label class="block text-xs text-cyan-400 font-bold mb-1">Group Rate (₹)</label><input type="number" id="bookGroupRate" oninput="recalcBill()" placeholder="Ex: 500" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400 font-bold font-mono"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs text-slate-400 mb-1">Phone Number (For CRM)</label>
             <input type="text" id="bookPhone" required oninput="checkCustomerHistory()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono">
@@ -464,7 +417,7 @@
           <div><label class="block text-xs text-slate-400 mb-1">Guest Full Name</label><input type="text" id="bookGuestName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl">
           <div>
             <label class="block text-xs text-cyan-400 font-bold mb-1">ID Type *</label>
             <select id="bookIdType" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
@@ -474,27 +427,27 @@
           <div><label class="block text-xs text-cyan-400 font-bold mb-1">ID Number *</label><input type="text" id="bookIdNumber" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono"></div>
         </div>
         
-        <div class="grid grid-cols-4 gap-2.5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <div><label class="block text-xs text-slate-400 mb-1">Adults</label><input type="number" id="bookAdults" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
           <div><label class="block text-xs text-slate-400 mb-1">Children</label><input type="number" id="bookChildren" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
           <div><label class="block text-xs text-slate-400 mb-1">Nights</label><input type="number" id="bookNights" value="1" min="1" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
           <div><label class="block text-xs text-slate-400 mb-1">Check-In Date</label><input type="date" id="bookCheckInDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white font-mono"></div>
         </div>
         
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div><label class="block text-xs text-slate-400 mb-1">Select Room</label><select id="bookRoomSelect" onchange="handleRoomSelectChange()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-cyan-400"></select></div>
           <div><label class="block text-xs text-slate-400 mb-1">Rate / Night</label><input type="number" id="bookRoomRate" value="800" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-emerald-400 font-mono font-bold"></div>
         </div>
         
-        <div class="grid grid-cols-3 gap-3">
-          <div class="col-span-1">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-1">
             <label class="block text-xs text-slate-400 mb-1">Package</label>
             <select id="bookPackageSelect" onchange="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
               <option value="lodging_only">Room Only (EP)</option><option value="fooding_lodging">Food + Lodging (MAP)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Special Discount (₹)</label>
+            <label class="block text-xs text-slate-400 mb-1">Discount (₹)</label>
             <input type="number" id="bookDiscount" value="0" min="0" oninput="recalcBill()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-rose-400 font-mono font-bold">
           </div>
           <div>
@@ -522,25 +475,30 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider rounded-xl mt-2 shadow-lg shadow-cyan-500/20">Confirm Check-In</button>
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeBookingModal()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase rounded-xl">Cancel</button>
+          <button type="submit" class="flex-[2] py-3 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-cyan-500/20">Confirm Check-In</button>
+        </div>
       </form>
     </div>
   </div>
 
   <!-- Checkout Settlement Modal -->
-  <div id="checkoutModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+  <div id="checkoutModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 my-auto">
       <h3 class="text-sm font-bold uppercase text-emerald-400 text-center">Settle & Check-Out</h3>
       <div class="text-xs space-y-1.5 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800">
         <div class="flex justify-between"><span class="text-slate-400">Room:</span><span id="outRoomNo" class="text-white font-bold">---</span></div>
-        <div class="flex justify-between"><span class="text-slate-400">Grand Total:</span><span id="outTotal" class="text-white">₹0.00</span></div>
-        <div class="flex justify-between"><span class="text-slate-400">Advance Paid:</span><span id="outAdvance" class="text-emerald-400">₹0.00</span></div>
-        <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Balance Due:</span><span id="outDue" class="text-rose-400 font-bold">₹0.00</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Room Bill:</span><span id="outRoomBill" class="text-slate-300">₹0.00</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Food (POS):</span><span id="outFoodBill" class="text-slate-300">₹0.00</span></div>
+        <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="text-slate-400">Grand Total:</span><span id="outTotal" class="text-white font-bold">₹0.00</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Total Paid:</span><span id="outAdvance" class="text-emerald-400 font-bold">₹0.00</span></div>
+        <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="text-slate-400">Balance Due:</span><span id="outDue" class="text-rose-400 font-bold text-sm">₹0.00</span></div>
       </div>
       
       <div>
         <label class="block text-xs text-slate-400 mb-1">Collect Remaining Amount (₹)</label>
-        <input type="number" id="outFinalPayment" oninput="calcFinalSettlement()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-emerald-400 font-bold font-mono outline-none">
+        <input type="number" id="outFinalPayment" oninput="calcFinalSettlement()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-emerald-400 font-bold font-mono outline-none">
       </div>
 
       <div>
@@ -554,14 +512,14 @@
       </div>
 
       <div class="flex gap-2 pt-2">
-        <button onclick="document.getElementById('checkoutModal').classList.add('hidden')" class="flex-1 py-2 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
-        <button onclick="confirmCheckout()" class="flex-1 py-2 bg-emerald-500 text-slate-950 text-xs font-black uppercase rounded-xl">Confirm</button>
+        <button onclick="document.getElementById('checkoutModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+        <button onclick="confirmCheckout()" class="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black uppercase rounded-xl">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- Market Due Collect Modal -->
-  <div id="dueModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+  <!-- Due Collect Modal -->
+  <div id="dueModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
       <h3 class="text-sm font-bold uppercase text-cyan-400 text-center">Collect Market Due</h3>
       <div class="text-xs space-y-1.5 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800">
@@ -569,12 +527,12 @@
         <div class="flex justify-between"><span class="text-slate-400">Invoice:</span><span id="dueInvoiceId" class="text-cyan-400">---</span></div>
         <div class="flex justify-between"><span class="text-slate-400">Total Bill:</span><span id="dueTotalBill" class="text-white">₹0.00</span></div>
         <div class="flex justify-between"><span class="text-slate-400">Already Paid:</span><span id="duePaid" class="text-emerald-400">₹0.00</span></div>
-        <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Current Due:</span><span id="dueAmount" class="text-rose-400 font-bold">₹0.00</span></div>
+        <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Current Due:</span><span id="dueAmount" class="text-rose-400 font-bold text-sm">₹0.00</span></div>
       </div>
       
       <div>
         <label class="block text-xs text-slate-400 mb-1">Amount Receiving Now (₹)</label>
-        <input type="number" id="dueCollectAmount" oninput="calcNewDue()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-sm text-cyan-400 font-bold font-mono outline-none">
+        <input type="number" id="dueCollectAmount" oninput="calcNewDue()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-cyan-400 font-bold font-mono outline-none">
       </div>
 
       <div class="text-center py-2 bg-slate-950 border border-slate-800 rounded-xl">
@@ -583,14 +541,14 @@
       </div>
 
       <div class="flex gap-2 pt-2">
-        <button onclick="document.getElementById('dueModal').classList.add('hidden')" class="flex-1 py-2 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
-        <button onclick="submitDueCollection()" class="flex-1 py-2 bg-cyan-500 text-slate-950 text-xs font-black uppercase rounded-xl">Receive</button>
+        <button onclick="document.getElementById('dueModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+        <button onclick="submitDueCollection()" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black uppercase rounded-xl">Receive</button>
       </div>
     </div>
   </div>
 
-  <!-- Settings Password Verify Modal -->
-  <div id="settingsAuthModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+  <!-- Other Modals remain untouched (Expense, Settings, etc.) -->
+  <div id="settingsAuthModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
       <h3 class="text-sm font-bold uppercase text-rose-400 text-center">Security Verification</h3>
       <p class="text-xs text-slate-400 text-center">Enter your login password to save settings.</p>
@@ -602,8 +560,7 @@
     </div>
   </div>
 
-  <!-- Room Edit Modal -->
-  <div id="roomEditModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+  <div id="roomEditModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
       <h3 id="roomModalTitle" class="text-sm font-bold uppercase text-cyan-400">Configure Room</h3>
       <form onsubmit="event.preventDefault(); submitRoom();" class="space-y-3">
@@ -622,8 +579,7 @@
     </div>
   </div>
 
-  <!-- Expense Modal -->
-  <div id="expenseModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+  <div id="expenseModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
       <h3 class="text-sm font-bold uppercase text-emerald-400">Log Property Expense</h3>
       <form onsubmit="event.preventDefault(); submitExpense();" class="space-y-3">
@@ -635,8 +591,7 @@
     </div>
   </div>
 
-  <!-- Menu Add Modal -->
-  <div id="menuModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+  <div id="menuModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
       <h3 class="text-sm font-bold uppercase text-cyan-400">Add POS Menu Item</h3>
       <form onsubmit="event.preventDefault(); submitMenuItem();" class="space-y-3">
@@ -647,19 +602,6 @@
     </div>
   </div>
 
-  <!-- License Lock Modal -->
-  <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
-    <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl shadow-2xl shadow-rose-500/10 text-center space-y-6">
-      <div class="w-20 h-20 bg-rose-950/50 rounded-full flex items-center justify-center mx-auto border border-rose-800"><span class="text-3xl">🔒</span></div>
-      <div>
-        <h2 class="text-xl font-black text-white uppercase tracking-wider mb-2">License Expired</h2>
-        <p class="text-sm text-slate-400">Your trial or subscription has ended. Please contact support to renew access.</p>
-      </div>
-      <a id="whatsappSupportBtn" href="#" target="_blank" class="block w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-sm uppercase hover:opacity-90 transition shadow-lg">Contact Support on WhatsApp</a>
-      <button onclick="handleSignOut()" class="text-xs text-slate-500 hover:text-slate-300 font-semibold underline">Sign Out</button>
-    </div>
-  </div>
-
   <script type="module">
     import { db, auth } from "./js/firebase-config.js";
     import { monitorAuthState, logoutUser } from "./js/auth.js";
@@ -667,7 +609,7 @@
     import { calculateBookingCharges, createNewBooking, processCheckOut } from "./js/bookings.js";
     import { initializeDefaultRooms, markRoomCleaned } from "./js/tape-chart.js";
     import { print58mmThermalReceipt, print80mmThermalReceipt, printA4TaxInvoice } from "./js/thermal-print.js";
-    import { getRoomUnsettledFoodOrders } from "./js/pos.js";
+    import { getRoomUnsettledFoodOrders, settleRoomFoodOrders } from "./js/pos.js";
     import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { collection, doc, setDoc, deleteDoc, updateDoc, getDocs, getDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -680,7 +622,6 @@
     let hotelFloors = ["Floor 1", "Floor 2", "Floor 3"];
     let currentPosOrder = [];
     
-    // Global Vars for Modals
     let checkoutBookingData = null;
     let checkoutRoomId = null;
     let dueBookingData = null;
@@ -688,11 +629,22 @@
     let profitChartInstance = null;
     let foodChartInstance = null;
 
+    // Live Checkout variables
+    let liveRoomBill = 0;
+    let liveFoodBill = 0;
+    let liveTotalBill = 0;
+    let liveAlreadyPaid = 0;
+    let liveBalanceDue = 0;
+
     monitorAuthState(async (state) => {
       if (state && state.user && state.profile) {
         currentHotelId = state.profile.hotelId;
+        if (!currentHotelId) {
+          alert("No Hotel ID found in user profile.");
+          return;
+        }
+
         const lic = await verifyLicenseStatus(currentHotelId);
-        
         if (!lic.isValid) {
           document.getElementById("licenseLockModal").classList.remove("hidden");
           document.getElementById("whatsappSupportBtn").href = getWhatsAppSupportLink(lic.details?.hotelName || "My Hotel", currentHotelId);
@@ -703,18 +655,28 @@
         document.getElementById("navHotelTitle").innerText = currentHotelProfile.hotelName || "Property";
         document.getElementById("licenseBadgeText").innerText = `${lic.daysRemaining} Days License`;
         
-        await initializeDefaultRooms(currentHotelId);
-        await loadHotelFloors();
-        await loadMenuItems();
+        try {
+          await initializeDefaultRooms(currentHotelId);
+          await loadHotelFloors();
+          await loadMenuItems();
+        } catch (e) {
+          console.log("Initialization warning:", e);
+        }
         
         onSnapshot(collection(db, "hotels", currentHotelId, "rooms"), (snap) => {
           cachedRooms = [];
           snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
-          renderFloorGrid(cachedRooms);
+          
+          if (cachedRooms.length === 0) {
+            document.getElementById("roomGridContainer").innerHTML = `
+              <div class="flex flex-col items-center justify-center p-6 border border-slate-700 border-dashed rounded-xl">
+                <p class="text-slate-400 text-sm mb-3">No rooms found in database.</p>
+                <button onclick="forceSeedRooms()" class="px-4 py-2 bg-cyan-600 text-white text-xs font-bold rounded-lg hover:bg-cyan-500">Force Create Rooms</button>
+              </div>`;
+          } else {
+            renderFloorGrid(cachedRooms);
+          }
           updateMetrics(cachedRooms);
-        }, (error) => {
-          console.error("Snapshot Error:", error);
-          document.getElementById("roomGridContainer").innerHTML = `<div class="text-rose-400 text-sm font-bold p-4">Failed to load rooms. Please check Firestore security rules.</div>`;
         });
         
         await loadInvoiceArchives();
@@ -724,6 +686,21 @@
         window.location.href = "index.html";
       }
     });
+
+    window.forceSeedRooms = async () => {
+      try {
+        const defaults = [
+          { roomId: "101", roomNumber: "101", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 1000, status: "vacant" },
+          { roomId: "102", roomNumber: "102", floor: "Floor 1", type: "Deluxe AC", rate: 800, foodRate: 1000, status: "vacant" }
+        ];
+        for (const r of defaults) {
+          await setDoc(doc(db, "hotels", currentHotelId, "rooms", r.roomId), r);
+        }
+        alert("Default rooms created successfully!");
+      } catch (e) {
+        alert("Error creating rooms. Check Firestore Rules: " + e.message);
+      }
+    };
 
     window.handleSignOut = () => logoutUser();
     
@@ -743,11 +720,10 @@
       if (vId === 'reports') setTimeout(renderCharts, 100);
     };
 
-    // --- GRID LIST MODALS ---
+    // --- LIST MODALS ---
     window.openCheckInList = () => {
       const list = document.getElementById('checkinList');
       const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
-      
       if(inHouse.length === 0) {
         list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
       } else {
@@ -755,11 +731,9 @@
           <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
             <div>
               <div class="text-sm font-bold text-white">${b.guestName} <span class="text-[10px] text-slate-500">(${b.phone})</span></div>
-              <div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | ${b.nights}N | Total: ₹${(b.summary?.grandTotal || 0).toFixed(2)}</div>
+              <div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | Bill: ₹${(b.summary?.grandTotal || 0).toFixed(2)}</div>
             </div>
-            <div class="text-right">
-              <span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span>
-            </div>
+            <span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span>
           </div>
         `).join('');
       }
@@ -769,32 +743,32 @@
     window.openCheckOutList = () => {
       const list = document.getElementById('checkoutList');
       const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
-      
       if(inHouse.length === 0) {
         list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
       } else {
-        list.innerHTML = inHouse.map(b => `
+        list.innerHTML = inHouse.map(b => {
+          const due = (b.balanceDue || 0);
+          return `
           <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
             <div>
               <div class="text-sm font-bold text-white">${b.guestName}</div>
-              <div class="text-xs text-slate-400 mt-1">Room ${b.roomNumber} | Due: <span class="text-rose-400 font-bold">₹${(b.balanceDue || 0).toFixed(2)}</span></div>
+              <div class="text-xs text-slate-400 mt-1">Room ${b.roomNumber} | Due: <span class="${due > 0 ? 'text-rose-400' : 'text-emerald-400'} font-bold">₹${due.toFixed(2)}</span></div>
             </div>
             <button onclick="initiateCheckoutFromList('${b.bookingId}', '${b.roomId}')" class="px-3 py-1.5 bg-rose-500 text-white text-[10px] font-bold rounded-lg hover:bg-rose-400">Settle</button>
-          </div>
-        `).join('');
+          </div>`;
+        }).join('');
       }
       document.getElementById('checkoutListModal').classList.remove('hidden');
     };
 
     window.initiateCheckoutFromList = (bid, rid) => {
       document.getElementById('checkoutListModal').classList.add('hidden');
-      handleRoomAction(rid); // Re-use the logic to open checkout modal
+      handleRoomAction(rid);
     };
 
     window.openCleaningList = () => {
       const list = document.getElementById('cleaningList');
       const cleaning = cachedRooms.filter(r => r.status === 'cleaning');
-      
       if(cleaning.length === 0) {
         list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No rooms in cleaning status.</div>`;
       } else {
@@ -813,19 +787,13 @@
 
     window.markCleanedFromList = async (rid) => {
       await markRoomCleaned(currentHotelId, rid);
-      openCleaningList(); // Refresh list
+      openCleaningList();
     };
 
     // --- DASHBOARD GRID ---
     function renderFloorGrid(rooms) {
       const container = document.getElementById("roomGridContainer");
       if (!container) return;
-      
-      if (rooms.length === 0) {
-        container.innerHTML = `<div class="text-center text-slate-500 text-sm py-4">No rooms initialized. Please add rooms in Room Manager.</div>`;
-        return;
-      }
-
       const grouped = {};
       rooms.forEach(r => {
         const f = r.floor || "Floor 1";
@@ -879,6 +847,7 @@
       else renderFloorGrid(cachedRooms.filter(r => r.status === st));
     };
 
+    // --- CHECKOUT LOGIC (FIXED) ---
     window.handleRoomAction = async (rId) => {
       const r = cachedRooms.find(x => x.id === rId);
       if (!r) return;
@@ -893,18 +862,25 @@
         
         checkoutBookingData = booking;
         checkoutRoomId = r.id;
-        const totalBill = (booking.summary?.grandTotal || 0);
-        checkoutTotalBill = totalBill;
-        checkoutAdvance = (booking.advancePaid || 0);
-        checkoutDue = totalBill - checkoutAdvance;
+        
+        // ফুড অর্ডার চেক করা হচ্ছে
+        const foodData = await getRoomUnsettledFoodOrders(currentHotelId, r.roomNumber);
+        liveFoodBill = foodData.totalFoodCost;
+        
+        liveRoomBill = (booking.summary?.grandTotal || 0);
+        liveTotalBill = liveRoomBill + liveFoodBill;
+        liveAlreadyPaid = (booking.totalPaid || booking.advancePaid || 0);
+        liveBalanceDue = liveTotalBill - liveAlreadyPaid;
 
         document.getElementById("outRoomNo").innerText = r.roomNumber;
-        document.getElementById("outTotal").innerText = `₹${totalBill.toFixed(2)}`;
-        document.getElementById("outAdvance").innerText = `₹${checkoutAdvance.toFixed(2)}`;
-        document.getElementById("outDue").innerText = `₹${checkoutDue.toFixed(2)}`;
+        document.getElementById("outRoomBill").innerText = `₹${liveRoomBill.toFixed(2)}`;
+        document.getElementById("outFoodBill").innerText = `₹${liveFoodBill.toFixed(2)}`;
+        document.getElementById("outTotal").innerText = `₹${liveTotalBill.toFixed(2)}`;
+        document.getElementById("outAdvance").innerText = `₹${liveAlreadyPaid.toFixed(2)}`;
+        document.getElementById("outDue").innerText = `₹${liveBalanceDue.toFixed(2)}`;
         
         const finalInput = document.getElementById("outFinalPayment");
-        finalInput.value = checkoutDue > 0 ? checkoutDue.toFixed(2) : "0.00";
+        finalInput.value = liveBalanceDue > 0 ? liveBalanceDue.toFixed(2) : "0.00";
         document.getElementById("outCollectedBy").value = "";
         
         calcFinalSettlement();
@@ -912,13 +888,9 @@
       }
     };
 
-    let checkoutTotalBill = 0;
-    let checkoutAdvance = 0;
-    let checkoutDue = 0;
-
     window.calcFinalSettlement = () => {
       const collectNow = parseFloat(document.getElementById("outFinalPayment").value) || 0;
-      const newBal = checkoutDue - collectNow;
+      const newBal = liveBalanceDue - collectNow;
       const displayBal = document.getElementById("outNewBalance");
       displayBal.innerText = `₹${newBal.toFixed(2)}`;
       if (newBal <= 0) {
@@ -931,23 +903,43 @@
     window.confirmCheckout = async () => {
       const collectNow = parseFloat(document.getElementById("outFinalPayment").value) || 0;
       const collectedBy = document.getElementById("outCollectedBy").value.trim() || "Front Desk";
-      const totalPaid = checkoutAdvance + collectNow;
-      const newBal = checkoutTotalBill - totalPaid;
+      const totalPaid = liveAlreadyPaid + collectNow;
+      const newBal = liveTotalBill - totalPaid;
       const isFullySettled = newBal <= 0;
       const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+      const bookingId = checkoutBookingData.bookingId;
 
-      await processCheckOut(currentHotelId, checkoutBookingData.bookingId, checkoutRoomId, { 
-        checkOutTime: outTime, 
-        totalPaid: totalPaid,
-        balanceDue: newBal > 0 ? newBal : 0,
-        isSettled: isFullySettled,
-        collectedBy: collectedBy
-      });
-      
-      document.getElementById("checkoutModal").classList.add("hidden");
-      alert(`Room checkout complete! Collected By: ${collectedBy}. Status: ${isFullySettled ? 'SETTLED' : 'DUE ₹' + newBal.toFixed(2)}`);
-      await loadInvoiceArchives();
-      await loadFinancialReports();
+      try {
+        // Update booking with new final total including food
+        await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), {
+          "summary.grandTotal": liveTotalBill,
+          "foodTotal": liveFoodBill
+        });
+
+        // Process checkout
+        await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { 
+          checkOutTime: outTime, 
+          totalPaid: totalPaid,
+          balanceDue: newBal > 0 ? newBal : 0,
+          isSettled: isFullySettled,
+          collectedBy: collectedBy
+        });
+        
+        // Settle food orders so they don't carry over
+        await settleRoomFoodOrders(currentHotelId, checkoutBookingData.roomNumber);
+        
+        document.getElementById("checkoutModal").classList.add("hidden");
+        
+        const wantPrint = confirm(`Checkout complete! Collected By: ${collectedBy}.\n\nDo you want to print the final invoice now?`);
+        if (wantPrint) {
+          await triggerPrint('a4', bookingId);
+        }
+
+        await loadInvoiceArchives();
+        await loadFinancialReports();
+      } catch(e) {
+        alert("Error during checkout: " + e.message);
+      }
     };
 
     // --- FOLLOW UP LOGIC ---
@@ -1125,7 +1117,6 @@
       vac.forEach(r => sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 500}" data-type="${r.type}">Room ${r.roomNumber} (${r.type})</option>`);
       if (presetRoomNo) sel.value = presetRoomNo;
       
-      // Reset Form
       document.getElementById("bookAdvancePaid").value = "0";
       document.getElementById("bookIsGroup").checked = false;
       document.getElementById("groupNameDiv").classList.add("hidden");
@@ -1134,7 +1125,6 @@
       document.getElementById("bookDiscount").value = "0";
       document.getElementById("crmStatus").classList.add("hidden");
       
-      // Set default check-in date to today
       const today = new Date().toISOString().split('T')[0];
       document.getElementById("bookCheckInDate").value = today;
       
@@ -1347,7 +1337,7 @@
       else printA4TaxInvoice(currentHotelProfile, bData, food.unsettledOrders);
     };
 
-    // --- POS ORDER LOGIC ---
+    // --- POS ORDER LOGIC (UPDATED TO SYNC BOOKING TOTAL) ---
     window.populatePosRooms = () => {
       const sel = document.getElementById("posRoomSelect");
       sel.innerHTML = "";
@@ -1399,13 +1389,32 @@
       if (!roomNo) return alert("Select a valid occupied room.");
       if (currentPosOrder.length === 0) return alert("Add items first.");
       
+      const orderTotal = currentPosOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const orderId = "KOT_" + Date.now().toString().slice(-6);
       try {
+        // Save POS order
         await setDoc(doc(db, "hotels", currentHotelId, "pos_orders", orderId), {
-          orderId, bookingId: bid, roomNumber: roomNo, items: currentPosOrder, status: "served", createdAt: new Date().toISOString()
+          orderId, bookingId: bid, roomNumber: roomNo, items: currentPosOrder, 
+          status: "served", isSettled: false, createdAt: new Date().toISOString()
         });
-        alert(`Food order transferred to Room ${roomNo} folio!`);
+        
+        // Update Booking Total directly
+        const bookingRef = doc(db, "hotels", currentHotelId, "bookings", bid);
+        const bookingSnap = await getDoc(bookingRef);
+        if (bookingSnap.exists()) {
+           const bData = bookingSnap.data();
+           const newGrandTotal = (bData.summary?.grandTotal || 0) + orderTotal;
+           const newBalanceDue = newGrandTotal - (bData.totalPaid || bData.advancePaid || 0);
+           await updateDoc(bookingRef, {
+              "summary.grandTotal": newGrandTotal,
+              "balanceDue": newBalanceDue,
+              "isSettled": newBalanceDue <= 0
+           });
+        }
+
+        alert(`Food order of ₹${orderTotal} transferred to Room ${roomNo} folio!`);
         currentPosOrder = []; renderPosOrder();
+        await loadInvoiceArchives(); // Refresh booking data in cache
       } catch (e) { alert("Error: " + e.message); }
     };
 
@@ -1429,7 +1438,7 @@
     };
     
     window.forceVacant = async (rid) => {
-      if(!confirm("Force this room to be Vacant? This will clear active booking links.")) return;
+      if(!confirm("Force this room to be Vacant?")) return;
       try {
         await updateDoc(doc(db, "hotels", currentHotelId, "rooms", rid), {
           status: "vacant", currentBookingId: null, guestName: null
@@ -1575,7 +1584,7 @@
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `GST_Audit_${currentHotelId}.csv`; a.click();
     };
 
-    // --- SETTINGS (With Password Prompt) ---
+    // --- SETTINGS ---
     async function loadHotelFloors() {
       const snap = await getDoc(doc(db, "hotels", currentHotelId));
       if (snap.exists() && snap.data().floors) hotelFloors = snap.data().floors;
