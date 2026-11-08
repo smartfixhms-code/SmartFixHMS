@@ -15,15 +15,18 @@
     body { font-family: 'Inter', sans-serif; background-color: #060913; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
+    
+    /* Custom glow for mobile bottom nav */
+    .glow-btn { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
+    .glass-nav { background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(30, 41, 59, 0.8); }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased pb-20 md:pb-0">
   
-  <!-- Top Navbar -->
   <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-[0_0_15px_rgba(34,211,238,0.3)]">S</div>
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-[0_0_15px_rgba(34,211,238,0.3)]">S</div>
         <div>
           <div class="text-sm font-black text-white">SmartFix <span class="text-cyan-400">HMS</span></div>
           <div id="navHotelTitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Loading...</div>
@@ -40,24 +43,29 @@
 
   <div class="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row">
     <!-- Desktop Sidebar -->
-    <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-2 bg-slate-950/40">
+    <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-1 bg-slate-950/40">
+      <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Main Menu</div>
       <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400"><span>Dashboard</span></button>
-      <button onclick="switchView('followup')" id="nav-followup" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Follow-up</span></button>
-      <button onclick="switchView('marketdue')" id="nav-marketdue" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Market Due</span></button>
-      <button onclick="switchView('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Restaurant POS</span></button>
-      <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Rooms & Tariffs</span></button>
-      <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Invoices Archive</span></button>
-      <button onclick="switchView('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>P&L Analytics</span></button>
-      <button onclick="switchView('gst-audit')" id="nav-gst-audit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>GST CA Audit</span></button>
-      <button onclick="switchView('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"><span>Settings</span></button>
-      <button onclick="openBookingModal()" class="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20">+ Book Walk-In</button>
+      <button onclick="switchView('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Restaurant POS</span></button>
+      <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Rooms & Tariffs</span></button>
+      <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Invoices Archive</span></button>
+      <button onclick="switchView('followup')" id="nav-followup" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Follow-up Bookings</span></button>
+      <button onclick="switchView('marketdue')" id="nav-marketdue" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Market Due</span></button>
+      
+      <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mt-4 mb-2">Analytics & Settings</div>
+      <button onclick="switchView('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>P&L Analytics</span></button>
+      <button onclick="switchView('gst-audit')" id="nav-gst-audit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>GST CA Audit</span></button>
+      <button onclick="switchView('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Settings</span></button>
+      
+      <button onclick="openBookingModal()" class="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">+ Book Walk-In</button>
     </aside>
     
     <!-- Main Content -->
     <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
       
-      <!-- DASHBOARD VIEW -->
       <section id="view-dashboard" class="space-y-6">
+        
+        <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-3.5">
           <div onclick="filterRoomsStatus('all')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl hover:border-cyan-500/50 transition">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Rooms</span>
@@ -87,44 +95,100 @@
           </div>
         </div>
 
-        <!-- Quick Actions Grid -->
-        <div class="grid grid-cols-4 sm:grid-cols-6 gap-3">
-          <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
+        <!-- 13 Quick Actions Grid -->
+        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-3">
+          <!-- 1. Book Room -->
+          <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Book Room</span>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Book Room</span>
           </button>
-          <button onclick="switchView('followup')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Follow-up</span>
+          
+          <!-- 2. Check-In List -->
+          <button onclick="openCheckInList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-In</span>
           </button>
-          <button onclick="switchView('marketdue')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Market Due</span>
+
+          <!-- 3. Check-Out List -->
+          <button onclick="openCheckOutList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-rose-500/50 transition">
+            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-Out</span>
           </button>
-          <button onclick="filterRoomsStatus('cleaning')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
+
+          <!-- 4. Cleaning -->
+          <button onclick="openCleaningList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-amber-500/50 transition">
             <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Cleaning</span>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Cleaning</span>
           </button>
-          <button onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
+
+          <!-- 5. Follow-up -->
+          <button onclick="switchView('followup')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Follow-up</span>
+          </button>
+
+          <!-- 6. Market Due -->
+          <button onclick="switchView('marketdue')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-rose-500/50 transition">
+            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Market Due</span>
+          </button>
+
+          <!-- 7. POS -->
+          <button onclick="switchView('pos')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">POS</span>
+          </button>
+
+          <!-- 8. Rooms -->
+          <button onclick="switchView('room-manager')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Rooms</span>
+          </button>
+
+          <!-- 9. Invoices -->
+          <button onclick="switchView('billing-archive')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Invoices</span>
+          </button>
+
+          <!-- 10. Expenses -->
+          <button onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
             <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">Expenses</span>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Expenses</span>
           </button>
-          <button onclick="switchView('pos')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-3 rounded-2xl hover:bg-slate-800 transition">
-            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-            <span class="text-[10px] font-semibold text-slate-300">POS</span>
+
+          <!-- 11. Reports -->
+          <button onclick="switchView('reports')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Reports</span>
+          </button>
+
+          <!-- 12. GST Audit -->
+          <button onclick="switchView('gst-audit')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">GST</span>
+          </button>
+
+          <!-- 13. Settings -->
+          <button onclick="switchView('settings')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition">
+            <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Settings</span>
           </button>
         </div>
 
+        <!-- Live Floor Status -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-sm font-black uppercase tracking-wider text-white">Live Floor Status</h3>
             <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Syncing</span>
           </div>
-          <div id="roomGridContainer" class="space-y-6"></div>
+          <div id="roomGridContainer" class="space-y-6">
+            <!-- Room grid loads here -->
+          </div>
         </div>
       </section>
 
-      <!-- FOLLOW UP (UPCOMING BOOKINGS) SECTION -->
+      <!-- FOLLOW UP SECTION -->
       <section id="view-followup" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-white uppercase tracking-wider">Follow-up & Upcoming Bookings</h2>
@@ -308,18 +372,18 @@
     </main>
   </div>
 
-  <!-- Mobile Bottom Navigation -->
-  <div class="md:hidden fixed bottom-0 left-0 w-full bg-slate-950/95 border-t border-slate-800 backdrop-blur-lg z-40 flex justify-between items-center px-4 py-2 pb-safe">
+  <!-- Mobile Bottom Navigation (Kept exactly the same, just styled) -->
+  <div class="md:hidden fixed bottom-0 left-0 w-full glass-nav z-40 flex justify-between items-center px-4 py-2 pb-safe">
     <button onclick="switchView('dashboard')" class="flex flex-col items-center gap-1 text-cyan-400">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
       <span class="text-[10px] font-bold">Home</span>
     </button>
     <button onclick="switchView('followup')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       <span class="text-[10px] font-bold">Follow-up</span>
     </button>
-    <div class="relative -top-4">
-      <button onclick="openBookingModal()" class="w-14 h-14 rounded-full bg-cyan-400 border-4 border-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+    <div class="relative -top-5">
+      <button onclick="openBookingModal()" class="w-16 h-16 rounded-full bg-cyan-400 border-[5px] border-slate-950 flex items-center justify-center glow-btn">
         <svg class="w-8 h-8 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
       </button>
     </div>
@@ -331,6 +395,45 @@
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
       <span class="text-[10px] font-bold">Menu</span>
     </button>
+  </div>
+
+  <!-- MODAL: Check-In List -->
+  <div id="checkinModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="text-sm font-bold uppercase text-cyan-400">In-House Guests</h3>
+        <button onclick="document.getElementById('checkinModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
+      </div>
+      <div id="checkinList" class="space-y-2">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Check-Out List -->
+  <div id="checkoutListModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="text-sm font-bold uppercase text-rose-400">Select Guest for Check-Out</h3>
+        <button onclick="document.getElementById('checkoutListModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
+      </div>
+      <div id="checkoutList" class="space-y-2">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Cleaning List -->
+  <div id="cleaningModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="text-sm font-bold uppercase text-amber-400">Housekeeping / Cleaning</h3>
+        <button onclick="document.getElementById('cleaningModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button>
+      </div>
+      <div id="cleaningList" class="space-y-2">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
   </div>
 
   <!-- Booking Modal -->
@@ -609,6 +712,9 @@
           snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
           renderFloorGrid(cachedRooms);
           updateMetrics(cachedRooms);
+        }, (error) => {
+          console.error("Snapshot Error:", error);
+          document.getElementById("roomGridContainer").innerHTML = `<div class="text-rose-400 text-sm font-bold p-4">Failed to load rooms. Please check Firestore security rules.</div>`;
         });
         
         await loadInvoiceArchives();
@@ -620,6 +726,7 @@
     });
 
     window.handleSignOut = () => logoutUser();
+    
     window.switchView = (vId) => {
       ['dashboard', 'followup', 'marketdue', 'pos', 'room-manager', 'billing-archive', 'reports', 'gst-audit', 'settings'].forEach(v => {
         document.getElementById(`view-${v}`)?.classList.add('hidden');
@@ -636,10 +743,89 @@
       if (vId === 'reports') setTimeout(renderCharts, 100);
     };
 
+    // --- GRID LIST MODALS ---
+    window.openCheckInList = () => {
+      const list = document.getElementById('checkinList');
+      const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
+      
+      if(inHouse.length === 0) {
+        list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
+      } else {
+        list.innerHTML = inHouse.map(b => `
+          <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div>
+              <div class="text-sm font-bold text-white">${b.guestName} <span class="text-[10px] text-slate-500">(${b.phone})</span></div>
+              <div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | ${b.nights}N | Total: ₹${(b.summary?.grandTotal || 0).toFixed(2)}</div>
+            </div>
+            <div class="text-right">
+              <span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span>
+            </div>
+          </div>
+        `).join('');
+      }
+      document.getElementById('checkinModal').classList.remove('hidden');
+    };
+
+    window.openCheckOutList = () => {
+      const list = document.getElementById('checkoutList');
+      const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
+      
+      if(inHouse.length === 0) {
+        list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
+      } else {
+        list.innerHTML = inHouse.map(b => `
+          <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div>
+              <div class="text-sm font-bold text-white">${b.guestName}</div>
+              <div class="text-xs text-slate-400 mt-1">Room ${b.roomNumber} | Due: <span class="text-rose-400 font-bold">₹${(b.balanceDue || 0).toFixed(2)}</span></div>
+            </div>
+            <button onclick="initiateCheckoutFromList('${b.bookingId}', '${b.roomId}')" class="px-3 py-1.5 bg-rose-500 text-white text-[10px] font-bold rounded-lg hover:bg-rose-400">Settle</button>
+          </div>
+        `).join('');
+      }
+      document.getElementById('checkoutListModal').classList.remove('hidden');
+    };
+
+    window.initiateCheckoutFromList = (bid, rid) => {
+      document.getElementById('checkoutListModal').classList.add('hidden');
+      handleRoomAction(rid); // Re-use the logic to open checkout modal
+    };
+
+    window.openCleaningList = () => {
+      const list = document.getElementById('cleaningList');
+      const cleaning = cachedRooms.filter(r => r.status === 'cleaning');
+      
+      if(cleaning.length === 0) {
+        list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No rooms in cleaning status.</div>`;
+      } else {
+        list.innerHTML = cleaning.map(r => `
+          <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div>
+              <div class="text-sm font-bold text-white">Room ${r.roomNumber}</div>
+              <div class="text-xs text-amber-400 mt-1">${r.type}</div>
+            </div>
+            <button onclick="markCleanedFromList('${r.id}')" class="px-3 py-1.5 bg-emerald-500 text-slate-950 text-[10px] font-bold rounded-lg hover:bg-emerald-400">Mark Cleaned</button>
+          </div>
+        `).join('');
+      }
+      document.getElementById('cleaningModal').classList.remove('hidden');
+    };
+
+    window.markCleanedFromList = async (rid) => {
+      await markRoomCleaned(currentHotelId, rid);
+      openCleaningList(); // Refresh list
+    };
+
     // --- DASHBOARD GRID ---
     function renderFloorGrid(rooms) {
       const container = document.getElementById("roomGridContainer");
       if (!container) return;
+      
+      if (rooms.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-500 text-sm py-4">No rooms initialized. Please add rooms in Room Manager.</div>`;
+        return;
+      }
+
       const grouped = {};
       rooms.forEach(r => {
         const f = r.floor || "Floor 1";
@@ -771,7 +957,7 @@
       today.setHours(0,0,0,0);
       
       const upcoming = cachedBookings.filter(b => {
-        if(b.status !== 'confirmed' && b.status !== 'checked_in') return false;
+        if(b.status !== 'confirmed') return false;
         if(!b.checkInDate) return false;
         const bDate = new Date(b.checkInDate);
         return bDate >= today;
@@ -789,7 +975,7 @@
           <td class="py-3 px-4 text-cyan-400 font-bold">${b.checkInDate}</td>
           <td class="py-3 px-4">Room ${b.roomNumber}</td>
           <td class="py-3 px-4">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">${b.status.toUpperCase()}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">CONFIRMED</span>
           </td>
           <td class="py-3 px-4 text-right space-x-2 font-sans">
             <button onclick="sendWhatsAppReminder('${b.id}', '${b.phone}', '${b.guestName}', '${b.checkInDate}', ${due})" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-bold">WhatsApp</button>
@@ -931,7 +1117,11 @@
       const sel = document.getElementById("bookRoomSelect");
       sel.innerHTML = "";
       const vac = cachedRooms.filter(r => r.status === "vacant");
-      if (!vac.length) return alert("All rooms occupied or cleaning.");
+      
+      if (!vac.length) {
+        return alert("No vacant rooms available! If rooms are stuck, go to 'Rooms' menu and click 'Force Vacant'.");
+      }
+      
       vac.forEach(r => sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 500}" data-type="${r.type}">Room ${r.roomNumber} (${r.type})</option>`);
       if (presetRoomNo) sel.value = presetRoomNo;
       
@@ -1018,7 +1208,6 @@
       const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
       const charges = recalcBill();
       
-      // If check-in date is in future, it's a confirmed booking (not checked-in yet).
       const today = new Date().toISOString().split('T')[0];
       const isFutureBooking = checkInDate > today;
       
@@ -1230,13 +1419,25 @@
           <td class="py-3 px-4 text-cyan-300 font-sans">${r.type}</td>
           <td class="py-3 px-4 text-emerald-400">₹${r.rate}</td>
           <td class="py-3 px-4 text-amber-400">₹${r.foodRate || 1000}</td>
-          <td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${r.status}</span></td>
+          <td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : (r.status === 'cleaning' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400')}">${r.status.toUpperCase()}</span></td>
           <td class="py-3 px-4 text-right space-x-2 font-sans">
+            ${r.status !== 'vacant' ? `<button onclick="forceVacant('${r.id}')" class="px-2 py-1 bg-amber-600 text-white rounded text-[10px] font-bold">Force Vacant</button>` : ''}
             <button onclick="openEditRoomModal('${r.id}')" class="px-2 py-1 bg-slate-800 text-cyan-400 rounded">Edit</button>
             <button onclick="deleteRoom('${r.id}')" class="px-2 py-1 bg-rose-950 text-rose-300 rounded">Delete</button>
           </td>
         </tr>`).join('');
     };
+    
+    window.forceVacant = async (rid) => {
+      if(!confirm("Force this room to be Vacant? This will clear active booking links.")) return;
+      try {
+        await updateDoc(doc(db, "hotels", currentHotelId, "rooms", rid), {
+          status: "vacant", currentBookingId: null, guestName: null
+        });
+        alert("Room forced to vacant!");
+      } catch(e) { alert("Error: " + e.message); }
+    };
+
     window.openAddRoomModal = () => {
       document.getElementById("editRoomId").value = "";
       document.getElementById("inputRoomNo").value = "";
