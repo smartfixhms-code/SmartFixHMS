@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartFix HMS - Next-Gen Hotel Management & Cloud POS</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='cyanGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3ClinearGradient id='mintGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300ffa3'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='100' fill='%23060913'/%3E%3Cg transform='translate(106, 96)'%3E%3Crect x='0' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Crect x='230' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Cpath d='M85 85 L150 30 L215 85 L215 310 L85 310 Z' stroke='url(%23cyanGrad)' stroke-width='10' fill='%2308182f'/%3E%3Ccircle cx='150' cy='175' r='60' fill='%23061426' stroke='url(%23mintGrad)' stroke-width='10'/%3E%3Cpolyline points='125,175 145,195 185,150' fill='none' stroke='%2300ffa3' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#060913">
   <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +14,9 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #060913; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
-    .neon-border { box-shadow: 0 0 25px rgba(0, 242, 254, 0.15); }
+    .neon-border { box-shadow: 0 0 30px rgba(0, 242, 254, 0.15); }
+    .glow-text { text-shadow: 0 0 20px rgba(0, 242, 254, 0.5); }
+    .feature-card:hover { transform: translateY(-5px); border-color: rgba(0, 242, 254, 0.5); }
   </style>
   <script>
     if ("serviceWorker" in navigator) {
@@ -23,7 +26,9 @@
     }
   </script>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+<body class="text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black overflow-x-hidden">
+  
+  <!-- Header -->
   <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -46,35 +51,110 @@
         </svg>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="openAuthModal('login')" class="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800">Sign In</button>
-        <button onclick="openAuthModal('register')" class="text-xs font-bold px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20">Get 30 Days Free</button>
+        <button onclick="openAuthModal('login')" class="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition">Sign In</button>
+        <button onclick="openAuthModal('register')" class="text-xs font-bold px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20 hover:scale-105 transition">Start Free Trial</button>
       </div>
     </div>
   </header>
-  
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+
+  <!-- Hero Section -->
+  <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none"></div>
+    
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-6">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Multi-Tenant Cloud PMS Architecture
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Zero-Commission Direct Booking System
     </div>
-    <h1 class="text-3xl sm:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight">
-      Manage Rooms, Fooding & GST Billing. <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">All Inside One Fast PWA.</span>
+    <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight">
+      Run Your Entire Hotel From <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 glow-text">One Screen.</span>
     </h1>
-    <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mt-6 leading-relaxed">
-      Customized for hoteliers. Complete control over building floors, room tariffs, per-head meal packages, restaurant KOT POS, floor-wise free guest WiFi, and CA-ready tax reports.
+    <p class="text-slate-400 text-sm sm:text-lg max-w-2xl mx-auto mt-6 leading-relaxed">
+      Stop using registers and messy Excel sheets. Automate your check-ins, restaurant bills, staff salaries, and GST reports with India's fastest cloud-based hotel software.
     </p>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-      <button onclick="openAuthModal('register')" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-cyan-500/25">Start Instant 30-Day Free Trial</button>
-      <button onclick="openAuthModal('login')" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm border border-slate-800">Sign In to Hotel Dashboard →</button>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+      <button onclick="openAuthModal('register')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-cyan-500/25 hover:scale-105 transition">Start 30-Day Free Trial</button>
+      <button onclick="openAuthModal('login')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm border border-slate-800">Go to Dashboard →</button>
+    </div>
+    <p class="text-xs text-slate-500 mt-4">No Credit Card Required. Cancel Anytime.</p>
+  </section>
+
+  <!-- Why Choose Us (Value Proposition) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="feature-card bg-slate-900/50 border border-slate-800 p-6 rounded-2xl transition duration-300">
+        <div class="w-12 h-12 bg-cyan-950 text-cyan-400 rounded-xl flex items-center justify-center mb-4 border border-cyan-800">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Save 10+ Hours Every Week</h3>
+        <p class="text-sm text-slate-400">Automate manual calculations, bill generation, and staff payroll. What used to take hours now takes seconds.</p>
+      </div>
+      <div class="feature-card bg-slate-900/50 border border-slate-800 p-6 rounded-2xl transition duration-300">
+        <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-xl flex items-center justify-center mb-4 border border-emerald-800">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Stop Revenue Leakage</h3>
+        <p class="text-sm text-slate-400">Track every single food order via our POS system and automatically add it to the guest's final bill. No more lost cash.</p>
+      </div>
+      <div class="feature-card bg-slate-900/50 border border-slate-800 p-6 rounded-2xl transition duration-300">
+        <div class="w-12 h-12 bg-purple-950 text-purple-400 rounded-xl flex items-center justify-center mb-4 border border-purple-800">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">100% CA-Ready GST</h3>
+        <p class="text-sm text-slate-400">Automated 12% Lodging and 5% Food GST calculation with SAC codes. Export CSV files for your CA with one click.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid (A to Z) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-slate-900/30 rounded-3xl border border-slate-800/50 mb-16">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-4xl font-black text-white">Everything You Need. <span class="text-cyan-400">Nothing You Don't.</span></h2>
+      <p class="text-slate-400 mt-2 text-sm">A complete, professional toolkit designed specifically for modern hoteliers.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Live Floor Chart</h4>
+        <p class="text-xs text-slate-400">See which rooms are Vacant, Occupied, or Cleaning in real-time. Click a room to instantly Check-In or Check-Out.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Smart CRM & Bookings</h4>
+        <p class="text-xs text-slate-400">Automatically identifies returning guests. Store ID proofs securely. Handle walk-ins and future group bookings easily.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Restaurant POS</h4>
+        <p class="text-xs text-slate-400">Create a digital menu. Take room-service orders and transfer the bill directly to the guest's room folio.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Thermal & A4 Printing</h4>
+        <p class="text-xs text-slate-400">Print 58mm/80mm pocket thermal bills for quick checkout, and professional full A4 tax invoices for corporate guests.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Market Due Tracker</h4>
+        <p class="text-xs text-slate-400">If a guest leaves without paying the full amount, track it in the "Market Due" tab. Send them automatic WhatsApp payment reminders.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">Staff & Payroll</h4>
+        <p class="text-xs text-slate-400">Add your staff details, record their base salary, and generate professional, printable salary slips automatically.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">P&L Analytics</h4>
+        <p class="text-xs text-slate-400">View beautiful charts of your revenue and expenses. Filter by date range to see exactly how much profit you made.</p>
+      </div>
+      <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition">
+        <h4 class="text-cyan-400 font-bold text-sm mb-2">1-Click Data Backup</h4>
+        <p class="text-xs text-slate-400">Your data is safely stored in the cloud. Download a complete JSON backup of your hotel whenever you want.</p>
+      </div>
     </div>
   </section>
 
   <!-- Dynamic Pricing Section -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
     <div class="text-center mb-12">
       <h2 class="text-2xl sm:text-4xl font-black text-white">Simple, Transparent Pricing</h2>
       <p class="text-slate-400 mt-2">Choose the plan that fits your property's scale.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      
       <!-- 6 Months Plan -->
       <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl relative overflow-hidden">
         <div class="absolute top-0 right-0 bg-slate-800 text-cyan-400 border border-cyan-800 font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-wider">Flexible</div>
@@ -89,6 +169,7 @@
         </ul>
         <button onclick="openAuthModal('register')" class="w-full py-3 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-700 transition">Start 6-Month Trial</button>
       </div>
+      
       <!-- 1 Year Plan -->
       <div class="bg-slate-900 border border-cyan-500/50 p-8 rounded-2xl relative overflow-hidden shadow-2xl shadow-cyan-500/10">
         <div class="absolute top-0 right-0 bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-wider">Best Value</div>
@@ -101,7 +182,7 @@
           <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Free Staff Onboarding</li>
           <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Dedicated Account Manager</li>
         </ul>
-        <button onclick="openAuthModal('register')" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold hover:opacity-90 transition">Start 30-Day Free Trial</button>
+        <button onclick="openAuthModal('register')" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold hover:opacity-90 transition shadow-lg shadow-cyan-500/20">Start 30-Day Free Trial</button>
       </div>
     </div>
   </section>
@@ -113,10 +194,12 @@
         <div><h3 id="modalTitle" class="text-lg font-bold text-white">Access SmartFix HMS</h3><p id="modalSub" class="text-xs text-slate-400">Sign in to your property dashboard.</p></div>
         <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white text-xl font-bold">×</button>
       </div>
+      
       <div class="grid grid-cols-2 gap-2 mb-4 bg-slate-950 p-1 rounded-xl border border-slate-800">
         <button id="tabBtnLogin" onclick="switchAuthMode('login')" class="py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-slate-950">Login</button>
         <button id="tabBtnRegister" onclick="switchAuthMode('register')" class="py-1.5 text-xs font-semibold rounded-lg text-slate-400">Register</button>
       </div>
+
       <form id="authForm" onsubmit="event.preventDefault(); submitAuth();" class="space-y-3">
         <div id="regExtraFields" class="hidden space-y-2.5">
           <div><label class="block text-xs text-slate-400 mb-1">Hotel Name</label><input type="text" id="regHotelName" placeholder="Grand Palace Resort" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none"></div>
@@ -134,7 +217,9 @@
     </div>
   </div>
   
-  <footer class="mt-auto border-t border-slate-900 py-6 text-center text-xs text-slate-600">© 2026 SmartFix HMS. Next-Gen Serverless Hotel Management Architecture.</footer>
+  <footer class="mt-auto border-t border-slate-900 py-6 text-center text-xs text-slate-600">
+    © 2026 SmartFix HMS. Next-Gen Serverless Hotel Management Architecture.
+  </footer>
   
   <script type="module">
     import { loginUser, registerNewHotel, monitorAuthState } from "./js/auth.js";
@@ -158,7 +243,7 @@
     }
     loadDynamicPricing();
 
-    // Check auth state (Email verification bypassed for now)
+    // Check auth state
     monitorAuthState((state) => {
       if (state && state.user && state.profile) {
         if (state.profile.role === "superadmin") window.location.href = "super-admin.html";
@@ -218,8 +303,6 @@
           switchAuthMode("login");
         } else {
           const res = await loginUser(email, pass);
-          
-          // ইমেইল ভেরিফিকেশন চেক এখানে বন্ধ করা হয়েছে
           
           if (res.profile.role === "superadmin") window.location.href = "super-admin.html";
           else window.location.href = "dashboard.html";
