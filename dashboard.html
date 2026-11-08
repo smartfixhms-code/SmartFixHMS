@@ -25,26 +25,48 @@
 <body class="text-slate-100 min-h-screen flex flex-col antialiased pb-20 md:pb-0">
   
   <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-[0_0_15px_rgba(34,211,238,0.3)]">S</div>
-        <div>
-          <div class="text-sm font-black text-white flex items-center gap-1">Smart<span class="text-cyan-400">Fix</span> <span class="text-[9px] bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 px-1.5 py-0.5 rounded">HMS</span></div>
-          <div id="navHotelTitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Loading...</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
-        <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Download Data Backup">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-        </button>
-        <button onclick="handleSignOut()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-400 hover:text-rose-300 border border-slate-800 transition" title="Sign Out">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-        </button>
+<header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <!-- Logo & Hotel Name Area -->
+    <div class="flex items-center gap-3 sm:gap-5">
+      <!-- Original SmartFix HMS SVG Logo -->
+      <svg class="h-9 sm:h-11 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00f2fe" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+          <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3" /><stop offset="100%" stop-color="#00b4d8" /></linearGradient>
+        </defs>
+        <g transform="translate(10, 5)">
+          <rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+          <rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#cyanGrad)" stroke-width="2.5" fill="#061224" />
+          <path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#cyanGrad)" stroke-width="3" fill="#08182f" />
+          <circle cx="45" cy="50" r="18" fill="#061426" stroke="url(#mintGrad)" stroke-width="2.5" />
+          <polyline points="37,50 43,56 55,42" fill="none" stroke="#00ffa3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <text x="110" y="48" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#cyanGrad)">Fix</tspan></text>
+        <rect x="295" y="16" width="94" height="36" rx="8" fill="url(#mintGrad)" />
+        <text x="342" y="42" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#060913" text-anchor="middle" letter-spacing="1">HMS</text>
+        <text x="112" y="74" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7dd3fc" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+      </svg>
+      
+      <!-- Hotel Workspace Name -->
+      <div class="flex flex-col border-l border-slate-700 pl-3 sm:pl-5">
+        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Workspace</span>
+        <span id="navHotelTitle" class="text-xs sm:text-sm font-black text-white uppercase tracking-wider leading-none">Loading...</span>
       </div>
     </div>
-  </header>
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-2">
+      <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
+      <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Download Data Backup">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      </button>
+      <button onclick="handleSignOut()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-400 hover:text-rose-300 border border-slate-800 transition" title="Sign Out">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+      </button>
+    </div>
+  </div>
+</header>
 
   <div class="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row">
     <!-- Sidebar -->
