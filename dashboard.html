@@ -53,9 +53,18 @@
 
       <div class="flex items-center gap-2">
         <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
+        
+        <!-- Backup Button -->
         <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Download Data Backup">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
         </button>
+
+        <!-- Restore Button (Hidden File Input) -->
+        <input type="file" id="restoreFileInput" class="hidden" accept=".json" onchange="handleRestoreFile(event)">
+        <button onclick="triggerRestore()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-slate-800 transition" title="Restore Data from Backup">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        </button>
+
         <button onclick="handleSignOut()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-rose-400 hover:text-rose-300 border border-slate-800 transition" title="Sign Out">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
         </button>
@@ -416,6 +425,44 @@
   </div>
 
   <!-- MODALS -->
+  <!-- Suspension Modal -->
+  <div id="suspensionModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
+    <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl shadow-2xl shadow-rose-500/10 text-center space-y-6">
+      <div class="w-20 h-20 bg-rose-950/50 rounded-full flex items-center justify-center mx-auto border border-rose-800">
+        <span class="text-3xl">🚫</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-black text-white uppercase tracking-wider mb-2">Account Suspended</h2>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          Your hotel account has been suspended due to a policy violation or pending verification. Access to the SmartFix HMS dashboard is currently restricted.
+        </p>
+        <p class="text-sm text-slate-400 mt-2 font-bold">
+          To resolve this issue and unlock your account, please contact our customer care immediately:
+        </p>
+        <div class="mt-4 p-3 bg-slate-950 rounded-xl border border-slate-800 inline-block">
+          <span class="text-lg font-mono font-bold text-cyan-400">+91 90463 56631</span>
+        </div>
+      </div>
+      <div class="pt-4 flex flex-col gap-2">
+        <a href="tel:+919046356631" class="block w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-sm uppercase hover:opacity-90 transition shadow-lg">Call Customer Care</a>
+        <button onclick="handleSignOut()" class="text-xs text-slate-500 hover:text-slate-300 font-semibold underline mt-2">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- License Lock Modal (Expired) -->
+  <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
+    <div class="w-full max-w-md bg-slate-900 border border-amber-800/50 p-8 rounded-3xl shadow-2xl shadow-amber-500/10 text-center space-y-6">
+      <div class="w-20 h-20 bg-amber-950/50 rounded-full flex items-center justify-center mx-auto border border-amber-800"><span class="text-3xl">⏳</span></div>
+      <div>
+        <h2 class="text-xl font-black text-white uppercase tracking-wider mb-2">License Expired</h2>
+        <p class="text-sm text-slate-400">Your trial or subscription has ended. Please contact support to renew access.</p>
+      </div>
+      <a id="whatsappSupportBtn" href="#" target="_blank" class="block w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-sm uppercase hover:opacity-90 transition shadow-lg">Contact Support on WhatsApp</a>
+      <button onclick="handleSignOut()" class="text-xs text-slate-500 hover:text-slate-300 font-semibold underline">Sign Out</button>
+    </div>
+  </div>
+
   <!-- Check-In List Modal -->
   <div id="checkinModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
@@ -759,6 +806,14 @@
         }
 
         const lic = await verifyLicenseStatus(currentHotelId);
+        
+        // Handle Suspended Account
+        if (lic.isSuspended) {
+          document.getElementById("suspensionModal").classList.remove("hidden");
+          return; // Stop execution
+        }
+
+        // Handle Expired License
         if (!lic.isValid) {
           document.getElementById("licenseLockModal").classList.remove("hidden");
           document.getElementById("whatsappSupportBtn").href = getWhatsAppSupportLink(lic.details?.hotelName || "My Hotel", currentHotelId);
@@ -1383,7 +1438,7 @@
       } catch (e) { alert("Error: " + e.message); }
     };
 
-    // --- STAFF LOGIC (UPDATED) ---
+    // --- STAFF LOGIC ---
     async function loadStaff() {
       try {
         const snap = await getDocs(collection(db, "hotels", currentHotelId, "staff"));
@@ -1676,7 +1731,6 @@
       if (!bDoc.exists()) return alert("Bill not found.");
       const bData = bDoc.data();
       
-      // Fetch ALL food orders for this booking ID so it prints even after settlement
       const food = await getBookingFoodOrders(currentHotelId, bData.bookingId);
       
       if (format === "58mm") print58mmThermalReceipt(currentHotelProfile, bData, food.orders);
@@ -2093,7 +2147,7 @@
       requestSettingsAuth({ action: "saveProfile", data: { phone, policyNote: policy } });
     };
 
-    // --- BACKUP FUNCTION ---
+    // --- BACKUP & RESTORE FUNCTIONS ---
     window.downloadBackup = () => {
       const data = {
         hotelName: currentHotelProfile?.hotelName || "Hotel",
@@ -2109,6 +2163,46 @@
       a.href = URL.createObjectURL(blob);
       a.download = `SmartFix_Backup_${new Date().toISOString().split('T')[0]}.json`;
       a.click();
+    };
+
+    window.triggerRestore = () => {
+      document.getElementById("restoreFileInput").click();
+    };
+
+    window.handleRestoreFile = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if(!data.hotelName) throw new Error("Invalid Backup File Format.");
+
+          const confirmMsg = `WARNING: This will overwrite your current data with the backup from ${data.exportDate.split('T')[0]}. Are you sure?`;
+          if(!confirm(confirmMsg)) { event.target.value = ""; return; }
+
+          // Restore Rooms
+          if(data.rooms) for(const r of data.rooms) await setDoc(doc(db, "hotels", currentHotelId, "rooms", r.id), r);
+          
+          // Restore Bookings
+          if(data.bookings) for(const b of data.bookings) await setDoc(doc(db, "hotels", currentHotelId, "bookings", b.id), b);
+          
+          // Restore Expenses
+          if(data.expenses) for(const ex of data.expenses) await setDoc(doc(db, "hotels", currentHotelId, "expenses", ex.id), ex);
+          
+          // Restore Staff
+          if(data.staff) for(const s of data.staff) await setDoc(doc(db, "hotels", currentHotelId, "staff", s.id), s);
+
+          alert("Data restored successfully! Page will reload.");
+          window.location.reload();
+
+        } catch (err) {
+          alert("Restore Failed: " + err.message);
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
     };
   </script>
 </body>
