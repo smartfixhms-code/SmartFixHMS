@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffa3"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="#060913"/>
+  <g transform="translate(106, 96)">
+    <rect x="0" y="110" width="70" height="200" rx="8" stroke="url(#cyanGrad)" stroke-width="8" fill="#061224"/>
+    <rect x="230" y="110" width="70" height="200" rx="8" stroke="url(#cyanGrad)" stroke-width="8" fill="#061224"/>
+    <path d="M85 85 L150 30 L215 85 L215 310 L85 310 Z" stroke="url(#cyanGrad)" stroke-width="10" fill="#08182f"/>
+    <circle cx="150" cy="175" r="60" fill="#061426" stroke="url(#mintGrad)" stroke-width="10"/>
+    <polyline points="125,175 145,195 185,150" fill="none" stroke="#00ffa3" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
