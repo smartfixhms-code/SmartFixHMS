@@ -369,6 +369,11 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             Restore Data from Backup
           </button>
+
+          <button onclick="clearHotelData('${h.id}', '${h.hotelName}')" id="clearDataBtn" class="py-2 bg-orange-950 text-orange-400 border border-orange-800 rounded-lg text-xs font-bold hover:bg-orange-900 transition col-span-2 flex items-center justify-center gap-2 mt-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            Clear All Data (Keep Profile)
+          </button>
           
           <button onclick="toggleSuspend('${h.id}', '${h.status}')" class="py-2 ${h.status === 'suspended' ? 'bg-emerald-600 text-white' : 'bg-amber-600 text-white'} rounded-lg text-xs font-bold transition">
             ${h.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
@@ -404,7 +409,7 @@
       window.open(url, '_blank');
     };
 
-    // 7. Actions (Renew, Suspend, Edit, Backup, Delete)
+    // 7. Actions (Renew, Suspend, Edit, Backup, Delete, Clear)
     window.renewHotel = async (hId, months) => {
       if(!confirm(`Extend license by ${months} months?`)) return;
       try {
@@ -491,6 +496,38 @@
       } finally {
         event.target.innerText = btnText;
         event.target.disabled = false;
+      }
+    };
+
+    // --- CLEAR DATA LOGIC ---
+    window.clearHotelData = async (hotelId, hotelName) => {
+      const confirmation = prompt(`DANGER: This will permanently delete ALL data (Rooms, Bookings, POS, Staff, Expenses) for *${hotelName}*, but keep the hotel profile.\n\nThis action is irreversible. Type 'CLEAR' to proceed:`);
+      
+      if(confirmation !== "CLEAR") {
+        alert("Action cancelled. You must type CLEAR exactly.");
+        return;
+      }
+
+      const btn = document.getElementById("clearDataBtn");
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "Clearing Data...";
+      btn.disabled = true;
+
+      try {
+        const collections = ['rooms', 'bookings', 'expenses', 'pos_orders', 'menu_items', 'staff'];
+        for (const colName of collections) {
+          const snap = await getDocs(collection(db, "hotels", hotelId, colName));
+          const promises = snap.docs.map(d => deleteDoc(d.ref));
+          await Promise.all(promises);
+        }
+        
+        alert("All hotel data cleared successfully. You can now restore from a backup or start fresh.");
+        document.getElementById("hotelDetailsModal").classList.add("hidden");
+      } catch (e) {
+        alert("Error clearing data: " + e.message);
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
       }
     };
 
