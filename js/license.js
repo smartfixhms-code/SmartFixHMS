@@ -1,9 +1,8 @@
 import { db } from "./firebase-config.js";
 import { doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Super Admin & Support Configurations
 export const SUPER_ADMIN_EMAIL = "admin@smartfix.com";
-export const SUPPORT_WHATSAPP_NUMBER = "+919876543210"; // আপনার আসল সাপোর্ট নাম্বার দিয়ে এটি আপডেট করবেন
+export const SUPPORT_WHATSAPP_NUMBER = "+919046356631"; 
 
 export async function initializeTrialSubscription(hotelId, hotelName, ownerEmail, ownerUid) {
   const currentDate = new Date();
@@ -30,7 +29,7 @@ export async function verifyLicenseStatus(hotelId) {
     const snap = await getDoc(hotelRef);
     
     if (!snap.exists()) {
-      return { isValid: false, daysRemaining: 0, details: null, isExpired: true };
+      return { isValid: false, isSuspended: false, isExpired: true, daysRemaining: 0, details: null };
     }
     
     const data = snap.data();
@@ -38,18 +37,23 @@ export async function verifyLicenseStatus(hotelId) {
     const exp = new Date(data.planExpiresAt);
     const days = Math.ceil((exp.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     
-    // Check if license is expired or status is marked expired
-    if (now > exp || data.status === "expired" || data.status === "locked") {
-      if (data.status !== "expired" && data.status !== "locked") {
+    // Check for Suspended Status
+    if (data.status === "suspended") {
+      return { isValid: false, isSuspended: true, isExpired: false, daysRemaining: 0, details: data };
+    }
+
+    // Check for Expired Status
+    if (now > exp || data.status === "expired") {
+      if (data.status !== "expired") {
         await updateDoc(hotelRef, { status: "expired" });
       }
-      return { isValid: false, daysRemaining: 0, details: data, isExpired: true };
+      return { isValid: false, isSuspended: false, isExpired: true, daysRemaining: 0, details: data };
     }
     
-    return { isValid: true, daysRemaining: days, details: data, isExpired: false };
+    return { isValid: true, isSuspended: false, isExpired: false, daysRemaining: days, details: data };
   } catch (err) {
     console.error("License Check Error:", err);
-    return { isValid: false, daysRemaining: 0, details: null, isExpired: true };
+    return { isValid: false, isSuspended: false, isExpired: true, daysRemaining: 0, details: null };
   }
 }
 
@@ -78,8 +82,7 @@ export async function renewHotelLicense(hotelId, months) {
   return { success: true, newExpiryDate: baseDate.toISOString() };
 }
 
-// WhatsApp Support Link Generator for Expired Dashboard Lock
 export function getWhatsAppSupportLink(hotelName, hotelId) {
-  const message = encodeURIComponent(`Hello SmartFix Support,\nMy hotel "${hotelName}" (ID: ${hotelId}) license has expired. Please help me renew the subscription.`);
+  const message = encodeURIComponent(`Hello SmartFix Support,\nMy hotel "${hotelName}" (ID: ${hotelId}) requires attention. Please help.`);
   return `https://wa.me/${SUPPORT_WHATSAPP_NUMBER.replace(/[^0-9]/g, '')}?text=${message}`;
 }
