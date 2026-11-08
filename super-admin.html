@@ -4,54 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartFix HMS - Master Super-Admin</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='cyanGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3ClinearGradient id='mintGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300ffa3'/%3E%3Cstop offset='100%25' stop-color='%2300b4d8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='100' fill='%23060913'/%3E%3Cg transform='translate(106, 96)'%3E%3Crect x='0' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Crect x='230' y='110' width='70' height='200' rx='8' stroke='url(%23cyanGrad)' stroke-width='8' fill='%23061224'/%3E%3Cpath d='M85 85 L150 30 L215 85 L215 310 L85 310 Z' stroke='url(%23cyanGrad)' stroke-width='10' fill='%2308182f'/%3E%3Ccircle cx='150' cy='175' r='60' fill='%23061426' stroke='url(%23mintGrad)' stroke-width='10'/%3E%3Cpolyline points='125,175 145,195 185,150' fill='none' stroke='%2300ffa3' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #040711; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-nav { background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(30, 41, 59, 0.8); }
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col antialiased">
-  <header class="border-b border-slate-800 bg-slate-950/90 h-16 flex items-center justify-between px-6 sticky top-0 z-40">
-    <div class="flex items-center gap-3">
-      <span class="text-lg font-black text-white">Smart<span class="text-cyan-400">Fix</span> HMS</span>
-      <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Master Console</span>
-    </div>
-    <div class="flex items-center gap-3">
-      <span id="adminSessionEmail" class="hidden sm:block text-xs font-mono text-slate-400">Authenticating...</span>
-      <button onclick="handleAdminLogout()" id="logoutBtn" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition">Logout</button>
+  
+  <header class="glass-nav sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-[0_0_15px_rgba(34,211,238,0.3)]">S</div>
+        <div>
+          <div class="text-sm font-black text-white">Smart<span class="text-cyan-400">Fix</span> HMS</div>
+          <div class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Master Console</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="adminSessionEmail" class="hidden sm:block text-xs font-mono text-slate-400">Authenticating...</span>
+        <button onclick="handleAdminLogout()" id="logoutBtn" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition">Logout</button>
+      </div>
     </div>
   </header>
-  
+
   <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-        <h3 class="text-sm font-bold uppercase text-cyan-400 mb-2">Platform Pricing Engine</h3>
-        <p class="text-xs text-slate-400 mb-4">Set pricing plans in INR (₹) displayed on user login portal.</p>
-        <div class="grid grid-cols-2 gap-3 font-mono text-xs">
-          <div><label class="block text-slate-400 mb-1">6-Month License (₹)</label><input type="number" id="price6M" value="4999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none"></div>
-          <div><label class="block text-slate-400 mb-1">1-Year License (₹)</label><input type="number" id="price1Y" value="8999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none"></div>
-        </div>
-        <button onclick="savePlatformPricing()" id="savePriceBtn" class="mt-4 px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl hover:bg-cyan-400">Save Pricing</button>
+    
+    <!-- Platform Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Hotels</span>
+        <div id="statTotalHotels" class="text-2xl font-black text-white mt-1 font-mono">0</div>
       </div>
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-center">
-        <h3 class="text-sm font-bold uppercase text-emerald-400 mb-1">Developer Oversight</h3>
-        <p class="text-xs text-slate-400">Full control over hotel legal identities, GSTIN modifications, and lifetime subscription renewals.</p>
+      <div class="bg-slate-900 border border-emerald-900/50 p-4 rounded-xl">
+        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Active</span>
+        <div id="statActiveHotels" class="text-2xl font-black text-emerald-400 mt-1 font-mono">0</div>
+      </div>
+      <div class="bg-slate-900 border border-rose-900/50 p-4 rounded-xl">
+        <span class="text-[10px] font-bold text-rose-400 uppercase tracking-wider">Suspended / Expired</span>
+        <div id="statSuspendedHotels" class="text-2xl font-black text-rose-400 mt-1 font-mono">0</div>
+      </div>
+      <div class="bg-slate-900 border border-cyan-900/50 p-4 rounded-xl">
+        <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">System Pricing</span>
+        <div class="text-sm font-bold text-white mt-2 font-mono">6M: ₹<span id="statPrice6M">4999</span> | 1Y: ₹<span id="statPrice1Y">8999</span></div>
       </div>
     </div>
 
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    <!-- Platform Pricing Engine -->
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-sm font-bold uppercase text-cyan-400">Update Platform Pricing</h3>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">6-Month License Price (₹)</label>
+          <input type="number" id="price6M" value="4999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">1-Year License Price (₹)</label>
+          <input type="number" id="price1Y" value="8999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none">
+        </div>
+      </div>
+      <button onclick="savePlatformPricing()" id="savePriceBtn" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase rounded-xl transition">Save Pricing</button>
+    </div>
+
+    <!-- Hotel Directory -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
       <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
         <h3 class="text-sm font-bold uppercase text-white">Registered Hotels Directory</h3>
-        <button onclick="loadTenants()" class="text-xs px-3 py-1.5 bg-slate-800 text-cyan-400 font-bold rounded-lg hover:bg-slate-700">Refresh List</button>
+        <button onclick="loadTenants()" class="text-xs px-3 py-1.5 bg-slate-800 text-cyan-400 font-bold rounded-lg hover:bg-slate-700">Refresh</button>
       </div>
-      <div class="overflow-x-auto">
+      <div class="table-responsive">
         <table class="w-full text-left text-xs font-mono">
           <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-            <tr><th class="py-3 px-4">Hotel Profile</th><th class="py-3 px-4">GSTIN & Address</th><th class="py-3 px-4">Plan Status</th><th class="py-3 px-4">Expires At</th><th class="py-3 px-4 text-right">Actions</th></tr>
+            <tr>
+              <th class="py-3 px-4">Hotel Profile</th>
+              <th class="py-3 px-4">Owner / GSTIN</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Expiry</th>
+              <th class="py-3 px-4 text-right">Actions</th>
+            </tr>
           </thead>
           <tbody id="tenantsTableBody" class="divide-y divide-slate-800/60">
-            <tr><td colspan="5" class="text-center py-8 text-slate-500">Loading hotels...</td></tr>
+            <tr><td colspan="5" class="text-center py-8 text-slate-500">Loading directory...</td></tr>
           </tbody>
         </table>
       </div>
@@ -63,10 +102,35 @@
     <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
       <h3 class="text-sm font-bold uppercase text-cyan-400">Edit Hotel Legal Profile</h3>
       <input type="hidden" id="editHotelId">
-      <div><label class="block text-xs text-slate-400 mb-1">Hotel Registered Name</label><input type="text" id="editHotelName" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"></div>
-      <div><label class="block text-xs text-slate-400 mb-1">Official GSTIN Number</label><input type="text" id="editHotelGstin" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white font-mono"></div>
-      <div><label class="block text-xs text-slate-400 mb-1">Physical Address</label><input type="text" id="editHotelAddress" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"></div>
-      <div class="flex gap-2 pt-2"><button onclick="saveHotelLegalEdits()" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-cyan-400">Save Changes</button><button onclick="document.getElementById('superEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 rounded-lg text-xs hover:bg-slate-700">Cancel</button></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Hotel Registered Name</label><input type="text" id="editHotelName" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white outline-none"></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Official GSTIN Number</label><input type="text" id="editHotelGstin" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white font-mono outline-none"></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Physical Address</label><input type="text" id="editHotelAddress" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white outline-none"></div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveHotelLegalEdits()" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-cyan-400">Save Changes</button>
+        <button onclick="document.getElementById('superEditModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 rounded-lg text-xs hover:bg-slate-700">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteHotelModal" class="hidden fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="w-full max-w-sm bg-slate-900 border border-rose-900/50 p-6 rounded-2xl space-y-4 text-center">
+      <div class="w-16 h-16 bg-rose-950/50 rounded-full flex items-center justify-center mx-auto border border-rose-800"><span class="text-3xl">⚠️</span></div>
+      <h3 class="text-lg font-black text-white uppercase tracking-wider">Delete Entire Hotel?</h3>
+      <p class="text-xs text-slate-400">This will permanently delete the hotel and <b>ALL</b> its data (Rooms, Bookings, POS, Staff, Expenses). This action cannot be undone.</p>
+      
+      <input type="hidden" id="deleteHotelId">
+      <input type="hidden" id="deleteHotelName">
+      
+      <div>
+        <label class="block text-[10px] text-rose-400 font-bold uppercase mb-1">Type the Hotel Name to confirm</label>
+        <input type="text" id="deleteConfirmInput" placeholder="Hotel Name" class="w-full bg-slate-950 border border-rose-900/50 rounded-xl p-2 text-sm text-white text-center font-mono outline-none">
+      </div>
+      
+      <div class="flex gap-2 pt-2">
+        <button onclick="document.getElementById('deleteHotelModal').classList.add('hidden')" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+        <button id="confirmDeleteBtn" onclick="executeHotelDeletion()" disabled class="flex-1 py-2 bg-rose-600 disabled:opacity-50 text-white text-xs font-black uppercase rounded-xl">Delete Permanently</button>
+      </div>
     </div>
   </div>
 
@@ -74,11 +138,11 @@
     import { db } from "./js/firebase-config.js";
     import { monitorAuthState, logoutUser } from "./js/auth.js";
     import { renewHotelLicense, SUPER_ADMIN_EMAIL } from "./js/license.js";
-    import { collection, doc, getDocs, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     let tenantsList = [];
 
-    // 1. Logout Function Fixed
+    // 1. Logout
     window.handleAdminLogout = async () => {
       const btn = document.getElementById("logoutBtn");
       btn.innerText = "Logging out...";
@@ -91,26 +155,19 @@
       }
     };
 
-    // 2. Auth State Check
+    // 2. Auth Check
     monitorAuthState(async (state) => {
       if (state && state.user && state.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
         document.getElementById("adminSessionEmail").innerText = state.user.email;
-        
-        // Check if role is correct in Firestore
-        if (state.profile && state.profile.role !== "superadmin") {
-          alert("Warning: Your Firestore user role is not set to 'superadmin'. Data fetching might be blocked by security rules.");
-        }
-
-        await loadTenants();
         await loadPlatformPricing();
+        await loadTenants();
       } else {
-        // Redirect unauthorized users
         alert("Unauthorized Developer Access.");
         window.location.href = "index.html";
       }
     });
 
-    // 3. Load Pricing (with error handling and default fallbacks)
+    // 3. Load Pricing
     window.loadPlatformPricing = async () => {
       try {
         const snap = await getDoc(doc(db, "system", "pricing"));
@@ -118,15 +175,10 @@
           const d = snap.data();
           document.getElementById("price6M").value = d.price6M || 4999;
           document.getElementById("price1Y").value = d.price1Y || 8999;
-        } else {
-          // Defaults if document doesn't exist yet
-          document.getElementById("price6M").value = 4999;
-          document.getElementById("price1Y").value = 8999;
+          document.getElementById("statPrice6M").innerText = d.price6M || 4999;
+          document.getElementById("statPrice1Y").innerText = d.price1Y || 8999;
         }
-      } catch (err) {
-        console.error("Pricing Load Error:", err);
-        alert("Could not load pricing. Check console for Firestore permission errors.");
-      }
+      } catch (err) { console.error(err); }
     };
 
     // 4. Save Pricing
@@ -134,28 +186,37 @@
       const btn = document.getElementById("savePriceBtn");
       btn.innerText = "Saving...";
       try {
-        await setDoc(doc(db, "system", "pricing"), {
-          price6M: parseFloat(document.getElementById("price6M").value) || 4999,
-          price1Y: parseFloat(document.getElementById("price1Y").value) || 8999
-        }, { merge: true });
-        alert("Platform pricing updated across landing portal!");
-      } catch (err) {
-        alert("Error saving pricing: " + err.message);
-      } finally {
-        btn.innerText = "Save Pricing";
-      }
+        const p6 = parseFloat(document.getElementById("price6M").value) || 4999;
+        const p1 = parseFloat(document.getElementById("price1Y").value) || 8999;
+        await setDoc(doc(db, "system", "pricing"), { price6M: p6, price1Y: p1 }, { merge: true });
+        document.getElementById("statPrice6M").innerText = p6;
+        document.getElementById("statPrice1Y").innerText = p1;
+        alert("Platform pricing updated!");
+      } catch (err) { alert("Error: " + err.message); } 
+      finally { btn.innerText = "Save Pricing"; }
     };
 
-    // 5. Load Tenants (with try-catch and empty state)
+    // 5. Load Tenants
     window.loadTenants = async () => {
       const tbody = document.getElementById("tenantsTableBody");
-      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 font-mono animate-pulse">Fetching hotel directory...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 animate-pulse">Fetching directory...</td></tr>`;
       
       try {
         const snap = await getDocs(collection(db, "hotels"));
         tenantsList = [];
-        snap.forEach(d => tenantsList.push({ id: d.id, ...d.data() }));
-        
+        let active = 0, suspended = 0;
+
+        snap.forEach(d => {
+          const data = d.data();
+          tenantsList.push({ id: d.id, ...data });
+          if (data.status === 'active' || data.status === 'trial') active++;
+          else suspended++;
+        });
+
+        document.getElementById("statTotalHotels").innerText = tenantsList.length;
+        document.getElementById("statActiveHotels").innerText = active;
+        document.getElementById("statSuspendedHotels").innerText = suspended;
+
         if (tenantsList.length === 0) {
           tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No hotels registered yet.</td></tr>`;
           return;
@@ -163,33 +224,34 @@
 
         let html = "";
         tenantsList.forEach(t => {
-          const statusColor = t.status === 'expired' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+          const isSuspended = t.status === 'suspended' || t.status === 'expired';
+          const statusColor = isSuspended ? 'bg-rose-500/20 text-rose-400 border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
           const expDate = t.planExpiresAt ? new Date(t.planExpiresAt).toLocaleDateString() : 'N/A';
           
-          html += `<tr class="hover:bg-slate-800/40">
+          html += `<tr class="hover:bg-slate-800/40 transition">
             <td class="py-3 px-4">
               <strong class="text-white block font-sans text-sm">${t.hotelName || 'Unnamed Property'}</strong>
-              <span class="text-slate-500 text-[10px]">${t.ownerEmail || 'No Email'}</span>
+              <span class="text-slate-500 text-[10px]">ID: ${t.id}</span>
             </td>
             <td class="py-3 px-4">
-              <span class="text-cyan-400 block font-mono">${t.gstin || 'No GSTIN'}</span>
-              <span class="text-slate-400 truncate max-w-[200px] block font-sans text-[10px]">${t.address || 'No Address'}</span>
+              <span class="text-cyan-400 block font-mono text-[10px]">${t.gstin || 'No GSTIN'}</span>
+              <span class="text-slate-400 block font-sans text-[10px]">${t.ownerEmail || 'N/A'}</span>
             </td>
             <td class="py-3 px-4">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusColor}">${(t.status || 'active').toUpperCase()}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusColor}">${(t.status || 'active').toUpperCase()}</span>
             </td>
             <td class="py-3 px-4 text-slate-300 font-bold">${expDate}</td>
-            <td class="py-3 px-4 text-right space-x-1.5 font-sans">
-              <button onclick="openSuperEditModal('${t.id}')" class="px-2 py-1 bg-slate-800 text-cyan-300 rounded text-[11px] hover:bg-slate-700">Edit</button>
-              <button onclick="renewTenant('${t.id}', 6)" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 rounded text-[11px] hover:bg-cyan-900">+6M</button>
-              <button onclick="renewTenant('${t.id}', 12)" class="px-2 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded text-[11px] hover:bg-emerald-900">+1Y</button>
+            <td class="py-3 px-4 text-right flex flex-wrap justify-end gap-1.5 font-sans">
+              <button onclick="openSuperEditModal('${t.id}')" class="px-2 py-1 bg-slate-800 text-cyan-300 rounded text-[10px] hover:bg-slate-700">Edit</button>
+              <button onclick="toggleSuspend('${t.id}', '${t.status}')" class="px-2 py-1 ${isSuspended ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-amber-600 hover:bg-amber-500'} text-white rounded text-[10px] font-bold">${isSuspended ? 'Activate' : 'Suspend'}</button>
+              <button onclick="backupHotelData('${t.id}', '${t.hotelName}')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded text-[10px] hover:bg-slate-700">Backup</button>
+              <button onclick="openDeleteModal('${t.id}', '${t.hotelName}')" class="px-2 py-1 bg-rose-950 text-rose-400 border border-rose-900 rounded text-[10px] hover:bg-rose-900">Delete</button>
             </td>
           </tr>`;
         });
         tbody.innerHTML = html;
       } catch (err) {
-        console.error("Tenant Load Error:", err);
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-rose-400 font-bold">Permission Denied or Network Error. Check Firestore Rules.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-rose-400">Error loading data. Check console.</td></tr>`;
       }
     };
 
@@ -215,20 +277,92 @@
         alert("Hotel legal profile updated!");
         document.getElementById("superEditModal").classList.add("hidden");
         await loadTenants();
-      } catch (err) {
-        alert("Error saving details: " + err.message);
+      } catch (err) { alert("Error: " + err.message); }
+    };
+
+    // 7. Suspend / Activate
+    window.toggleSuspend = async (hId, currentStatus) => {
+      const isSuspending = (currentStatus !== 'suspended');
+      if(!confirm(`Are you sure you want to ${isSuspending ? 'SUSPEND' : 'ACTIVATE'} this hotel?`)) return;
+      
+      try {
+        await updateDoc(doc(db, "hotels", hId), {
+          status: isSuspending ? "suspended" : "active"
+        });
+        alert(`Hotel ${isSuspending ? 'Suspended' : 'Activated'} successfully!`);
+        await loadTenants();
+      } catch(e) { alert("Error: " + e.message); }
+    };
+
+    // 8. Backup Hotel Data (Download JSON)
+    window.backupHotelData = async (hotelId, hotelName) => {
+      const btnText = event.target.innerText;
+      event.target.innerText = "Wait...";
+      try {
+        const backupData = { hotelId, hotelName, exportedAt: new Date().toISOString() };
+        
+        // Fetch all sub-collections
+        const collections = ['rooms', 'bookings', 'expenses', 'pos_orders', 'menu_items', 'staff'];
+        for (const colName of collections) {
+          const snap = await getDocs(collection(db, "hotels", hotelId, colName));
+          backupData[colName] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `Backup_${hotelName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        event.target.innerText = btnText;
+      } catch (e) {
+        alert("Backup failed: " + e.message);
+        event.target.innerText = btnText;
       }
     };
 
-    // 7. Renew License
-    window.renewTenant = async (hId, months) => {
-      if (!confirm(`Extend license by ${months} months?`)) return;
+    // 9. DELETE HOTEL ENTIRELY
+    window.openDeleteModal = (hotelId, hotelName) => {
+      document.getElementById("deleteHotelId").value = hotelId;
+      document.getElementById("deleteHotelName").value = hotelName;
+      document.getElementById("deleteConfirmInput").value = "";
+      document.getElementById("deleteConfirmInput").placeholder = hotelName;
+      
+      const btn = document.getElementById("confirmDeleteBtn");
+      btn.disabled = true;
+      document.getElementById("deleteHotelModal").classList.remove("hidden");
+    };
+
+    // Enable delete button only if typed name matches
+    document.getElementById("deleteConfirmInput").addEventListener("input", (e) => {
+      const expected = document.getElementById("deleteHotelName").value;
+      document.getElementById("confirmDeleteBtn").disabled = (e.target.value !== expected);
+    });
+
+    window.executeHotelDeletion = async () => {
+      const hId = document.getElementById("deleteHotelId").value;
+      const btn = document.getElementById("confirmDeleteBtn");
+      btn.innerText = "Deleting Data...";
+      btn.disabled = true;
+
       try {
-        await renewHotelLicense(hId, months);
-        alert("Subscription renewed successfully!");
+        // 1. Delete all subcollections
+        const collections = ['rooms', 'bookings', 'expenses', 'pos_orders', 'menu_items', 'staff'];
+        for (const colName of collections) {
+          const snap = await getDocs(collection(db, "hotels", hId, colName));
+          const promises = snap.docs.map(d => deleteDoc(d.ref));
+          await Promise.all(promises);
+        }
+
+        // 2. Delete the hotel document itself
+        await deleteDoc(doc(db, "hotels", hId));
+
+        alert("Hotel and ALL its data have been permanently deleted from the system.");
+        document.getElementById("deleteHotelModal").classList.add("hidden");
         await loadTenants();
-      } catch (err) {
-        alert("Error renewing license: " + err.message);
+      } catch (e) {
+        alert("Error during deletion: " + e.message);
+        btn.innerText = "Delete Permanently";
+        btn.disabled = false;
       }
     };
   </script>
