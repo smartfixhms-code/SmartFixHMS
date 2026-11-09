@@ -117,7 +117,7 @@
             <div id="statOccupancyRate" class="text-2xl font-black text-cyan-400 mt-1 font-mono">0%</div>
           </div>
           
-          <!-- New Cash & Bank Cards -->
+          <!-- Cash & Bank Cards -->
           <div class="bg-slate-900 border border-emerald-800/50 p-4 rounded-2xl col-span-1">
             <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">💵 Cash in Hand</span>
             <div id="statCashInHand" class="text-xl font-black text-emerald-300 mt-1 font-mono">₹0.00</div>
@@ -206,6 +206,22 @@
             <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Syncing</span>
           </div>
           <div id="roomGridContainer" class="space-y-6"></div>
+        </div>
+
+        <!-- RECENT EXPENSES ON DASHBOARD -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 mt-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-black uppercase tracking-wider text-white">Recent Expenses</h3>
+            <button onclick="openAddExpenseModal()" class="text-xs text-cyan-400 font-bold hover:underline">+ Add New</button>
+          </div>
+          <div class="table-responsive">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
+                <tr><th class="py-2 px-3">Date</th><th class="py-2 px-3">Category</th><th class="py-2 px-3">Note</th><th class="py-2 px-3">Source</th><th class="py-2 px-3 text-right">Amount (₹)</th></tr>
+              </thead>
+              <tbody id="recentExpenseDashboard" class="divide-y divide-slate-800/60"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -2311,8 +2327,10 @@
       document.getElementById("repCashInHand").innerText = `₹${cashInHand.toFixed(2)}`;
       document.getElementById("repBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
       
-      const tbody = document.getElementById("expenseTableBody");
-      tbody.innerHTML = cachedExpenses.map(e => `<tr class="hover:bg-slate-800/40"><td class="py-2 px-3 text-slate-400">${e.date}</td><td class="py-2 px-3 font-bold text-cyan-400 font-sans">${e.category}</td><td class="py-2 px-3 text-white font-sans">${e.description}</td><td class="py-2 px-3 text-xs"><span class="px-1.5 py-0.5 rounded ${e.paymentSource === 'Bank' ? 'bg-blue-900/50 text-blue-300' : 'bg-emerald-900/50 text-emerald-300'}">${e.paymentSource || 'Cash'}</span></td><td class="py-2 px-3 text-rose-400 text-right font-bold">₹${parseFloat(e.amount).toFixed(2)}</td></tr>`).join('');
+      const expenseRows = cachedExpenses.map(e => `<tr class="hover:bg-slate-800/40"><td class="py-2 px-3 text-slate-400">${e.date}</td><td class="py-2 px-3 font-bold text-cyan-400 font-sans">${e.category}</td><td class="py-2 px-3 text-white font-sans">${e.description}</td><td class="py-2 px-3 text-xs"><span class="px-1.5 py-0.5 rounded ${e.paymentSource === 'Bank' ? 'bg-blue-900/50 text-blue-300' : 'bg-emerald-900/50 text-emerald-300'}">${e.paymentSource || 'Cash'}</span></td><td class="py-2 px-3 text-rose-400 text-right font-bold">₹${parseFloat(e.amount).toFixed(2)}</td></tr>`).join('');
+      
+      document.getElementById("expenseTableBody").innerHTML = expenseRows;
+      document.getElementById("recentExpenseDashboard").innerHTML = expenseRows;
     };
 
     window.renderCharts = () => {
@@ -2525,8 +2543,16 @@
         
         document.getElementById("setHotelPhone").value = d.phone || "";
         document.getElementById("setHotelUpiId").value = d.upiId || "";
-        document.getElementById("setCheckIn").value = d.policyNote?.split("|")[0]?.replace("Standard check-in:", "").trim() || "12:00 PM";
-        document.getElementById("setCheckOut").value = d.policyNote?.split("|")[1]?.replace("Check-out:", "").trim() || "11:00 AM";
+        // Extract check-in and check-out
+        let inTime = "12:00 PM";
+        let outTime = "11:00 AM";
+        if(d.policyNote) {
+            const parts = d.policyNote.split("|");
+            if(parts[0]) inTime = parts[0].replace("Standard check-in:", "").trim();
+            if(parts[1]) outTime = parts[1].replace("Check-out:", "").trim();
+        }
+        document.getElementById("setCheckIn").value = inTime;
+        document.getElementById("setCheckOut").value = outTime;
         document.getElementById("setPolicyNote").value = d.policyNote || "";
       }
     }
