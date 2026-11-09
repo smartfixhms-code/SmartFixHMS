@@ -582,7 +582,6 @@
           <div class="relative">
             <label class="block text-xs text-cyan-400 font-bold mb-1">ID Number *</label>
             <div class="flex gap-2">
-              <!-- Fixed Bug: Added oninput to hide badge if user types manually -->
               <input type="text" id="bookIdNumber" required oninput="document.getElementById('verifiedBadge').classList.add('hidden')" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono">
               <button type="button" onclick="manualVerifyId()" class="px-3 bg-cyan-800 text-cyan-300 rounded-lg text-xs font-bold hover:bg-cyan-700">Verify</button>
             </div>
@@ -914,7 +913,7 @@
         
         await loadInvoiceArchives();
         await loadFinancialReports();
-        loadHotelProfileSettings();
+        await loadHotelProfileSettings(); // Updated to await and update local memory
       } else {
         window.location.href = "index.html";
       }
@@ -953,12 +952,23 @@
       if (vId === 'reports') renderCharts();
     };
 
-    // --- UPI PAYMENT LOGIC ---
-    window.showUpiQrCode = (bookingId) => {
+    // --- UPI PAYMENT LOGIC (BUG FIXED) ---
+    window.showUpiQrCode = async (bookingId) => {
       const booking = cachedBookings.find(b => b.id === bookingId || b.bookingId === bookingId);
       if(!booking) return alert("Booking not found");
       
-      const upiId = currentHotelProfile.upiId;
+      // 1. Try to get UPI ID from local memory
+      let upiId = currentHotelProfile.upiId;
+      
+      // 2. Fallback: Fetch latest from Firestore if missing in memory
+      if (!upiId) {
+        const hotelSnap = await getDoc(doc(db, "hotels", currentHotelId));
+        if (hotelSnap.exists() && hotelSnap.data().upiId) {
+          upiId = hotelSnap.data().upiId;
+          currentHotelProfile.upiId = upiId; // Update local memory
+        }
+      }
+
       if(!upiId) {
         return alert("Please set your Hotel UPI ID in Settings first to accept online payments.");
       }
@@ -972,12 +982,10 @@
       document.getElementById("upiPayeeId").innerText = upiId;
       document.getElementById("upiAmount").innerText = `₹${dueAmount.toFixed(2)}`;
       
-      // Generate UPI URI
       const encodedName = encodeURIComponent(currentHotelProfile.hotelName);
       const encodedNote = encodeURIComponent(`Payment for Invoice ${booking.bookingId}`);
       const upiUri = `upi://pay?pa=${upiId}&pn=${encodedName}&am=${dueAmount.toFixed(2)}&cu=INR&tn=${encodedNote}`;
 
-      // Clear previous QR and generate new
       document.getElementById("qrcode").innerHTML = "";
       qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
         text: upiUri,
@@ -2316,6 +2324,9 @@
       const snap = await getDoc(doc(db, "hotels", currentHotelId));
       if (snap.exists()) {
         const d = snap.data();
+        // FIXED BUG: Ensure local memory gets the latest data including UPI ID on load
+        currentHotelProfile = { ...currentHotelProfile, ...d }; 
+        
         document.getElementById("setHotelPhone").value = d.phone || "";
         document.getElementById("setHotelUpiId").value = d.upiId || "";
         document.getElementById("setCheckIn").value = d.policyNote?.split("|")[0]?.replace("Standard check-in:", "").trim() || "12:00 PM";
@@ -2343,6 +2354,7 @@
         if (pendingSettingsPayload && pendingSettingsPayload.action === "saveProfile") {
           await updateDoc(doc(db, "hotels", currentHotelId), pendingSettingsPayload.data);
           alert("Settings updated successfully!");
+          // Update local memory
           currentHotelProfile = { ...currentHotelProfile, ...pendingSettingsPayload.data };
         }
         document.getElementById("settingsAuthModal").classList.add("hidden");
