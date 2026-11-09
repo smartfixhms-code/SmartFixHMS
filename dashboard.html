@@ -425,7 +425,6 @@
             <h3 class="text-sm font-bold text-cyan-400 uppercase">Hotel Profile & Policy</h3>
             <div><label class="block text-xs text-slate-400 mb-1">Phone Number</label><input type="text" id="setHotelPhone" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"></div>
             
-            <!-- UPI ID INPUT -->
             <div>
               <label class="block text-xs text-emerald-400 font-bold mb-1">UPI ID for Payments (GPay/PhonePe)</label>
               <input type="text" id="setHotelUpiId" placeholder="hotelname@okicici" class="w-full bg-slate-950 border border-emerald-800 rounded-lg p-2 text-xs text-white font-mono">
@@ -952,7 +951,7 @@
     let cachedExpenses = [];
     let cachedMenuItems = [];
     let cachedStaff = [];
-    let cachedDeposits = []; // New
+    let cachedDeposits = []; 
     let hotelFloors = ["Floor 1", "Floor 2", "Floor 3"];
     let currentPosOrder = [];
     
@@ -988,13 +987,11 @@
 
         const lic = await verifyLicenseStatus(currentHotelId);
         
-        // Handle Suspended Account
         if (lic.isSuspended) {
           document.getElementById("suspensionModal").classList.remove("hidden");
           return; 
         }
 
-        // Handle Expired License
         if (!lic.isValid) {
           document.getElementById("licenseLockModal").classList.remove("hidden");
           document.getElementById("whatsappSupportBtn").href = getWhatsAppSupportLink(lic.details?.hotelName || "My Hotel", currentHotelId);
@@ -1130,7 +1127,7 @@
           totalPaid: newPaid,
           balanceDue: 0,
           isSettled: true,
-          lastPaymentMode: "Bank" // UPI automatically goes to Bank
+          lastPaymentMode: "Bank"
         });
         
         alert("Payment recorded successfully! Invoice is now fully settled.");
@@ -1431,7 +1428,7 @@
     window.confirmCheckout = async () => {
       const collectNow = parseFloat(document.getElementById("outFinalPayment").value) || 0;
       const collectedBy = document.getElementById("outCollectedBy").value.trim() || "Front Desk";
-      const paymentMode = document.getElementById("outPaymentMode").value; // Cash or Bank
+      const paymentMode = document.getElementById("outPaymentMode").value; 
       const totalPaid = liveAlreadyPaid + collectNow;
       const newBal = liveTotalBill - totalPaid;
       const isFullySettled = newBal <= 0;
@@ -2022,50 +2019,62 @@
       }
     };
 
-    // --- INVOICE ARCHIVE ---
+    // --- INVOICE ARCHIVE (BUG FIXED: Removed orderBy) ---
     window.loadInvoiceArchives = async () => {
-      const snap = await getDocs(query(collection(db, "hotels", currentHotelId, "bookings"), orderBy("createdAt", "desc")));
-      cachedBookings = [];
-      snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
-      
-      const tbody = document.getElementById("invoiceTableBody");
-      let html = "";
-      cachedBookings.forEach(b => {
-        const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
-        const total = (b.summary?.grandTotal || 0).toFixed(2);
-        const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
-        const due = (b.balanceDue || 0).toFixed(2);
+      try {
+        // Fetching without orderBy to ensure old data is not omitted if createdAt is missing
+        const snap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
+        cachedBookings = [];
+        snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
         
-        let statusBadge = "";
-        if(b.status === "confirmed") {
-            statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">UPCOMING</span>`;
-        } else if(b.status === "checked_in") {
-            statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">IN-HOUSE</span>`;
-        } else if (isSettled) {
-            statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">✓ SETTLED</span>`;
-        } else {
-            statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">DUE ₹${due}</span>`;
-        }
+        // Sort in JavaScript instead
+        cachedBookings.sort((a, b) => {
+            const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return timeB - timeA;
+        });
 
-        html += `<tr class="hover:bg-slate-800/40">
-          <td class="py-3 px-4 font-bold text-cyan-400">${b.bookingId || b.id}</td>
-          <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName} ${b.isGroup ? '<span class="text-[9px] bg-slate-800 text-slate-300 px-1 rounded ml-1 border border-slate-700">GRP</span>' : ''}</td>
-          <td class="py-3 px-4">R-${b.roomNumber} (${b.nights}N)</td>
-          <td class="py-3 px-4 text-xs font-mono">
-            <div class="text-white">₹${total}</div>
-            <div class="text-emerald-400 text-[10px]">P: ₹${paid}</div>
-          </td>
-          <td class="py-3 px-4 font-sans">${statusBadge}</td>
-          <td class="py-3 px-4 text-right space-x-1 font-sans">
-            <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded hover:bg-slate-700">58</button>
-            <button onclick="triggerPrint('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold hover:bg-cyan-900">A4</button>
-            <button onclick="showUpiQrCode('${b.id}')" class="px-2 py-1 bg-purple-950 text-purple-400 border border-purple-800 text-[10px] rounded font-bold hover:bg-purple-900">UPI QR</button>
-            <button onclick="deleteInvoice('${b.id}', '${b.roomId}')" class="px-2 py-1 bg-rose-950 text-rose-400 border border-rose-900 text-[10px] rounded hover:bg-rose-900">Del</button>
-          </td>
-        </tr>`;
-      });
-      tbody.innerHTML = html;
-      return cachedBookings;
+        const tbody = document.getElementById("invoiceTableBody");
+        let html = "";
+        cachedBookings.forEach(b => {
+          const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
+          const total = (b.summary?.grandTotal || 0).toFixed(2);
+          const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
+          const due = (b.balanceDue || 0).toFixed(2);
+          
+          let statusBadge = "";
+          if(b.status === "confirmed") {
+              statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">UPCOMING</span>`;
+          } else if(b.status === "checked_in") {
+              statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">IN-HOUSE</span>`;
+          } else if (isSettled) {
+              statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">✓ SETTLED</span>`;
+          } else {
+              statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">DUE ₹${due}</span>`;
+          }
+
+          html += `<tr class="hover:bg-slate-800/40">
+            <td class="py-3 px-4 font-bold text-cyan-400">${b.bookingId || b.id}</td>
+            <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName} ${b.isGroup ? '<span class="text-[9px] bg-slate-800 text-slate-300 px-1 rounded ml-1 border border-slate-700">GRP</span>' : ''}</td>
+            <td class="py-3 px-4">R-${b.roomNumber} (${b.nights}N)</td>
+            <td class="py-3 px-4 text-xs font-mono">
+              <div class="text-white">₹${total}</div>
+              <div class="text-emerald-400 text-[10px]">P: ₹${paid}</div>
+            </td>
+            <td class="py-3 px-4 font-sans">${statusBadge}</td>
+            <td class="py-3 px-4 text-right space-x-1 font-sans">
+              <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded hover:bg-slate-700">58</button>
+              <button onclick="triggerPrint('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold hover:bg-cyan-900">A4</button>
+              <button onclick="showUpiQrCode('${b.id}')" class="px-2 py-1 bg-purple-950 text-purple-400 border border-purple-800 text-[10px] rounded font-bold hover:bg-purple-900">UPI QR</button>
+              <button onclick="deleteInvoice('${b.id}', '${b.roomId}')" class="px-2 py-1 bg-rose-950 text-rose-400 border border-rose-900 text-[10px] rounded hover:bg-rose-900">Del</button>
+            </td>
+          </tr>`;
+        });
+        tbody.innerHTML = html;
+        return cachedBookings;
+      } catch(e) {
+        console.error("Error loading invoices:", e);
+      }
     };
 
     window.filterInvoicesTable = () => {
@@ -2265,19 +2274,22 @@
       await deleteDoc(doc(db, "hotels", currentHotelId, "rooms", rId));
     };
 
-    // --- FINANCIAL REPORTS & CHARTS ---
+    // --- FINANCIAL REPORTS & CHARTS (BUG FIXED) ---
     window.loadFinancialReports = async () => {
-      // 1. Load Expenses
-      const expSnap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
-      cachedExpenses = []; 
-      expSnap.forEach(d => cachedExpenses.push(d.data()));
+      try {
+        // Fetch Expenses safely
+        const expSnap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
+        cachedExpenses = []; 
+        expSnap.forEach(d => cachedExpenses.push(d.data()));
+      } catch(e) { console.error("Error loading expenses:", e); }
 
-      // 2. Load Bank Deposits
-      const depSnap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
-      cachedDeposits = [];
-      depSnap.forEach(d => cachedDeposits.push(d.data()));
+      try {
+        // Fetch Deposits safely (Rules must allow this)
+        const depSnap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
+        cachedDeposits = [];
+        depSnap.forEach(d => cachedDeposits.push(d.data()));
+      } catch(e) { console.error("Error loading bank deposits:", e); }
 
-      // 3. Calculate Totals
       let cashRevenue = 0;
       let bankRevenue = 0;
       let totalRevenue = 0;
@@ -2286,7 +2298,6 @@
         const paid = b.totalPaid || b.advancePaid || 0;
         totalRevenue += paid;
         
-        // If payment mode is Bank/Online, add to bank. Else assume Cash.
         if (b.lastPaymentMode === "Bank") {
           bankRevenue += paid;
         } else {
@@ -2316,21 +2327,21 @@
       const bankBalance = bankRevenue - bankExpenses + totalDeposits;
       const netProfit = totalRevenue - totalExpenses;
 
-      // 4. Update UI
-      document.getElementById("statTodayRevenue").innerText = `₹${totalRevenue.toFixed(2)}`;
-      document.getElementById("statNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
-      document.getElementById("statCashInHand").innerText = `₹${cashInHand.toFixed(2)}`;
-      document.getElementById("statBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
+      // Update UI
+      if(document.getElementById("statTodayRevenue")) document.getElementById("statTodayRevenue").innerText = `₹${totalRevenue.toFixed(2)}`;
+      if(document.getElementById("statNetProfit")) document.getElementById("statNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
+      if(document.getElementById("statCashInHand")) document.getElementById("statCashInHand").innerText = `₹${cashInHand.toFixed(2)}`;
+      if(document.getElementById("statBankBalance")) document.getElementById("statBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
 
-      document.getElementById("repTotalRevenue").innerText = `₹${totalRevenue.toFixed(2)}`;
-      document.getElementById("repNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
-      document.getElementById("repCashInHand").innerText = `₹${cashInHand.toFixed(2)}`;
-      document.getElementById("repBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
+      if(document.getElementById("repTotalRevenue")) document.getElementById("repTotalRevenue").innerText = `₹${totalRevenue.toFixed(2)}`;
+      if(document.getElementById("repNetProfit")) document.getElementById("repNetProfit").innerText = `₹${netProfit.toFixed(2)}`;
+      if(document.getElementById("repCashInHand")) document.getElementById("repCashInHand").innerText = `₹${cashInHand.toFixed(2)}`;
+      if(document.getElementById("repBankBalance")) document.getElementById("repBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
       
       const expenseRows = cachedExpenses.map(e => `<tr class="hover:bg-slate-800/40"><td class="py-2 px-3 text-slate-400">${e.date}</td><td class="py-2 px-3 font-bold text-cyan-400 font-sans">${e.category}</td><td class="py-2 px-3 text-white font-sans">${e.description}</td><td class="py-2 px-3 text-xs"><span class="px-1.5 py-0.5 rounded ${e.paymentSource === 'Bank' ? 'bg-blue-900/50 text-blue-300' : 'bg-emerald-900/50 text-emerald-300'}">${e.paymentSource || 'Cash'}</span></td><td class="py-2 px-3 text-rose-400 text-right font-bold">₹${parseFloat(e.amount).toFixed(2)}</td></tr>`).join('');
       
-      document.getElementById("expenseTableBody").innerHTML = expenseRows;
-      document.getElementById("recentExpenseDashboard").innerHTML = expenseRows;
+      if(document.getElementById("expenseTableBody")) document.getElementById("expenseTableBody").innerHTML = expenseRows;
+      if(document.getElementById("recentExpenseDashboard")) document.getElementById("recentExpenseDashboard").innerHTML = expenseRows;
     };
 
     window.renderCharts = () => {
@@ -2543,7 +2554,6 @@
         
         document.getElementById("setHotelPhone").value = d.phone || "";
         document.getElementById("setHotelUpiId").value = d.upiId || "";
-        // Extract check-in and check-out
         let inTime = "12:00 PM";
         let outTime = "11:00 AM";
         if(d.policyNote) {
@@ -2653,4 +2663,4 @@
     };
   </script>
 </body>
-</html>
+</html>করে 
