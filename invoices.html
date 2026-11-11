@@ -44,19 +44,14 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 
 <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
 
-<!-- Header -->
 <div class="flex flex-wrap justify-between items-center gap-3">
-<div>
-<h1 class="text-lg sm:text-xl font-black text-white uppercase tracking-wider">📄 Invoices & Bookings</h1>
-<p class="text-xs text-slate-400 mt-1">All financial operations</p>
-</div>
+<div><h1 class="text-lg sm:text-xl font-black text-white uppercase tracking-wider">📄 Invoices & Bookings</h1><p class="text-xs text-slate-400 mt-1">All financial operations</p></div>
 <div class="flex gap-2">
 <a href="dashboard.html" class="px-3 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-700">← Dashboard</a>
 <button onclick="openDayClose()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-lg">📊 Day Close</button>
 </div>
 </div>
 
-<!-- Tabs -->
 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-1 grid grid-cols-4 gap-1 overflow-x-auto">
 <button onclick="setTab('invoices')" id="tabInvoices" class="py-2.5 px-2 text-xs font-bold rounded-lg whitespace-nowrap">📄 Invoices</button>
 <button onclick="setTab('followup')" id="tabFollowup" class="py-2.5 px-2 text-xs font-bold rounded-lg whitespace-nowrap">📅 Follow-up</button>
@@ -64,132 +59,62 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <button onclick="setTab('refunds')" id="tabRefunds" class="py-2.5 px-2 text-xs font-bold rounded-lg whitespace-nowrap">↩ Refunds</button>
 </div>
 
-<!-- ============================================================ -->
 <!-- TAB 1: INVOICES -->
-<!-- ============================================================ -->
 <div id="contentInvoices" class="space-y-4">
 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap gap-2 items-center">
-<input type="text" id="invoiceSearch" oninput="filterInvoices()" placeholder="Search guest, phone, invoice..." class="flex-1 min-w-[200px] bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white">
-<select id="invoiceFilter" onchange="filterInvoices()" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white">
-<option value="all">All Status</option>
-<option value="checked_in">In-House</option>
-<option value="confirmed">Upcoming</option>
-<option value="checked_out">Checked Out</option>
-<option value="cancelled">Cancelled</option>
-<option value="due">With Due</option>
+<input type="text" id="invoiceSearch" oninput="renderInvoices()" placeholder="Search guest, phone, invoice..." class="flex-1 min-w-[200px] bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white">
+<select id="invoiceFilter" onchange="renderInvoices()" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white">
+<option value="all">All Status</option><option value="checked_in">In-House</option><option value="confirmed">Upcoming</option><option value="checked_out">Checked Out</option><option value="cancelled">Cancelled</option><option value="due">With Due</option>
 </select>
 <span id="invoiceCount" class="text-[10px] text-slate-400 font-mono px-2"></span>
 </div>
-
 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
 <div class="table-responsive">
 <table class="w-full text-left text-xs font-mono">
-<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-3 px-3">Invoice</th>
-<th class="py-3 px-3">Guest</th>
-<th class="py-3 px-3">Room</th>
-<th class="py-3 px-3">Total</th>
-<th class="py-3 px-3">Paid</th>
-<th class="py-3 px-3">Status</th>
-<th class="py-3 px-3 text-right">Actions</th>
-</tr>
-</thead>
-<tbody id="invoiceTableBody" class="divide-y divide-slate-800/60">
-<tr><td colspan="7" class="text-center py-8 text-slate-500">Loading...</td></tr>
-</tbody>
+<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">Guest</th><th class="py-3 px-3">Room</th><th class="py-3 px-3">Total</th><th class="py-3 px-3">Paid</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Actions</th></tr></thead>
+<tbody id="invoiceTableBody" class="divide-y divide-slate-800/60"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 2: FOLLOW-UP -->
-<!-- ============================================================ -->
+<!-- TAB 2: FOLLOWUP -->
 <div id="contentFollowup" class="hidden space-y-4">
-<div class="bg-cyan-950/20 border border-cyan-800/40 p-3 rounded-xl text-xs text-cyan-300 flex items-start gap-2">
-<span class="text-base">💡</span>
-<p>Upcoming confirmed bookings. Click <b>Check-In</b> when guest arrives, or <b>No-Show</b> if they don't come (advance retained).</p>
-</div>
+<div class="bg-cyan-950/20 border border-cyan-800/40 p-3 rounded-xl text-xs text-cyan-300 flex items-start gap-2"><span class="text-base">💡</span><p>Upcoming confirmed bookings. Click <b>Check-In</b> when guest arrives, or <b>No-Show</b> if they don't come.</p></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
 <div class="table-responsive">
 <table class="w-full text-left text-xs font-mono">
-<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-3 px-3">Guest</th>
-<th class="py-3 px-3">Phone</th>
-<th class="py-3 px-3">Check-In Date</th>
-<th class="py-3 px-3">Room</th>
-<th class="py-3 px-3">Advance</th>
-<th class="py-3 px-3">Due</th>
-<th class="py-3 px-3 text-right">Actions</th>
-</tr>
-</thead>
-<tbody id="followupTableBody" class="divide-y divide-slate-800/60">
-<tr><td colspan="7" class="text-center py-8 text-slate-500">Loading...</td></tr>
-</tbody>
+<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Guest</th><th class="py-3 px-3">Phone</th><th class="py-3 px-3">Check-In Date</th><th class="py-3 px-3">Room</th><th class="py-3 px-3">Advance</th><th class="py-3 px-3">Due</th><th class="py-3 px-3 text-right">Actions</th></tr></thead>
+<tbody id="followupTableBody" class="divide-y divide-slate-800/60"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- TAB 3: MARKET DUE -->
-<!-- ============================================================ -->
 <div id="contentMarketDue" class="hidden space-y-4">
 <div class="bg-rose-950/20 border border-rose-800/40 p-3 rounded-xl flex justify-between items-center">
-<div class="text-xs text-rose-300">
-<span class="text-base">⚠️</span> <b>Outstanding balances</b> — collect from guests
-</div>
+<div class="text-xs text-rose-300"><span class="text-base">⚠️</span> <b>Outstanding balances</b> — collect from guests</div>
 <span id="totalDue" class="text-lg font-black text-rose-400 font-mono">₹0.00</span>
 </div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
 <div class="table-responsive">
 <table class="w-full text-left text-xs font-mono">
-<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-3 px-3">Guest</th>
-<th class="py-3 px-3">Phone</th>
-<th class="py-3 px-3">Room</th>
-<th class="py-3 px-3">Total Bill</th>
-<th class="py-3 px-3">Paid</th>
-<th class="py-3 px-3">Due</th>
-<th class="py-3 px-3 text-right">Actions</th>
-</tr>
-</thead>
-<tbody id="marketDueTableBody" class="divide-y divide-slate-800/60">
-<tr><td colspan="7" class="text-center py-8 text-slate-500">Loading...</td></tr>
-</tbody>
+<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Guest</th><th class="py-3 px-3">Phone</th><th class="py-3 px-3">Room</th><th class="py-3 px-3">Total Bill</th><th class="py-3 px-3">Paid</th><th class="py-3 px-3">Due</th><th class="py-3 px-3 text-right">Actions</th></tr></thead>
+<tbody id="marketDueTableBody" class="divide-y divide-slate-800/60"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- TAB 4: REFUNDS -->
-<!-- ============================================================ -->
 <div id="contentRefunds" class="hidden space-y-4">
-<div class="bg-amber-950/20 border border-amber-800/40 p-3 rounded-xl text-xs text-amber-300 flex items-start gap-2">
-<span class="text-base">💡</span>
-<p>All refunds given to guests. Each refund is deducted from P&L revenue.</p>
-</div>
+<div class="bg-amber-950/20 border border-amber-800/40 p-3 rounded-xl text-xs text-amber-300 flex items-start gap-2"><span class="text-base">💡</span><p>All refunds given to guests. Each refund is deducted from P&L revenue.</p></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
 <div class="table-responsive">
 <table class="w-full text-left text-xs font-mono">
-<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-3 px-3">Date</th>
-<th class="py-3 px-3">Invoice</th>
-<th class="py-3 px-3">Guest</th>
-<th class="py-3 px-3">Amount</th>
-<th class="py-3 px-3">Mode</th>
-<th class="py-3 px-3">Reason</th>
-<th class="py-3 px-3">By</th>
-</tr>
-</thead>
-<tbody id="refundsTableBody" class="divide-y divide-slate-800/60">
-<tr><td colspan="7" class="text-center py-8 text-slate-500">Loading...</td></tr>
-</tbody>
+<thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800"><tr><th class="py-3 px-3">Date</th><th class="py-3 px-3">Invoice</th><th class="py-3 px-3">Guest</th><th class="py-3 px-3">Amount</th><th class="py-3 px-3">Mode</th><th class="py-3 px-3">Reason</th><th class="py-3 px-3">By</th></tr></thead>
+<tbody id="refundsTableBody" class="divide-y divide-slate-800/60"></tbody>
 </table>
 </div>
 </div>
@@ -198,9 +123,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </main>
 </div>
 
-<!-- ============================================================ -->
-<!-- DUE COLLECTION MODAL -->
-<!-- ============================================================ -->
+<!-- MODALS (Due, Refund, UPI, DayClose) -->
 <div id="dueModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4 overflow-y-auto">
 <div class="w-full max-w-sm bg-slate-900 border border-cyan-800/50 p-6 rounded-2xl space-y-3 my-auto">
 <h3 class="text-sm font-bold uppercase text-cyan-400 text-center">💰 Collect Due</h3>
@@ -211,31 +134,13 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <div class="flex justify-between"><span class="text-slate-400">Already Paid:</span><span id="duePaid" class="text-emerald-400">₹0.00</span></div>
 <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Current Due:</span><span id="dueAmount" class="text-rose-400 font-bold text-sm">₹0.00</span></div>
 </div>
-<div>
-<label class="block text-xs text-slate-400 mb-1">Amount Receiving (₹)</label>
-<input type="number" id="dueCollectAmount" oninput="calcNewDue()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-cyan-400 font-bold font-mono outline-none">
-</div>
-<div>
-<label class="block text-xs text-slate-400 mb-1">Payment Mode</label>
-<select id="duePaymentMode" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-<option value="Cash">💵 Cash</option>
-<option value="Bank">🏦 Bank / Online</option>
-</select>
-</div>
-<div class="text-center py-2 bg-slate-950 border border-slate-800 rounded-xl">
-<span class="text-[10px] text-slate-400 block mb-1">Remaining Due</span>
-<span id="dueRemaining" class="text-xl font-black text-white font-mono">₹0.00</span>
-</div>
-<div class="flex gap-2 pt-2">
-<button onclick="document.getElementById('dueModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
-<button onclick="submitDueCollection()" class="flex-1 py-2.5 bg-cyan-500 text-slate-950 text-xs font-black uppercase rounded-xl">Receive</button>
-</div>
+<div><label class="block text-xs text-slate-400 mb-1">Amount Receiving (₹)</label><input type="number" id="dueCollectAmount" oninput="calcNewDue()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-cyan-400 font-bold font-mono outline-none"></div>
+<div><label class="block text-xs text-slate-400 mb-1">Payment Mode</label><select id="duePaymentMode" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"><option value="Cash">💵 Cash</option><option value="Bank">🏦 Bank / Online</option></select></div>
+<div class="text-center py-2 bg-slate-950 border border-slate-800 rounded-xl"><span class="text-[10px] text-slate-400 block mb-1">Remaining Due</span><span id="dueRemaining" class="text-xl font-black text-white font-mono">₹0.00</span></div>
+<div class="flex gap-2 pt-2"><button onclick="document.getElementById('dueModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button><button onclick="submitDueCollection()" class="flex-1 py-2.5 bg-cyan-500 text-slate-950 text-xs font-black uppercase rounded-xl">Receive</button></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- REFUND MODAL -->
-<!-- ============================================================ -->
 <div id="refundModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4 overflow-y-auto">
 <div class="w-full max-w-sm bg-slate-900 border border-rose-800/50 p-6 rounded-2xl space-y-3 my-auto">
 <h3 class="text-sm font-bold uppercase text-rose-400 text-center">↩ Process Refund</h3>
@@ -246,32 +151,13 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <div class="flex justify-between"><span class="text-slate-400">Already Refunded:</span><span id="refundAlreadyAmount" class="text-amber-400">₹0.00</span></div>
 <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Max Refundable:</span><span id="refundMaxAmount" class="text-white font-bold">₹0.00</span></div>
 </div>
-<div>
-<label class="block text-xs text-slate-400 mb-1">Refund Amount (₹)</label>
-<input type="number" id="refundAmount" oninput="validateRefund()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-rose-400 font-bold font-mono outline-none">
-<div id="refundError" class="text-[10px] text-rose-400 mt-1 hidden">⚠️ Exceeds limit!</div>
-</div>
-<div>
-<label class="block text-xs text-slate-400 mb-1">Reason</label>
-<input type="text" id="refundReason" placeholder="Ex: Booking cancelled" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-</div>
-<div>
-<label class="block text-xs text-slate-400 mb-1">Refund Mode</label>
-<select id="refundPaymentMode" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white">
-<option value="Cash">💵 Cash</option>
-<option value="Bank">🏦 Bank / UPI</option>
-</select>
-</div>
-<div class="flex gap-2 pt-2">
-<button onclick="document.getElementById('refundModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
-<button onclick="submitRefund()" class="flex-1 py-2.5 bg-rose-500 text-white text-xs font-black uppercase rounded-xl">Process</button>
-</div>
+<div><label class="block text-xs text-slate-400 mb-1">Refund Amount (₹)</label><input type="number" id="refundAmount" oninput="validateRefund()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-rose-400 font-bold font-mono outline-none"><div id="refundError" class="text-[10px] text-rose-400 mt-1 hidden">⚠️ Exceeds limit!</div></div>
+<div><label class="block text-xs text-slate-400 mb-1">Reason</label><input type="text" id="refundReason" placeholder="Ex: Booking cancelled" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"></div>
+<div><label class="block text-xs text-slate-400 mb-1">Refund Mode</label><select id="refundPaymentMode" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"><option value="Cash">💵 Cash</option><option value="Bank">🏦 Bank / UPI</option></select></div>
+<div class="flex gap-2 pt-2"><button onclick="document.getElementById('refundModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 text-xs font-bold rounded-xl text-slate-300">Cancel</button><button onclick="submitRefund()" class="flex-1 py-2.5 bg-rose-500 text-white text-xs font-black uppercase rounded-xl">Process</button></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- UPI QR MODAL -->
-<!-- ============================================================ -->
 <div id="upiModal" class="hidden fixed inset-0 bg-slate-950/95 z-[70] flex items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-700 p-6 rounded-3xl shadow-2xl text-center space-y-4">
 <h3 class="text-sm font-bold uppercase text-white">Scan & Pay via UPI</h3>
@@ -281,232 +167,122 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <div class="flex justify-between"><span class="text-slate-400">UPI ID:</span><span class="text-cyan-400" id="upiPayeeId">hotel@upi</span></div>
 <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="text-slate-400">Amount:</span><span class="text-emerald-400 font-bold" id="upiAmount">₹0.00</span></div>
 </div>
-<div class="flex flex-col gap-2 pt-2">
-<button onclick="confirmUpiReceived()" id="upiConfirmBtn" class="w-full py-3 bg-emerald-500 text-slate-950 font-black text-xs uppercase rounded-xl">✓ Payment Received</button>
-<button onclick="document.getElementById('upiModal').classList.add('hidden')" class="w-full py-2 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl">Cancel</button>
-</div>
+<div class="flex flex-col gap-2 pt-2"><button onclick="confirmUpiReceived()" id="upiConfirmBtn" class="w-full py-3 bg-emerald-500 text-slate-950 font-black text-xs uppercase rounded-xl">✓ Payment Received</button><button onclick="document.getElementById('upiModal').classList.add('hidden')" class="w-full py-2 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl">Cancel</button></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- DAY CLOSE MODAL -->
-<!-- ============================================================ -->
 <div id="dayCloseModal" class="hidden fixed inset-0 bg-slate-950/95 z-[70] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
 <div class="w-full max-w-lg bg-slate-900 border border-cyan-800/50 rounded-2xl max-h-[95vh] overflow-hidden flex flex-col">
-<div class="p-4 border-b border-slate-800 flex justify-between items-center bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 flex-shrink-0">
-<div class="flex items-center gap-2">
-<span class="text-xl">📊</span>
-<div><h3 class="text-sm font-bold uppercase text-cyan-400">Day Close</h3><p class="text-[10px] text-slate-400">End-of-day reconciliation</p></div>
-</div>
-<button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
-</div>
+<div class="p-4 border-b border-slate-800 flex justify-between items-center bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 flex-shrink-0"><div class="flex items-center gap-2"><span class="text-xl">📊</span><div><h3 class="text-sm font-bold uppercase text-cyan-400">Day Close</h3><p class="text-[10px] text-slate-400">End-of-day reconciliation</p></div></div><button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button></div>
 <div id="dayCloseContent" class="p-4 space-y-3 font-mono text-xs overflow-y-auto flex-1"></div>
-<div class="p-4 border-t border-slate-800 flex gap-2 flex-shrink-0">
-<button onclick="printDayClose()" class="flex-1 py-2.5 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">🖨️ Print</button>
-<button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-800 text-xs rounded-xl font-bold">Close</button>
-</div>
+<div class="p-4 border-t border-slate-800 flex gap-2 flex-shrink-0"><button onclick="printDayClose()" class="flex-1 py-2.5 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">🖨️ Print</button><button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-800 text-xs rounded-xl font-bold">Close</button></div>
 </div>
 </div>
 
-<!-- LICENSE LOCK -->
 <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex items-center justify-center p-4">
-<div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4">
-<div class="text-3xl">🔒</div>
-<h2 class="text-xl font-black text-white">License Expired</h2>
-<a href="tel:+919046356631" class="block w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-sm uppercase">Call +91 90463 56631</a>
-<button onclick="handleLogout()" class="text-xs text-slate-500 underline">Sign Out</button>
-</div>
+<div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4"><div class="text-3xl">🔒</div><h2 class="text-xl font-black text-white">License Expired</h2><a href="tel:+919046356631" class="block w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-sm uppercase">Call +91 90463 56631</a><button onclick="handleLogout()" class="text-xs text-slate-500 underline">Sign Out</button></div>
 </div>
 
-<!-- SUSPENSION -->
 <div id="suspensionModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex items-center justify-center p-4">
-<div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4">
-<div class="text-3xl">🚫</div>
-<h2 class="text-xl font-black text-white">Account Suspended</h2>
-<a href="tel:+919046356631" class="block w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-sm uppercase">Call +91 90463 56631</a>
-<button onclick="handleLogout()" class="text-xs text-slate-500 underline">Sign Out</button>
-</div>
+<div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4"><div class="text-3xl">🚫</div><h2 class="text-xl font-black text-white">Account Suspended</h2><a href="tel:+919046356631" class="block w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-sm uppercase">Call +91 90463 56631</a><button onclick="handleLogout()" class="text-xs text-slate-500 underline">Sign Out</button></div>
 </div>
 
-<!-- DISCLAIMER -->
 <div id="loginDisclaimerModal" class="hidden fixed inset-0 bg-slate-950/98 z-[200] flex items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-2xl bg-slate-900 border-2 border-amber-700/50 rounded-3xl max-h-[95vh] overflow-hidden flex flex-col">
-<div class="p-4 border-b border-slate-800 bg-gradient-to-r from-amber-950/40 to-rose-950/40 flex items-center gap-3">
-<div class="w-10 h-10 bg-amber-950 rounded-full flex items-center justify-center text-xl border border-amber-700">⚠️</div>
-<div><h2 class="text-sm font-black text-white uppercase">Important Disclaimer</h2><p class="text-[10px] text-amber-400 font-bold">महत्वपूर्ण सूचना • গুরুত্বপূর্ণ সতর্কতা</p></div>
-</div>
+<div class="p-4 border-b border-slate-800 bg-gradient-to-r from-amber-950/40 to-rose-950/40 flex items-center gap-3"><div class="w-10 h-10 bg-amber-950 rounded-full flex items-center justify-center text-xl border border-amber-700">⚠️</div><div><h2 class="text-sm font-black text-white uppercase">Important Disclaimer</h2><p class="text-[10px] text-amber-400 font-bold">महत्वपूर्ण सूचना • গুরুত্বপূর্ণ সতর্কতা</p></div></div>
 <div class="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1">
-<div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-<div class="flex items-center gap-2 mb-2"><span>🇬🇧</span><h3 class="text-xs font-black text-cyan-400 uppercase">English</h3></div>
-<ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4">
-<li><b>Guest Register / Form C:</b> <span class="text-rose-400">LEGAL REQUIREMENT</span> — SmartFix does NOT provide this.</li>
-<li><b>Data Backup:</b> Take <span class="text-rose-400">EVERY DAY</span>.</li>
-<li><b>ID Verification:</b> Manual.</li>
-<li><b>Legal Compliance:</b> Owner's responsibility.</li>
-<li><b>Refunds:</b> Record in system.</li>
-<li><b>Software:</b> Management tool only.</li>
-</ul>
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><div class="flex items-center gap-2 mb-2"><span>🇬🇧</span><h3 class="text-xs font-black text-cyan-400 uppercase">English</h3></div><ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4"><li><b>Guest Register / Form C:</b> <span class="text-rose-400">LEGAL REQUIREMENT</span> — SmartFix does NOT provide this.</li><li><b>Data Backup:</b> Take <span class="text-rose-400">EVERY DAY</span>.</li><li><b>ID Verification:</b> Manual.</li><li><b>Legal Compliance:</b> Owner's responsibility.</li><li><b>Refunds:</b> Record in system.</li><li><b>Software:</b> Management tool only.</li></ul></div>
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><div class="flex items-center gap-2 mb-2"><span>🇮🇳</span><h3 class="text-xs font-black text-orange-400 uppercase">हिंदी</h3></div><ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4"><li><b>गेस्ट रजिस्टर:</b> <span class="text-rose-400">कानूनी अनिवार्य</span>।</li><li><b>डेटा बैकअप:</b> <span class="text-rose-400">प्रतिदिन</span>।</li><li><b>आईडी:</b> मैन्युअली।</li><li><b>अनुपालन:</b> मालिक की ज़िम्मेदारी।</li><li><b>रिफंड:</b> दर्ज करें।</li><li><b>सॉफ्टवेयर:</b> केवल उपकरण।</li></ul></div>
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><div class="flex items-center gap-2 mb-2"><span>🇧🇩</span><h3 class="text-xs font-black text-emerald-400 uppercase">বাংলা</h3></div><ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4"><li><b>গেস্ট রেজিস্টার:</b> <span class="text-rose-400">আইনি বাধ্যবাধকতা</span>।</li><li><b>ডাটা ব্যাকআপ:</b> <span class="text-rose-400">প্রতিদিন</span>।</li><li><b>আইডি:</b> ম্যানুয়ালি।</li><li><b>সম্মতি:</b> মালিকের দায়িত্ব।</li><li><b>রিফান্ড:</b> রেকর্ড।</li><li><b>সফটওয়্যার:</b> শুধু টুল।</li></ul></div>
+<label class="flex items-start gap-3 p-3 bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 border-2 border-cyan-800/60 rounded-xl cursor-pointer"><input type="checkbox" id="disclaimerAgreeCheck" class="w-5 h-5 accent-cyan-500 flex-shrink-0"><span class="text-[11px] text-slate-200"><b class="text-white">✓ I agree.</b><br><span class="text-slate-400 text-[10px]">मैं सहमत हूँ • আমি সম্মত আছি</span></span></label>
 </div>
-<div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-<div class="flex items-center gap-2 mb-2"><span>🇮🇳</span><h3 class="text-xs font-black text-orange-400 uppercase">हिंदी</h3></div>
-<ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4">
-<li><b>गेस्ट रजिस्टर:</b> <span class="text-rose-400">कानूनी अनिवार्य</span>।</li>
-<li><b>डेटा बैकअप:</b> <span class="text-rose-400">प्रतिदिन</span>।</li>
-<li><b>आईडी:</b> मैन्युअली।</li>
-<li><b>अनुपालन:</b> मालिक की ज़िम्मेदारी।</li>
-<li><b>रिफंड:</b> दर्ज करें।</li>
-<li><b>सॉफ्टवेयर:</b> केवल उपकरण।</li>
-</ul>
-</div>
-<div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-<div class="flex items-center gap-2 mb-2"><span>🇧🇩</span><h3 class="text-xs font-black text-emerald-400 uppercase">বাংলা</h3></div>
-<ul class="text-[11px] text-slate-300 space-y-1 list-disc pl-4">
-<li><b>গেস্ট রেজিস্টার:</b> <span class="text-rose-400">আইনি বাধ্যবাধকতা</span>।</li>
-<li><b>ডাটা ব্যাকআপ:</b> <span class="text-rose-400">প্রতিদিন</span>।</li>
-<li><b>আইডি:</b> ম্যানুয়ালি।</li>
-<li><b>সম্মতি:</b> মালিকের দায়িত্ব।</li>
-<li><b>রিফান্ড:</b> রেকর্ড।</li>
-<li><b>সফটওয়্যার:</b> শুধু টুল।</li>
-</ul>
-</div>
-<label class="flex items-start gap-3 p-3 bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 border-2 border-cyan-800/60 rounded-xl cursor-pointer">
-<input type="checkbox" id="disclaimerAgreeCheck" class="w-5 h-5 accent-cyan-500 flex-shrink-0">
-<span class="text-[11px] text-slate-200"><b class="text-white">✓ I agree.</b><br><span class="text-slate-400 text-[10px]">मैं सहमत हूँ • আমি সম্মত আছি</span></span>
-</label>
-</div>
-<div class="p-4 border-t border-slate-800 bg-slate-950/50">
-<button id="disclaimerAgreeBtn" disabled class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase disabled:opacity-30">Agree & Continue</button>
-</div>
+<div class="p-4 border-t border-slate-800 bg-slate-950/50"><button id="disclaimerAgreeBtn" disabled class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase disabled:opacity-30">Agree & Continue</button></div>
 </div>
 </div>
 
 <script type="module">
-import { db } from "./js/firebase-config.js";
+import { db, auth } from "./js/firebase-config.js";
 import { requireLogin, applyRoleAccess, setHotelName, setLicenseBadge, logout, showDisclaimerIfNeeded, setupDisclaimer } from "./js/common.js";
 import { getBookingFoodOrders } from "./js/pos.js";
 import { print58mmThermalReceipt, print80mmThermalReceipt, printA4TaxInvoice } from "./js/thermal-print.js";
-import { collection, doc, updateDoc, deleteDoc, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, doc, updateDoc, deleteDoc, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// ============================================================
-// STATE
-// ============================================================
-let SESSION = null;
-let currentHotelId = null;
-let currentHotelProfile = null;
+// STAFF LOGIN FIX
+if (sessionStorage.getItem('smartfix_staff_session') && !auth.currentUser) {
+  try { await signInAnonymously(auth); } catch(e) { console.error(e); }
+}
+
+let SESSION = null, currentHotelId = null, currentHotelProfile = null;
 let cachedBookings = [], cachedExpenses = [], cachedDeposits = [], cachedRefunds = [];
-let dueBooking = null;
-let refundBooking = null;
-let maxRefundable = 0;
-let upiBookingId = null;
+let dueBooking = null, refundBooking = null, maxRefundable = 0, upiBookingId = null;
 
-// ============================================================
-// BOOT
-// ============================================================
 (async () => {
-  SESSION = await requireLogin();
-  if (!SESSION) return;
-
-  currentHotelId = SESSION.hotelId;
-  currentHotelProfile = SESSION.hotelProfile;
-
+  SESSION = await requireLogin(); if (!SESSION) return;
+  currentHotelId = SESSION.hotelId; currentHotelProfile = SESSION.hotelProfile;
   try {
     const sidebarHTML = await fetch('./components/sidebar.html').then(r => r.text());
     document.getElementById('sidebar-container').innerHTML = sidebarHTML;
-    // Mark either invoices or followup or marketdue based on hash
     const hash = window.location.hash.replace('#', '') || 'invoices';
     const navMap = { invoices: 'billing-archive', followup: 'followup', marketdue: 'marketdue', refunds: 'billing-archive' };
     document.querySelectorAll(`[data-nav-page="${navMap[hash] || 'billing-archive'}"]`).forEach(el => el.classList.add('nav-active'));
-  } catch(e) { console.error('Sidebar:', e); }
+  } catch(e) { console.error(e); }
 
-  setHotelName(currentHotelProfile.hotelName);
-  setLicenseBadge(SESSION.daysRemaining);
-  applyRoleAccess(SESSION.role);
-  showDisclaimerIfNeeded();
-  setupDisclaimer();
+  setHotelName(currentHotelProfile.hotelName); setLicenseBadge(SESSION.daysRemaining);
+  applyRoleAccess(SESSION.role); showDisclaimerIfNeeded(); setupDisclaimer();
 
   await loadData();
-
-  // Route based on hash
+  
   const hash = window.location.hash.replace('#', '');
   if (hash === 'followup') setTab('followup');
   else if (hash === 'marketdue') setTab('marketdue');
+  else if (hash === 'refunds') setTab('refunds');
   else setTab('invoices');
-
-  renderAll();
 })();
 
 window.handleLogout = logout;
 
-// ============================================================
-// LOAD DATA
-// ============================================================
 async function loadData() {
   try {
     const snap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
-    cachedBookings = [];
-    snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
-    cachedBookings.sort((a, b) => {
-      const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return tb - ta;
-    });
-  } catch(e) { console.error('Bookings:', e); }
+    cachedBookings = []; snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
+    cachedBookings.sort((a, b) => { const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0; const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0; return tb - ta; });
+  } catch(e) { console.error("Bookings:", e); }
 
-  try {
-    const snap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
-    cachedExpenses = [];
-    snap.forEach(d => cachedExpenses.push(d.data()));
-  } catch(e) { console.error('Expenses:', e); }
-
-  try {
-    const snap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
-    cachedDeposits = [];
-    snap.forEach(d => cachedDeposits.push(d.data()));
-  } catch(e) { console.error('Deposits:', e); }
-
-  try {
-    const snap = await getDocs(collection(db, "hotels", currentHotelId, "refunds"));
-    cachedRefunds = [];
-    snap.forEach(d => cachedRefunds.push({ id: d.id, ...d.data() }));
-    cachedRefunds.sort((a, b) => new Date(b.date) - new Date(a.date));
-  } catch(e) { console.error('Refunds:', e); }
+  try { const snap = await getDocs(collection(db, "hotels", currentHotelId, "expenses")); cachedExpenses = []; snap.forEach(d => cachedExpenses.push(d.data())); } catch(e) {}
+  try { const snap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits")); cachedDeposits = []; snap.forEach(d => cachedDeposits.push(d.data())); } catch(e) {}
+  try { const snap = await getDocs(collection(db, "hotels", currentHotelId, "refunds")); cachedRefunds = []; snap.forEach(d => cachedRefunds.push({ id: d.id, ...d.data() })); cachedRefunds.sort((a, b) => new Date(b.date) - new Date(a.date)); } catch(e) {}
 }
 
-function renderAll() {
-  renderInvoices();
-  renderFollowup();
-  renderMarketDue();
-  renderRefunds();
-}
-
-// ============================================================
-// TABS
-// ============================================================
 window.setTab = (tab) => {
   ['invoices', 'followup', 'marketdue', 'refunds'].forEach(t => {
-    document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
+    const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
+    if(content) content.classList.toggle('hidden', t !== tab);
+    
     const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-    btn.className = `py-2.5 px-2 text-xs font-bold rounded-lg whitespace-nowrap ${t === tab ? 'bg-cyan-500 text-slate-950' : 'text-slate-400 hover:bg-slate-800/50'}`;
+    if(btn) btn.className = `py-2.5 px-2 text-xs font-bold rounded-lg whitespace-nowrap ${t === tab ? 'bg-cyan-500 text-slate-950' : 'text-slate-400 hover:bg-slate-800/50'}`;
   });
+
+  // FIXED: Force render when tab is clicked
+  if (tab === 'invoices') renderInvoices();
+  if (tab === 'followup') renderFollowup();
+  if (tab === 'marketdue') renderMarketDue();
+  if (tab === 'refunds') renderRefunds();
 };
 
-// ============================================================
-// RENDER INVOICES
-// ============================================================
+// --- RENDER INVOICES ---
 function renderInvoices() {
   const tbody = document.getElementById('invoiceTableBody');
+  if (!tbody) return;
   const search = (document.getElementById('invoiceSearch')?.value || '').toLowerCase();
   const filter = document.getElementById('invoiceFilter')?.value || 'all';
 
   let filtered = cachedBookings.filter(b => {
-    // Filter by status
     if (filter === 'checked_in' && b.status !== 'checked_in') return false;
     if (filter === 'confirmed' && b.status !== 'confirmed') return false;
     if (filter === 'checked_out' && b.status !== 'checked_out') return false;
     if (filter === 'cancelled' && b.status !== 'cancelled') return false;
     if (filter === 'due' && (b.balanceDue || 0) <= 0) return false;
-
-    // Search
     if (search) {
       const txt = `${b.guestName || ''} ${b.phone || ''} ${b.bookingId || ''} ${b.roomNumber || ''}`.toLowerCase();
       if (!txt.includes(search)) return false;
@@ -514,7 +290,8 @@ function renderInvoices() {
     return true;
   });
 
-  document.getElementById('invoiceCount').innerText = `${filtered.length} invoices`;
+  const countEl = document.getElementById('invoiceCount');
+  if (countEl) countEl.innerText = `${filtered.length} invoices`;
 
   if (!filtered.length) {
     tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No invoices found.</td></tr>`;
@@ -542,7 +319,7 @@ function renderInvoices() {
       <td class="py-3 px-3 text-right text-emerald-400">₹${paid}</td>
       <td class="py-3 px-3">${badge}</td>
       <td class="py-3 px-3 text-right space-x-1">
-        ${isSettled === false && (b.balanceDue || 0) > 0 ? `<button onclick="openUpi('${b.id}')" class="px-2 py-1 bg-purple-600 text-white rounded text-[10px] font-bold">UPI</button>` : ''}
+        ${!isSettled && (b.balanceDue || 0) > 0 ? `<button onclick="openUpi('${b.id}')" class="px-2 py-1 bg-purple-600 text-white rounded text-[10px] font-bold">UPI</button>` : ''}
         <button onclick="printInvoice('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded text-[10px]">58</button>
         <button onclick="printInvoice('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 rounded text-[10px] font-bold">A4</button>
         <button onclick="openRefund('${b.id}')" class="px-2 py-1 bg-amber-950 text-amber-400 border border-amber-800 rounded text-[10px] font-bold">↩</button>
@@ -552,32 +329,23 @@ function renderInvoices() {
   }).join('');
 }
 
-window.filterInvoices = renderInvoices;
-
-// ============================================================
-// RENDER FOLLOWUP
-// ============================================================
+// --- RENDER FOLLOWUP ---
 function renderFollowup() {
   const tbody = document.getElementById('followupTableBody');
+  if (!tbody) return;
   const today = new Date(); today.setHours(0,0,0,0);
+  const upcoming = cachedBookings.filter(b => b.status === 'confirmed').sort((a, b) => (a.checkInDate || '').localeCompare(b.checkInDate || ''));
 
-  const upcoming = cachedBookings.filter(b => b.status === 'confirmed')
-    .sort((a, b) => (a.checkInDate || '').localeCompare(b.checkInDate || ''));
-
-  if (!upcoming.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No upcoming bookings.</td></tr>`;
-    return;
-  }
+  if (!upcoming.length) { tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No upcoming bookings.</td></tr>`; return; }
 
   tbody.innerHTML = upcoming.map(b => {
     const due = b.balanceDue || 0;
     const bDate = b.checkInDate ? new Date(b.checkInDate) : null;
     const isOverdue = bDate && bDate < today;
-    const dateLabel = b.checkInDate + (isOverdue ? ' <span class="text-rose-400 text-[9px]">OVERDUE</span>' : '');
     return `<tr class="hover:bg-slate-800/40">
       <td class="py-3 px-3 text-white font-bold">${b.guestName}</td>
       <td class="py-3 px-3 text-slate-300 font-mono text-[10px]">${b.phone || 'N/A'}</td>
-      <td class="py-3 px-3 text-cyan-400 font-bold">${dateLabel}</td>
+      <td class="py-3 px-3 text-cyan-400 font-bold">${b.checkInDate} ${isOverdue ? '<span class="text-rose-400 text-[9px]">OVERDUE</span>' : ''}</td>
       <td class="py-3 px-3 text-white">R-${b.roomNumber}</td>
       <td class="py-3 px-3 text-emerald-400">₹${(b.totalPaid || b.advancePaid || 0).toFixed(2)}</td>
       <td class="py-3 px-3 text-rose-400">₹${due.toFixed(2)}</td>
@@ -591,54 +359,34 @@ function renderFollowup() {
 
 window.checkInBooking = async (bookingId, roomId) => {
   if (!confirm('Confirm check-in?')) return;
-  const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
   try {
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId), {
-      status: "checked_in", checkInTime: inTime
-    });
-    await updateDoc(doc(db, "hotels", currentHotelId, "rooms", roomId), {
-      status: "occupied", currentBookingId: bookingId
-    });
-    alert('Guest checked in!');
-    await loadData();
-    renderAll();
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId), { status: "checked_in", checkInTime: new Date().toLocaleString("en-IN") });
+    await updateDoc(doc(db, "hotels", currentHotelId, "rooms", roomId), { status: "occupied", currentBookingId: bookingId });
+    alert('Checked in!'); await loadData(); setTab('followup');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
 window.noShowBooking = async (bookingId) => {
-  const b = cachedBookings.find(x => x.id === bookingId);
-  if (!b) return;
-  const adv = b.totalPaid || b.advancePaid || 0;
-  if (!confirm(`Mark as NO-SHOW?\n\nGuest: ${b.guestName}\nAdvance: ₹${adv.toFixed(2)} → RETAINED\n\nRoom becomes available.`)) return;
+  const b = cachedBookings.find(x => x.id === bookingId); if (!b) return;
+  if (!confirm(`Mark NO-SHOW? Advance ₹${(b.totalPaid || b.advancePaid || 0).toFixed(2)} retained.`)) return;
   try {
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId), {
-      status: "cancelled",
-      cancelledAt: new Date().toISOString(),
-      cancelReason: "No-Show",
-      isSettled: true,
-      balanceDue: 0
-    });
-    alert('Booking cancelled. Advance retained.');
-    await loadData();
-    renderAll();
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId), { status: "cancelled", cancelReason: "No-Show", isSettled: true, balanceDue: 0 });
+    alert('Cancelled.'); await loadData(); setTab('followup');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-// ============================================================
-// RENDER MARKET DUE
-// ============================================================
+// --- RENDER MARKET DUE ---
 function renderMarketDue() {
   const tbody = document.getElementById('marketDueTableBody');
+  const totalEl = document.getElementById('totalDue');
+  if (!tbody) return;
+  
   const dueBookings = cachedBookings.filter(b => (b.balanceDue || 0) > 0 && b.status !== 'cancelled');
-
   let total = 0;
   dueBookings.forEach(b => total += (b.balanceDue || 0));
-  document.getElementById('totalDue').innerText = `₹${total.toFixed(2)}`;
+  if(totalEl) totalEl.innerText = `₹${total.toFixed(2)}`;
 
-  if (!dueBookings.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No outstanding dues! 🎉</td></tr>`;
-    return;
-  }
+  if (!dueBookings.length) { tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No outstanding dues! 🎉</td></tr>`; return; }
 
   tbody.innerHTML = dueBookings.map(b => {
     const totalBill = (b.summary?.grandTotal || 0) + (b.foodTotal || 0);
@@ -658,12 +406,8 @@ function renderMarketDue() {
   }).join('');
 }
 
-// ============================================================
-// DUE COLLECTION
-// ============================================================
 window.openDueCollection = (id) => {
-  dueBooking = cachedBookings.find(b => b.id === id);
-  if (!dueBooking) return;
+  dueBooking = cachedBookings.find(b => b.id === id); if (!dueBooking) return;
   const totalBill = (dueBooking.summary?.grandTotal || 0) + (dueBooking.foodTotal || 0);
   const paid = dueBooking.totalPaid || dueBooking.advancePaid || 0;
   document.getElementById('dueGuestName').innerText = dueBooking.guestName;
@@ -672,15 +416,13 @@ window.openDueCollection = (id) => {
   document.getElementById('duePaid').innerText = `₹${paid.toFixed(2)}`;
   document.getElementById('dueAmount').innerText = `₹${(dueBooking.balanceDue || 0).toFixed(2)}`;
   document.getElementById('dueCollectAmount').value = (dueBooking.balanceDue || 0).toFixed(2);
-  calcNewDue();
-  document.getElementById('dueModal').classList.remove('hidden');
+  calcNewDue(); document.getElementById('dueModal').classList.remove('hidden');
 };
 
 window.calcNewDue = () => {
   const collect = parseFloat(document.getElementById('dueCollectAmount').value) || 0;
   const newBal = Math.max(0, dueBooking.balanceDue - collect);
-  const el = document.getElementById('dueRemaining');
-  el.innerText = `₹${newBal.toFixed(2)}`;
+  const el = document.getElementById('dueRemaining'); el.innerText = `₹${newBal.toFixed(2)}`;
   el.className = newBal <= 0 ? 'text-xl font-black text-emerald-400 font-mono' : 'text-xl font-black text-rose-400 font-mono';
 };
 
@@ -688,47 +430,32 @@ window.submitDueCollection = async () => {
   const collect = parseFloat(document.getElementById('dueCollectAmount').value) || 0;
   const mode = document.getElementById('duePaymentMode').value;
   if (collect <= 0) return alert('Enter valid amount');
-
   const oldPaid = dueBooking.totalPaid || dueBooking.advancePaid || 0;
   const newPaid = oldPaid + collect;
   const totalBill = (dueBooking.summary?.grandTotal || 0) + (dueBooking.foodTotal || 0);
   const newBal = Math.max(0, totalBill - newPaid);
   const isSettled = newBal <= 0;
   const newPayments = [...(dueBooking.payments || []), { amount: collect, mode, date: new Date().toISOString(), type: "due" }];
-
   try {
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBooking.id), {
-      totalPaid: newPaid, balanceDue: newBal, isSettled, lastPaymentMode: mode, payments: newPayments
-    });
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBooking.id), { totalPaid: newPaid, balanceDue: newBal, isSettled, lastPaymentMode: mode, payments: newPayments });
     alert(`✓ Received ₹${collect.toFixed(2)} via ${mode}`);
-    document.getElementById('dueModal').classList.add('hidden');
-    await loadData();
-    renderAll();
+    document.getElementById('dueModal').classList.add('hidden'); await loadData(); setTab('marketdue');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-// ============================================================
-// REFUND
-// ============================================================
+// --- REFUNDS ---
 window.openRefund = (bookingId) => {
-  refundBooking = cachedBookings.find(b => b.id === bookingId);
-  if (!refundBooking) return;
-
-  const alreadyRefunded = cachedRefunds
-    .filter(r => r.bookingId === refundBooking.bookingId)
-    .reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+  refundBooking = cachedBookings.find(b => b.id === bookingId); if (!refundBooking) return;
+  const alreadyRefunded = cachedRefunds.filter(r => r.bookingId === refundBooking.bookingId).reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
   const totalPaid = refundBooking.totalPaid || refundBooking.advancePaid || 0;
   maxRefundable = Math.max(0, totalPaid - alreadyRefunded);
-
   document.getElementById('refundGuestName').innerText = refundBooking.guestName;
   document.getElementById('refundInvoiceId').innerText = refundBooking.bookingId;
   document.getElementById('refundTotalPaid').innerText = `₹${totalPaid.toFixed(2)}`;
   document.getElementById('refundAlreadyAmount').innerText = `₹${alreadyRefunded.toFixed(2)}`;
   document.getElementById('refundMaxAmount').innerText = `₹${maxRefundable.toFixed(2)}`;
   document.getElementById('refundAmount').value = maxRefundable > 0 ? maxRefundable.toFixed(2) : '0.00';
-  document.getElementById('refundReason').value = '';
-  document.getElementById('refundError').classList.add('hidden');
-
+  document.getElementById('refundReason').value = ''; document.getElementById('refundError').classList.add('hidden');
   if (maxRefundable <= 0) return alert('No refundable amount.');
   document.getElementById('refundModal').classList.remove('hidden');
 };
@@ -742,37 +469,21 @@ window.submitRefund = async () => {
   const amt = parseFloat(document.getElementById('refundAmount').value) || 0;
   const reason = document.getElementById('refundReason').value.trim() || 'No reason';
   const mode = document.getElementById('refundPaymentMode').value;
-
-  if (amt <= 0) return alert('Enter amount');
-  if (amt > maxRefundable) return alert('Exceeds limit');
-
+  if (amt <= 0) return alert('Enter amount'); if (amt > maxRefundable) return alert('Exceeds limit');
   try {
     const refundId = "REF_" + Date.now().toString().slice(-6);
-    await (await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js")).setDoc(
-      doc(db, "hotels", currentHotelId, "refunds", refundId),
-      {
-        id: refundId, bookingId: refundBooking.bookingId,
-        guestName: refundBooking.guestName, amount: amt,
-        reason, mode, date: new Date().toISOString(),
-        processedBy: SESSION.staffName || 'Owner'
-      }
-    );
+    await setDoc(doc(db, "hotels", currentHotelId, "refunds", refundId), {
+      id: refundId, bookingId: refundBooking.bookingId, guestName: refundBooking.guestName, amount: amt, reason, mode, date: new Date().toISOString(), processedBy: SESSION.staffName || 'Owner'
+    });
     alert(`✓ Refund ₹${amt.toFixed(2)} via ${mode}`);
-    document.getElementById('refundModal').classList.add('hidden');
-    await loadData();
-    renderAll();
+    document.getElementById('refundModal').classList.add('hidden'); await loadData(); setTab('refunds');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-// ============================================================
-// RENDER REFUNDS
-// ============================================================
 function renderRefunds() {
   const tbody = document.getElementById('refundsTableBody');
-  if (!cachedRefunds.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No refunds processed yet.</td></tr>`;
-    return;
-  }
+  if (!tbody) return;
+  if (!cachedRefunds.length) { tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 text-xs">No refunds processed yet.</td></tr>`; return; }
   tbody.innerHTML = cachedRefunds.map(r => `<tr class="hover:bg-slate-800/40">
     <td class="py-3 px-3 text-slate-400">${new Date(r.date).toLocaleDateString('en-IN')}</td>
     <td class="py-3 px-3 text-cyan-400 text-[10px]">${r.bookingId || 'N/A'}</td>
@@ -784,14 +495,11 @@ function renderRefunds() {
   </tr>`).join('');
 }
 
-// ============================================================
-// PRINT
-// ============================================================
+// --- PRINT & UPI & DAY CLOSE ---
 window.printInvoice = async (format, bId) => {
   const snap = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bId));
   if (!snap.exists()) return alert("Not found");
-  const bData = snap.data();
-  const food = await getBookingFoodOrders(currentHotelId, bData.bookingId);
+  const bData = snap.data(); const food = await getBookingFoodOrders(currentHotelId, bData.bookingId);
   if (format === "58mm") print58mmThermalReceipt(currentHotelProfile, bData, food.orders);
   else if (format === "80mm") print80mmThermalReceipt(currentHotelProfile, bData, food.orders);
   else printA4TaxInvoice(currentHotelProfile, bData, food.orders);
@@ -799,218 +507,107 @@ window.printInvoice = async (format, bId) => {
 
 window.deleteInvoice = async (bId) => {
   if (prompt("Type 'CONFIRM' to permanently delete:") !== "CONFIRM") return alert("Cancelled.");
-  try {
-    await deleteDoc(doc(db, "hotels", currentHotelId, "bookings", bId));
-    alert('Deleted.');
-    await loadData();
-    renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
+  try { await deleteDoc(doc(db, "hotels", currentHotelId, "bookings", bId)); alert('Deleted.'); await loadData(); setTab('invoices'); } catch(e) { alert('Error: ' + e.message); }
 };
 
-// ============================================================
-// UPI QR
-// ============================================================
 window.openUpi = async (bookingId) => {
-  const b = cachedBookings.find(x => x.id === bookingId);
-  if (!b) return;
-  let upiId = currentHotelProfile.upiId;
-  if (!upiId) {
-    const snap = await getDoc(doc(db, "hotels", currentHotelId));
-    if (snap.exists() && snap.data().upiId) {
-      upiId = snap.data().upiId;
-      currentHotelProfile.upiId = upiId;
-    }
-  }
-  if (!upiId) return alert("Set UPI ID in Settings first.");
-  const due = b.balanceDue || 0;
+  const b = cachedBookings.find(x => x.id === bookingId); if (!b) return;
+  let upiId = currentHotelProfile.upiId; if (!upiId) return alert("Set UPI ID in Settings first.");
+  
+  // FIXED: Fetch unsettled food orders dynamically for UPI
+  let foodBill = 0;
+  try {
+    const q = query(collection(db, "hotels", currentHotelId, "pos_orders"), where("roomNumber", "==", b.roomNumber));
+    const snap = await getDocs(q);
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.isSettled === false && data.items) {
+        data.items.forEach(i => foodBill += (i.price * i.quantity));
+      }
+    });
+  } catch(e) { console.log(e); }
+
+  const due = (b.balanceDue || 0) + foodBill;
   if (due <= 0) return alert("Already settled!");
-
   upiBookingId = bookingId;
-  document.getElementById('upiPayeeName').innerText = currentHotelProfile.hotelName;
-  document.getElementById('upiPayeeId').innerText = upiId;
-  document.getElementById('upiAmount').innerText = `₹${due.toFixed(2)}`;
+  document.getElementById("upiPayeeName").innerText = currentHotelProfile.hotelName;
+  document.getElementById("upiPayeeId").innerText = upiId;
+  document.getElementById("upiAmount").innerText = `₹${due.toFixed(2)}`;
   const uri = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(currentHotelProfile.hotelName)}&am=${due.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Invoice ' + b.bookingId)}`;
-
-  document.getElementById('qrcode').innerHTML = '';
-  new QRCode(document.getElementById('qrcode'), { text: uri, width: 200, height: 200, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
-  document.getElementById('upiModal').classList.remove('hidden');
+  document.getElementById("qrcode").innerHTML = "";
+  new QRCode(document.getElementById("qrcode"), { text: uri, width: 200, height: 200, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+  document.getElementById("upiModal").classList.remove("hidden");
 };
 
 window.confirmUpiReceived = async () => {
-  if (!upiBookingId) return;
-  const b = cachedBookings.find(x => x.id === upiBookingId);
-  if (!b) return;
-  const btn = document.getElementById('upiConfirmBtn');
-  btn.innerText = 'Processing...';
-  btn.disabled = true;
-
+  if (!upiBookingId) return; const b = cachedBookings.find(x => x.id === upiBookingId); if (!b) return;
+  const btn = document.getElementById("upiConfirmBtn"); btn.innerText = 'Processing...'; btn.disabled = true;
   try {
-    const amt = b.balanceDue || 0;
-    const newPaid = (b.totalPaid || b.advancePaid || 0) + amt;
-    const newPayments = [...(b.payments || []), { amount: amt, mode: "Bank", date: new Date().toISOString(), type: "upi" }];
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", upiBookingId), {
-      totalPaid: newPaid, balanceDue: 0, isSettled: true, lastPaymentMode: "Bank", payments: newPayments
+    // FIXED: Include food bill in total paid
+    let foodBill = 0;
+    const q = query(collection(db, "hotels", currentHotelId, "pos_orders"), where("roomNumber", "==", b.roomNumber));
+    const snap = await getDocs(q);
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.isSettled === false && data.items) {
+        data.items.forEach(i => foodBill += (i.price * i.quantity));
+      }
     });
-    alert('Payment received!');
-    document.getElementById('upiModal').classList.add('hidden');
-    await loadData();
-    renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
-  finally { btn.innerText = '✓ Payment Received'; btn.disabled = false; }
+    const totalToPay = (b.balanceDue || 0) + foodBill;
+    
+    const newPaid = (b.totalPaid || b.advancePaid || 0) + totalToPay;
+    const newPayments = [...(b.payments || []), { amount: totalToPay, mode: "Bank", date: new Date().toISOString(), type: "upi" }];
+    
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", upiBookingId), { 
+      foodTotal: foodBill, totalPaid: newPaid, balanceDue: 0, isSettled: true, lastPaymentMode: "Bank", payments: newPayments 
+    });
+    
+    // Settle the food orders as well
+    const settlePromises = [];
+    snap.forEach(d => { if (d.data().isSettled === false) settlePromises.push(updateDoc(d.ref, { isSettled: true })); });
+    await Promise.all(settlePromises);
+
+    alert('Payment received!'); document.getElementById('upiModal').classList.add('hidden'); await loadData(); setTab('invoices');
+  } catch(e) { alert('Error: ' + e.message); } finally { btn.innerText = '✓ Payment Received'; btn.disabled = false; }
 };
 
-// ============================================================
-// DAY CLOSE
-// ============================================================
 window.openDayClose = () => {
-  const todayDate = new Date(); todayDate.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(todayDate); tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const todayCheckIns = cachedBookings.filter(b => {
-    if (!b.checkInTime) return false;
-    const d = new Date(b.checkInTime);
-    return d >= todayDate && d < tomorrow;
-  });
-  const todayCheckOuts = cachedBookings.filter(b => {
-    if (b.status !== 'checked_out' || !b.settledAt) return false;
-    const d = new Date(b.settledAt);
-    return d >= todayDate && d < tomorrow;
-  });
-
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0); const tomorrow = new Date(todayDate); tomorrow.setDate(tomorrow.getDate() + 1);
+  const todayCheckIns = cachedBookings.filter(b => { if (!b.checkInTime) return false; const d = new Date(b.checkInTime); return d >= todayDate && d < tomorrow; });
+  const todayCheckOuts = cachedBookings.filter(b => { if (b.status !== 'checked_out' || !b.settledAt) return false; const d = new Date(b.settledAt); return d >= todayDate && d < tomorrow; });
   let todayCash = 0, todayBank = 0;
-  cachedBookings.forEach(b => {
-    if (b.payments && Array.isArray(b.payments)) {
-      b.payments.forEach(p => {
-        const pDate = new Date(p.date || b.createdAt);
-        if (pDate >= todayDate && pDate < tomorrow) {
-          const amt = parseFloat(p.amount) || 0;
-          if (p.mode === 'Bank') todayBank += amt; else todayCash += amt;
-        }
-      });
-    }
-  });
-
+  cachedBookings.forEach(b => { if (b.payments && Array.isArray(b.payments)) { b.payments.forEach(p => { const pDate = new Date(p.date || b.createdAt); if (pDate >= todayDate && pDate < tomorrow) { const amt = parseFloat(p.amount) || 0; if (p.mode === 'Bank') todayBank += amt; else todayCash += amt; } }); } });
   let todayRefundCash = 0, todayRefundBank = 0;
-  cachedRefunds.forEach(r => {
-    const rDate = new Date(r.date);
-    if (rDate >= todayDate && rDate < tomorrow) {
-      const amt = parseFloat(r.amount) || 0;
-      if (r.mode === 'Bank') todayRefundBank += amt; else todayRefundCash += amt;
-    }
-  });
-
+  cachedRefunds.forEach(r => { const rDate = new Date(r.date); if (rDate >= todayDate && rDate < tomorrow) { const amt = parseFloat(r.amount) || 0; if (r.mode === 'Bank') todayRefundBank += amt; else todayRefundCash += amt; } });
   let todayCashExp = 0, todayBankExp = 0;
-  cachedExpenses.forEach(e => {
-    const parts = (e.date || '').split('/');
-    if (parts.length !== 3) return;
-    const eDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    if (eDate >= todayDate && eDate < tomorrow) {
-      const amt = parseFloat(e.amount) || 0;
-      if (e.paymentSource === 'Bank') todayBankExp += amt; else todayCashExp += amt;
-    }
-  });
-
-  let todayDeposits = 0;
-  cachedDeposits.forEach(dep => {
-    const parts = (dep.date || '').split('/');
-    if (parts.length !== 3) return;
-    const dDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    if (dDate >= todayDate && dDate < tomorrow) todayDeposits += (parseFloat(dep.amount) || 0);
-  });
-
-  const netCash = todayCash - todayRefundCash - todayCashExp - todayDeposits;
-  const netBank = todayBank - todayRefundBank - todayBankExp + todayDeposits;
-
-  document.getElementById('dayCloseContent').innerHTML = `
-    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-      <div class="text-cyan-400 font-bold">📅 ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}</div>
-    </div>
-    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
-      <div class="text-cyan-400 font-bold mb-2">🏨 Occupancy</div>
-      <div class="flex justify-between"><span class="text-slate-400">Check-Ins:</span><span class="text-emerald-400 font-bold">${todayCheckIns.length}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Check-Outs:</span><span class="text-rose-400 font-bold">${todayCheckOuts.length}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">In-House Now:</span><span class="text-white font-bold">${cachedBookings.filter(b => b.status === 'checked_in').length}</span></div>
-    </div>
-    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
-      <div class="text-cyan-400 font-bold mb-2">💵 Cash Flow</div>
-      <div class="flex justify-between"><span class="text-slate-400">Collected:</span><span class="text-emerald-400">₹${todayCash.toFixed(2)}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Refunds:</span><span class="text-rose-400">- ₹${todayRefundCash.toFixed(2)}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Expenses:</span><span class="text-rose-400">- ₹${todayCashExp.toFixed(2)}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Bank Deposits:</span><span class="text-rose-400">- ₹${todayDeposits.toFixed(2)}</span></div>
-      <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Cash:</span><span class="text-emerald-400 font-bold">₹${netCash.toFixed(2)}</span></div>
-    </div>
-    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
-      <div class="text-cyan-400 font-bold mb-2">🏦 Bank Flow</div>
-      <div class="flex justify-between"><span class="text-slate-400">Collected:</span><span class="text-emerald-400">₹${todayBank.toFixed(2)}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Refunds:</span><span class="text-rose-400">- ₹${todayRefundBank.toFixed(2)}</span></div>
-      <div class="flex justify-between"><span class="text-slate-400">Expenses:</span><span class="text-rose-400">- ₹${todayBankExp.toFixed(2)}</span></div>
-      <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Bank:</span><span class="text-blue-400 font-bold">₹${netBank.toFixed(2)}</span></div>
-    </div>
-    <div class="bg-yellow-950/30 p-3 rounded-xl border border-yellow-800/50 text-yellow-400 text-[10px]">
-      ⚠️ Verify physical drawer cash. Take daily backup.
-    </div>
-  `;
-
-  window._dayCloseData = { date: new Date().toLocaleDateString('en-IN', { dateStyle: 'full' }), todayCheckIns, todayCheckOuts, todayCash, todayBank, todayRefundCash, todayRefundBank, todayCashExp, todayBankExp, todayDeposits, netCash, netBank };
-  document.getElementById('dayCloseModal').classList.remove('hidden');
+  cachedExpenses.forEach(e => { const parts = (e.date || '').split('/'); if (parts.length !== 3) return; const eDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`); if (eDate >= todayDate && eDate < tomorrow) { const amt = parseFloat(e.amount) || 0; if (e.paymentSource === 'Bank') todayBankExp += amt; else todayCashExp += amt; } });
+  let todayDeposits = 0; cachedDeposits.forEach(dep => { const parts = (dep.date || '').split('/'); if (parts.length !== 3) return; const dDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`); if (dDate >= todayDate && dDate < tomorrow) todayDeposits += (parseFloat(dep.amount) || 0); });
+  const netCashToday = todayCash - todayRefundCash - todayCashExp - todayDeposits; const netBankToday = todayBank - todayRefundBank - todayBankExp + todayDeposits;
+  
+  document.getElementById("dayCloseContent").innerHTML = `
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><div class="text-cyan-400 font-bold">📅 ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}</div></div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5"><div class="text-cyan-400 font-bold mb-2">🏨 Occupancy</div><div class="flex justify-between"><span class="text-slate-400">Check-Ins:</span><span class="text-emerald-400 font-bold">${todayCheckIns.length}</span></div><div class="flex justify-between"><span class="text-slate-400">Check-Outs:</span><span class="text-rose-400 font-bold">${todayCheckOuts.length}</span></div><div class="flex justify-between"><span class="text-slate-400">In-House Now:</span><span class="text-white font-bold">${cachedBookings.filter(b => b.status === 'checked_in').length}</span></div></div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5"><div class="text-cyan-400 font-bold mb-2">💵 Cash Flow</div><div class="flex justify-between"><span class="text-slate-400">Collected:</span><span class="text-emerald-400">₹${todayCash.toFixed(2)}</span></div><div class="flex justify-between"><span class="text-slate-400">Refunds:</span><span class="text-rose-400">- ₹${todayRefundCash.toFixed(2)}</span></div><div class="flex justify-between"><span class="text-slate-400">Expenses:</span><span class="text-rose-400">- ₹${todayCashExp.toFixed(2)}</span></div><div class="flex justify-between"><span class="text-slate-400">Bank Deposits:</span><span class="text-rose-400">- ₹${todayDeposits.toFixed(2)}</span></div><div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Cash:</span><span class="text-emerald-400 font-bold">₹${netCashToday.toFixed(2)}</span></div></div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5"><div class="text-cyan-400 font-bold mb-2">🏦 Bank Flow</div><div class="flex justify-between"><span class="text-slate-400">Collected:</span><span class="text-emerald-400">₹${todayBank.toFixed(2)}</span></div><div class="flex justify-between"><span class="text-slate-400">Refunds:</span><span class="text-rose-400">- ₹${todayRefundBank.toFixed(2)}</span></div><div class="flex justify-between"><span class="text-slate-400">Expenses:</span><span class="text-rose-400">- ₹${todayBankExp.toFixed(2)}</span></div><div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Bank:</span><span class="text-blue-400 font-bold">₹${netBankToday.toFixed(2)}</span></div></div>
+    <div class="bg-yellow-950/30 p-3 rounded-xl border border-yellow-800/50 text-yellow-400 text-[10px]">⚠️ Verify physical drawer cash. Take daily backup.</div>`;
+  window._dayCloseData = { date: new Date().toLocaleDateString('en-IN', { dateStyle: 'full' }), todayCheckIns, todayCheckOuts, todayCash, todayBank, todayRefundCash, todayRefundBank, todayCashExp, todayBankExp, todayDeposits, netCashToday, netBankToday };
+  document.getElementById("dayCloseModal").classList.remove("hidden");
 };
 
 window.printDayClose = () => {
-  const d = window._dayCloseData;
-  if (!d) return;
+  const d = window._dayCloseData; if (!d) return;
   const hotelName = currentHotelProfile?.hotelName || "HOTEL";
-  const html = `<div style="width:210mm;padding:20mm;margin:0 auto;background:#fff;color:#000;font-family:'Segoe UI',sans-serif;">
-    <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px;">
-      <h1 style="font-size:24px;font-weight:900;">${hotelName}</h1>
-      <p style="font-size:14px;font-weight:bold;">DAY CLOSE SUMMARY</p>
-      <p style="font-size:12px;">${d.date}</p>
-    </div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;">
-      <tr style="background:#0f172a;color:#fff;"><th colspan="2" style="padding:8px;text-align:left;">Occupancy</th></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Check-Ins</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckIns.length}</td></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Check-Outs</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckOuts.length}</td></tr>
-    </table>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;">
-      <tr style="background:#0f172a;color:#fff;"><th style="padding:8px;text-align:left;">Cash</th><th style="padding:8px;text-align:right;">Amount</th></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Collected</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">₹${d.todayCash.toFixed(2)}</td></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Refunds</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayRefundCash.toFixed(2)}</td></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Expenses</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayCashExp.toFixed(2)}</td></tr>
-      <tr><td style="padding:6px;border:1px solid #ccc;">Deposits</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayDeposits.toFixed(2)}</td></tr>
-      <tr style="background:#f0fdf4;font-weight:bold;"><td style="padding:8px;border:1px solid #000;">Net Cash</td><td style="padding:8px;border:1px solid #000;text-align:right;">₹${d.netCash.toFixed(2)}</td></tr>
-    </table>
-    <div style="margin-top:50px;display:flex;justify-content:space-between;">
-      <div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p>Cashier</p></div>
-      <div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p>Manager</p></div>
-    </div>
-  </div>`;
-  const w = window.open("", "_blank", "width=850,height=950");
-  if (!w) return alert("Allow popups");
-  w.document.open();
-  w.document.write(`<!DOCTYPE html><html><head><title>Day Close</title></head><body onload="window.print(); setTimeout(() => { window.close(); }, 500);">${html}</body></html>`);
-  w.document.close();
+  const html = `<div style="width:210mm;padding:20mm;margin:0 auto;background:#fff;color:#000;font-family:'Segoe UI',sans-serif;"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px;"><h1 style="font-size:24px;font-weight:900;text-transform:uppercase;">${hotelName}</h1><p style="font-size:14px;font-weight:bold;">DAY CLOSE SUMMARY</p><p style="font-size:12px;">${d.date}</p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;"><tr style="background:#0f172a;color:#fff;"><th colspan="2" style="padding:8px;text-align:left;">Occupancy</th></tr><tr><td style="padding:6px;border:1px solid #ccc;">Check-Ins Today</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckIns.length}</td></tr><tr><td style="padding:6px;border:1px solid #ccc;">Check-Outs Today</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckOuts.length}</td></tr></table><table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;"><tr style="background:#0f172a;color:#fff;"><th style="padding:8px;text-align:left;">Cash Flow</th><th style="padding:8px;text-align:right;">Amount</th></tr><tr><td style="padding:6px;border:1px solid #ccc;">Cash Collected</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">₹${d.todayCash.toFixed(2)}</td></tr><tr><td style="padding:6px;border:1px solid #ccc;">Cash Refunds</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayRefundCash.toFixed(2)}</td></tr><tr><td style="padding:6px;border:1px solid #ccc;">Cash Expenses</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayCashExp.toFixed(2)}</td></tr><tr><td style="padding:6px;border:1px solid #ccc;">Bank Deposits</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayDeposits.toFixed(2)}</td></tr><tr style="background:#f0fdf4;font-weight:bold;"><td style="padding:8px;border:1px solid #000;">Net Cash</td><td style="padding:8px;border:1px solid #000;text-align:right;">₹${d.netCashToday.toFixed(2)}</td></tr></table><div style="margin-top:50px;display:flex;justify-content:space-between;"><div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;">Cashier</p></div><div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;">Manager</p></div></div></div>`;
+  const w = window.open("", "_blank", "width=850,height=950"); if (!w) return alert("Allow popups.");
+  w.document.open(); w.document.write(`<!DOCTYPE html><html><head><title>Day Close</title></head><body onload="window.print(); setTimeout(() => { window.close(); }, 500);">${html}</body></html>`); w.document.close();
 };
 
-// ============================================================
-// KEYBOARD
-// ============================================================
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.fixed.inset-0:not(.hidden)').forEach(m => {
-      if (['licenseLockModal','suspensionModal','loginDisclaimerModal'].includes(m.id)) return;
-      m.classList.add('hidden');
-    });
-  }
+  if (e.key === 'Escape') { document.querySelectorAll('.fixed.inset-0:not(.hidden)').forEach(m => { if (['licenseLockModal','suspensionModal','loginDisclaimerModal'].includes(m.id)) return; m.classList.add('hidden'); }); }
 });
-
-// ============================================================
-// HASH ROUTING
-// ============================================================
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
-  if (hash === 'followup') setTab('followup');
-  else if (hash === 'marketdue') setTab('marketdue');
-  else if (hash === 'refunds') setTab('refunds');
-  else setTab('invoices');
+  if (hash === 'followup') setTab('followup'); else if (hash === 'marketdue') setTab('marketdue'); else if (hash === 'refunds') setTab('refunds'); else setTab('invoices');
 });
 </script>
 </body>
