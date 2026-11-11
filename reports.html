@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartFix HMS - P&L Reports & GST</title>
+<title>SmartFix HMS - Reports & GST</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23060913'/%3E%3Ccircle cx='256' cy='256' r='120' fill='%23061426' stroke='%2300ffa3' stroke-width='20'/%3E%3Cpolyline points='200,256 240,296 320,216' fill='none' stroke='%2300ffa3' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#060913">
@@ -103,7 +103,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 
 <!-- GST Audit -->
-<div id="gstSection" class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+<div id="gstSection" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 scroll-mt-24">
 <div class="flex justify-between items-center mb-3">
 <h3 class="text-xs font-bold text-orange-400 uppercase">🧾 GST Audit</h3>
 <button onclick="exportGstExcel()" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold rounded-lg">📥 Export Excel</button>
@@ -148,7 +148,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </main>
 </div>
 
-<!-- LICENSE LOCK -->
+<!-- LICENSE LOCK & SUSPENSION & DISCLAIMER -->
 <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex items-center justify-center p-4">
 <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4">
 <div class="text-3xl">🔒</div>
@@ -158,7 +158,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- SUSPENSION -->
 <div id="suspensionModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex items-center justify-center p-4">
 <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl text-center space-y-4">
 <div class="text-3xl">🚫</div>
@@ -168,7 +167,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- DISCLAIMER -->
 <div id="loginDisclaimerModal" class="hidden fixed inset-0 bg-slate-950/98 z-[200] flex items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-2xl bg-slate-900 border-2 border-amber-700/50 rounded-3xl max-h-[95vh] overflow-hidden flex flex-col">
 <div class="p-4 border-b border-slate-800 bg-gradient-to-r from-amber-950/40 to-rose-950/40 flex items-center gap-3">
@@ -220,14 +218,22 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- SCRIPT -->
+<!-- ============================================================ -->
 <script type="module">
-import { db } from "./js/firebase-config.js";
+import { db, auth } from "./js/firebase-config.js";
 import { requireLogin, applyRoleAccess, setHotelName, setLicenseBadge, logout, showDisclaimerIfNeeded, setupDisclaimer } from "./js/common.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// ============================================================
-// STATE
-// ============================================================
+// Check for staff session and ensure anonymous auth BEFORE requireLogin
+if (sessionStorage.getItem('smartfix_staff_session') && !auth.currentUser) {
+  try {
+    await signInAnonymously(auth);
+  } catch(e) { console.error("Anon auth failed:", e); }
+}
+
 let SESSION = null;
 let currentHotelId = null;
 let currentHotelProfile = null;
@@ -235,19 +241,9 @@ let cachedBookings = [], cachedExpenses = [], cachedDeposits = [], cachedRefunds
 let profitChartInst = null, expenseChartInst = null, topItemsChartInst = null;
 let filteredBookings = [], filteredExpenses = [];
 
-// ============================================================
-// BOOT
-// ============================================================
 (async () => {
   SESSION = await requireLogin();
   if (!SESSION) return;
-
-  // Only owner/manager can access financial reports
-  if (!['owner', 'manager'].includes(SESSION.role)) {
-    alert("Access denied. Only Owner/Manager can view financial reports.");
-    window.location.href = 'dashboard.html';
-    return;
-  }
 
   currentHotelId = SESSION.hotelId;
   currentHotelProfile = SESSION.hotelProfile;
@@ -255,7 +251,7 @@ let filteredBookings = [], filteredExpenses = [];
   try {
     const sidebarHTML = await fetch('./components/sidebar.html').then(r => r.text());
     document.getElementById('sidebar-container').innerHTML = sidebarHTML;
-    document.querySelectorAll('[data-nav-page="reports"]').forEach(el => el.classList.add('nav-active'));
+    document.querySelectorAll('[data-nav-page="reports"], [data-nav-page="gst-audit"]').forEach(el => el.classList.add('nav-active'));
   } catch(e) { console.error('Sidebar:', e); }
 
   setHotelName(currentHotelProfile.hotelName);
@@ -264,7 +260,6 @@ let filteredBookings = [], filteredExpenses = [];
   showDisclaimerIfNeeded();
   setupDisclaimer();
 
-  // Set default date range: this month
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   document.getElementById('startDate').value = firstOfMonth.toLocaleDateString('en-CA');
@@ -272,187 +267,128 @@ let filteredBookings = [], filteredExpenses = [];
 
   await loadAllData();
   renderReports();
+  checkHash();
 })();
 
 window.handleLogout = logout;
 
-// ============================================================
-// LOAD ALL DATA
-// ============================================================
+// --- HASH ROUTING (Scroll to GST section if URL has #gst) ---
+function checkHash() {
+  if (window.location.hash === '#gst') {
+    const gstSection = document.getElementById('gstSection');
+    if (gstSection) {
+      setTimeout(() => {
+        gstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Highlight GST section briefly
+        gstSection.classList.add('ring-2', 'ring-orange-500');
+        setTimeout(() => gstSection.classList.remove('ring-2', 'ring-orange-500'), 2000);
+      }, 500);
+    }
+  }
+}
+
+window.addEventListener('hashchange', checkHash);
+
+// --- LOAD DATA ---
 async function loadAllData() {
   try {
     const bSnap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
-    cachedBookings = [];
-    bSnap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
+    cachedBookings = []; bSnap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error('Bookings:', e); }
 
   try {
     const eSnap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
-    cachedExpenses = [];
-    eSnap.forEach(d => cachedExpenses.push({ id: d.id, ...d.data() }));
+    cachedExpenses = []; eSnap.forEach(d => cachedExpenses.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error('Expenses:', e); }
 
   try {
     const dSnap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
-    cachedDeposits = [];
-    dSnap.forEach(d => cachedDeposits.push({ id: d.id, ...d.data() }));
+    cachedDeposits = []; dSnap.forEach(d => cachedDeposits.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error('Deposits:', e); }
 
   try {
     const rSnap = await getDocs(collection(db, "hotels", currentHotelId, "refunds"));
-    cachedRefunds = [];
-    rSnap.forEach(d => cachedRefunds.push({ id: d.id, ...d.data() }));
+    cachedRefunds = []; rSnap.forEach(d => cachedRefunds.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error('Refunds:', e); }
 
   try {
     const pSnap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
-    cachedPosOrders = [];
-    pSnap.forEach(d => cachedPosOrders.push({ id: d.id, ...d.data() }));
+    cachedPosOrders = []; pSnap.forEach(d => cachedPosOrders.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error('POS:', e); }
 }
 
-// ============================================================
-// DATE PRESETS
-// ============================================================
+// --- PRESETS ---
 window.setPreset = (preset) => {
   const today = new Date();
   let start, end;
-
-  if (preset === 'today') {
-    start = new Date(today);
-    end = new Date(today);
-  } else if (preset === 'week') {
-    start = new Date(today);
-    start.setDate(start.getDate() - 6);
-    end = new Date(today);
-  } else if (preset === 'month') {
-    start = new Date(today.getFullYear(), today.getMonth(), 1);
-    end = new Date(today);
-  } else if (preset === 'year') {
-    start = new Date(today.getFullYear(), 0, 1);
-    end = new Date(today);
-  }
+  if (preset === 'today') { start = new Date(today); end = new Date(today); }
+  else if (preset === 'week') { start = new Date(today); start.setDate(start.getDate() - 6); end = new Date(today); }
+  else if (preset === 'month') { start = new Date(today.getFullYear(), today.getMonth(), 1); end = new Date(today); }
+  else if (preset === 'year') { start = new Date(today.getFullYear(), 0, 1); end = new Date(today); }
 
   document.getElementById('startDate').value = start.toLocaleDateString('en-CA');
   document.getElementById('endDate').value = end.toLocaleDateString('en-CA');
-
-  // Update button styles
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.classList.remove('bg-cyan-500', 'text-slate-950');
-  });
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('bg-cyan-500', 'text-slate-950'));
   event.target.classList.add('bg-cyan-500', 'text-slate-950');
-
   renderReports();
 };
 
-// ============================================================
-// RENDER REPORTS
-// ============================================================
+// --- RENDER REPORTS ---
 window.renderReports = () => {
   const startStr = document.getElementById('startDate').value;
   const endStr = document.getElementById('endDate').value;
   if (!startStr || !endStr) return alert("Select date range");
 
-  const start = new Date(startStr);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(endStr);
-  end.setHours(23, 59, 59, 999);
+  const start = new Date(startStr); start.setHours(0, 0, 0, 0);
+  const end = new Date(endStr); end.setHours(23, 59, 59, 999);
 
-  // Filter bookings
-  filteredBookings = cachedBookings.filter(b => {
-    if (!b.createdAt) return false;
-    const d = new Date(b.createdAt);
-    return d >= start && d <= end;
-  });
+  filteredBookings = cachedBookings.filter(b => { if (!b.createdAt) return false; const d = new Date(b.createdAt); return d >= start && d <= end; });
+  filteredExpenses = cachedExpenses.filter(e => { const parts = (e.date || '').split('/'); if (parts.length !== 3) return false; const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`); return d >= start && d <= end; });
+  const filteredRefunds = cachedRefunds.filter(r => { const d = new Date(r.date); return d >= start && d <= end; });
+  const filteredPos = cachedPosOrders.filter(o => { if (!o.createdAt) return false; const d = new Date(o.createdAt); return d >= start && d <= end; });
 
-  // Filter expenses by date string
-  filteredExpenses = cachedExpenses.filter(e => {
-    const parts = (e.date || '').split('/');
-    if (parts.length !== 3) return false;
-    const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    return d >= start && d <= end;
-  });
-
-  // Filter refunds
-  const filteredRefunds = cachedRefunds.filter(r => {
-    const d = new Date(r.date);
-    return d >= start && d <= end;
-  });
-
-  // Filter POS
-  const filteredPos = cachedPosOrders.filter(o => {
-    if (!o.createdAt) return false;
-    const d = new Date(o.createdAt);
-    return d >= start && d <= end;
-  });
-
-  // ---- Compute totals ----
   let totalRev = 0, cashRev = 0, bankRev = 0;
   filteredBookings.forEach(b => {
     if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
       b.payments.forEach(p => {
         const pd = new Date(p.date || b.createdAt);
         if (pd >= start && pd <= end) {
-          const amt = parseFloat(p.amount) || 0;
-          totalRev += amt;
+          const amt = parseFloat(p.amount) || 0; totalRev += amt;
           if (p.mode === 'Bank') bankRev += amt; else cashRev += amt;
         }
       });
     } else {
       const paidDate = b.createdAt ? new Date(b.createdAt) : null;
       if (paidDate && paidDate >= start && paidDate <= end) {
-        const paid = b.totalPaid || b.advancePaid || 0;
-        totalRev += paid;
+        const paid = b.totalPaid || b.advancePaid || 0; totalRev += paid;
         if (b.lastPaymentMode === 'Bank') bankRev += paid; else cashRev += paid;
       }
     }
   });
 
-  filteredRefunds.forEach(r => {
-    const amt = parseFloat(r.amount) || 0;
-    totalRev -= amt;
-    if (r.mode === 'Bank') bankRev -= amt; else cashRev -= amt;
-  });
+  filteredRefunds.forEach(r => { const amt = parseFloat(r.amount) || 0; totalRev -= amt; if (r.mode === 'Bank') bankRev -= amt; else cashRev -= amt; });
 
   let totalExp = 0, cashExp = 0, bankExp = 0;
-  filteredExpenses.forEach(e => {
-    const amt = parseFloat(e.amount) || 0;
-    totalExp += amt;
-    if (e.paymentSource === 'Bank') bankExp += amt; else cashExp += amt;
-  });
+  filteredExpenses.forEach(e => { const amt = parseFloat(e.amount) || 0; totalExp += amt; if (e.paymentSource === 'Bank') bankExp += amt; else cashExp += amt; });
 
-  // Deposits (all deposits - not date filtered for simplicity)
   const totalDeposits = cachedDeposits.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
-
   const cashInHand = cashRev - cashExp - totalDeposits;
   const bankBalance = bankRev - bankExp + totalDeposits;
   const netProfit = totalRev - totalExp;
 
-  // Update summary cards
   document.getElementById('sumCash').innerText = `₹${cashInHand.toFixed(2)}`;
   document.getElementById('sumBank').innerText = `₹${bankBalance.toFixed(2)}`;
   document.getElementById('sumRevenue').innerText = `₹${totalRev.toFixed(2)}`;
   document.getElementById('sumProfit').innerText = `₹${netProfit.toFixed(2)}`;
 
-  // ---- Render Profit Trend Chart ----
   renderProfitChart(filteredBookings, filteredRefunds, start, end);
-
-  // ---- Render Expense Chart ----
   renderExpenseChart(filteredExpenses);
-
-  // ---- Render Top Items Chart ----
   renderTopItemsChart(filteredPos);
-
-  // ---- Render GST Table ----
   renderGstTable(filteredBookings);
-
-  // ---- Render Expenses Table ----
   renderExpensesTable(filteredExpenses);
 };
 
-// ============================================================
-// PROFIT TREND CHART
-// ============================================================
+// --- CHARTS ---
 function renderProfitChart(bookings, refunds, start, end) {
   const dayMap = {};
   const cursor = new Date(start);
@@ -464,102 +400,40 @@ function renderProfitChart(bookings, refunds, start, end) {
 
   bookings.forEach(b => {
     if (b.payments && Array.isArray(b.payments)) {
-      b.payments.forEach(p => {
-        const pd = new Date(p.date || b.createdAt);
-        if (pd >= start && pd <= end) {
-          const key = pd.toLocaleDateString('en-CA');
-          if (dayMap[key]) dayMap[key].rev += (parseFloat(p.amount) || 0);
-        }
-      });
+      b.payments.forEach(p => { const pd = new Date(p.date || b.createdAt); if (pd >= start && pd <= end) { const key = pd.toLocaleDateString('en-CA'); if (dayMap[key]) dayMap[key].rev += (parseFloat(p.amount) || 0); } });
     }
   });
 
-  refunds.forEach(r => {
-    const pd = new Date(r.date);
-    const key = pd.toLocaleDateString('en-CA');
-    if (dayMap[key]) dayMap[key].refund += (parseFloat(r.amount) || 0);
-  });
+  refunds.forEach(r => { const pd = new Date(r.date); const key = pd.toLocaleDateString('en-CA'); if (dayMap[key]) dayMap[key].refund += (parseFloat(r.amount) || 0); });
 
-  const labels = Object.keys(dayMap).map(k => {
-    const d = new Date(k + 'T00:00:00');
-    return d.getDate() + '/' + (d.getMonth() + 1);
-  });
+  const labels = Object.keys(dayMap).map(k => { const d = new Date(k + 'T00:00:00'); return d.getDate() + '/' + (d.getMonth() + 1); });
   const data = Object.values(dayMap).map(v => v.rev - v.refund);
 
   const ctx = document.getElementById('profitChart').getContext('2d');
   if (profitChartInst) profitChartInst.destroy();
   profitChartInst = new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Net Revenue (₹)',
-        data,
-        backgroundColor: data.map(v => v >= 0 ? 'rgba(0,255,163,0.7)' : 'rgba(244,63,94,0.7)'),
-        borderColor: data.map(v => v >= 0 ? '#00ffa3' : '#f43f5e'),
-        borderWidth: 1,
-        borderRadius: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } },
-        y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } }
-      }
-    }
+    data: { labels, datasets: [{ label: 'Net Revenue (₹)', data, backgroundColor: data.map(v => v >= 0 ? 'rgba(0,255,163,0.7)' : 'rgba(244,63,94,0.7)'), borderColor: data.map(v => v >= 0 ? '#00ffa3' : '#f43f5e'), borderWidth: 1, borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } } } }
   });
 }
 
-// ============================================================
-// EXPENSE BREAKDOWN CHART
-// ============================================================
 function renderExpenseChart(expenses) {
   const byCat = {};
-  expenses.forEach(e => {
-    const cat = e.category || 'Other';
-    byCat[cat] = (byCat[cat] || 0) + (parseFloat(e.amount) || 0);
-  });
-
-  const labels = Object.keys(byCat);
-  const data = Object.values(byCat);
-
+  expenses.forEach(e => { const cat = e.category || 'Other'; byCat[cat] = (byCat[cat] || 0) + (parseFloat(e.amount) || 0); });
+  const labels = Object.keys(byCat); const data = Object.values(byCat);
   const ctx = document.getElementById('expenseChart').getContext('2d');
   if (expenseChartInst) expenseChartInst.destroy();
   expenseChartInst = new Chart(ctx, {
     type: 'doughnut',
-    data: {
-      labels: labels.length ? labels : ['No Expenses'],
-      datasets: [{
-        data: data.length ? data : [1],
-        backgroundColor: ['#f43f5e','#3b82f6','#eab308','#8b5cf6','#22d3ee','#10b981','#f97316','#ec4899'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, padding: 8 } }
-      },
-      cutout: '65%'
-    }
+    data: { labels: labels.length ? labels : ['No Expenses'], datasets: [{ data: data.length ? data : [1], backgroundColor: ['#f43f5e','#3b82f6','#eab308','#8b5cf6','#22d3ee','#10b981','#f97316','#ec4899'], borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, padding: 8 } } }, cutout: '65%' }
   });
 }
 
-// ============================================================
-// TOP ITEMS CHART
-// ============================================================
 function renderTopItemsChart(posOrders) {
   const itemTotals = {};
-  posOrders.forEach(o => {
-    (o.items || []).forEach(it => {
-      itemTotals[it.name] = (itemTotals[it.name] || 0) + (it.quantity || 1);
-    });
-  });
-
+  posOrders.forEach(o => { (o.items || []).forEach(it => { itemTotals[it.name] = (itemTotals[it.name] || 0) + (it.quantity || 1); }); });
   const sorted = Object.entries(itemTotals).sort((a, b) => b[1] - a[1]).slice(0, 8);
 
   if (!sorted.length) {
@@ -573,31 +447,12 @@ function renderTopItemsChart(posOrders) {
   if (topItemsChartInst) topItemsChartInst.destroy();
   topItemsChartInst = new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels: sorted.map(x => x[0]),
-      datasets: [{
-        label: 'Orders',
-        data: sorted.map(x => x[1]),
-        backgroundColor: ['#10b981','#22d3ee','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#ec4899','#f97316'],
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      indexAxis: 'y',
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: '#1e293b' }, beginAtZero: true },
-        y: { ticks: { color: '#e2e8f0', font: { size: 10 } }, grid: { display: false } }
-      }
-    }
+    data: { labels: sorted.map(x => x[0]), datasets: [{ label: 'Orders', data: sorted.map(x => x[1]), backgroundColor: ['#10b981','#22d3ee','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#ec4899','#f97316'], borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: '#1e293b' }, beginAtZero: true }, y: { ticks: { color: '#e2e8f0', font: { size: 10 } }, grid: { display: false } } } }
   });
 }
 
-// ============================================================
-// GST TABLE
-// ============================================================
+// --- GST TABLE ---
 function renderGstTable(bookings) {
   const tbody = document.getElementById('gstTableBody');
   let totRoomTax = 0, totFoodTax = 0, totCgst = 0, totSgst = 0, totGrand = 0;
@@ -609,19 +464,11 @@ function renderGstTable(bookings) {
   }
 
   tbody.innerHTML = bookings.map(b => {
-    const foodTotal = b.foodTotal || 0;
-    const foodTaxable = foodTotal / 1.05;
-    const foodGst = foodTotal - foodTaxable;
-    const roomTax = b.summary?.grandTaxable || 0;
-    const cgst = (b.summary?.totalCgst || 0) + (foodGst / 2);
-    const sgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
+    const foodTotal = b.foodTotal || 0; const foodTaxable = foodTotal / 1.05; const foodGst = foodTotal - foodTaxable;
+    const roomTax = b.summary?.grandTaxable || 0; const cgst = (b.summary?.totalCgst || 0) + (foodGst / 2); const sgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
     const grand = (b.summary?.grandTotal || 0) + foodTotal;
 
-    totRoomTax += roomTax;
-    totFoodTax += foodTaxable;
-    totCgst += cgst;
-    totSgst += sgst;
-    totGrand += grand;
+    totRoomTax += roomTax; totFoodTax += foodTaxable; totCgst += cgst; totSgst += sgst; totGrand += grand;
 
     const dateStr = b.checkInTime?.split(',')[0] || 'N/A';
     return `<tr class="hover:bg-slate-800/40">
@@ -646,19 +493,14 @@ function renderGstTable(bookings) {
   `;
 }
 
-// ============================================================
-// EXPENSES TABLE
-// ============================================================
+// --- EXPENSES TABLE ---
 function renderExpensesTable(expenses) {
   const tbody = document.getElementById('expensesTableBody');
   if (!expenses.length) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-500 text-xs">No expenses in this range.</td></tr>`;
     return;
   }
-  const sorted = [...expenses].sort((a, b) => {
-    const p = s => { const [dd, mm, yy] = s.split('/'); return new Date(`${yy}-${mm}-${dd}`).getTime() || 0; };
-    return p(b.date) - p(a.date);
-  });
+  const sorted = [...expenses].sort((a, b) => { const p = s => { const [dd, mm, yy] = s.split('/'); return new Date(`${yy}-${mm}-${dd}`).getTime() || 0; }; return p(b.date) - p(a.date); });
   tbody.innerHTML = sorted.map(e => `<tr class="hover:bg-slate-800/40">
     <td class="py-2 px-3 text-slate-400">${e.date}</td>
     <td class="py-2 px-3 text-cyan-400 font-bold font-sans">${e.category}</td>
@@ -668,116 +510,49 @@ function renderExpensesTable(expenses) {
   </tr>`).join('');
 }
 
-// ============================================================
-// EXPORT GST TO EXCEL
-// ============================================================
+// --- EXPORTS ---
 window.exportGstExcel = () => {
   if (!filteredBookings.length) return alert("No data to export");
-
-  let html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>`;
-  html += `<table border="1" cellpadding="4" cellspacing="0">`;
-  html += `<tr style="background:#0f172a;color:#fff;font-weight:bold">`;
-  html += `<th>Date</th><th>Invoice</th><th>Guest</th><th>Phone</th><th>ID Type</th><th>ID Number</th>`;
-  html += `<th>Room Taxable</th><th>Food Taxable</th><th>CGST</th><th>SGST</th><th>Grand Total</th>`;
-  html += `</tr>`;
-
+  let html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><table border="1" cellpadding="4" cellspacing="0">`;
+  html += `<tr style="background:#0f172a;color:#fff;font-weight:bold"><th>Date</th><th>Invoice</th><th>Guest</th><th>Phone</th><th>ID Type</th><th>ID Number</th><th>Room Taxable</th><th>Food Taxable</th><th>CGST</th><th>SGST</th><th>Grand Total</th></tr>`;
   let tRoom = 0, tFood = 0, tCgst = 0, tSgst = 0, tGrand = 0;
 
   filteredBookings.forEach(b => {
-    const foodTotal = b.foodTotal || 0;
-    const foodTaxable = foodTotal / 1.05;
-    const foodGst = foodTotal - foodTaxable;
-    const roomTax = b.summary?.grandTaxable || 0;
-    const cgst = (b.summary?.totalCgst || 0) + (foodGst / 2);
-    const sgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
+    const foodTotal = b.foodTotal || 0; const foodTaxable = foodTotal / 1.05; const foodGst = foodTotal - foodTaxable;
+    const roomTax = b.summary?.grandTaxable || 0; const cgst = (b.summary?.totalCgst || 0) + (foodGst / 2); const sgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
     const grand = (b.summary?.grandTotal || 0) + foodTotal;
-
     tRoom += roomTax; tFood += foodTaxable; tCgst += cgst; tSgst += sgst; tGrand += grand;
 
-    html += `<tr>`;
-    html += `<td>${b.checkInTime?.split(',')[0] || ''}</td>`;
-    html += `<td>${b.bookingId || ''}</td>`;
-    html += `<td>${b.guestName || ''}</td>`;
-    html += `<td>${b.phone || ''}</td>`;
-    html += `<td>${b.idType || ''}</td>`;
-    html += `<td>${b.idNumber || ''}</td>`;
-    html += `<td style="text-align:right">${roomTax.toFixed(2)}</td>`;
-    html += `<td style="text-align:right">${foodTaxable.toFixed(2)}</td>`;
-    html += `<td style="text-align:right">${cgst.toFixed(2)}</td>`;
-    html += `<td style="text-align:right">${sgst.toFixed(2)}</td>`;
-    html += `<td style="text-align:right;font-weight:bold">${grand.toFixed(2)}</td>`;
-    html += `</tr>`;
+    html += `<tr><td>${b.checkInTime?.split(',')[0] || ''}</td><td>${b.bookingId || ''}</td><td>${b.guestName || ''}</td><td>${b.phone || ''}</td><td>${b.idType || ''}</td><td>${b.idNumber || ''}</td><td style="text-align:right">${roomTax.toFixed(2)}</td><td style="text-align:right">${foodTaxable.toFixed(2)}</td><td style="text-align:right">${cgst.toFixed(2)}</td><td style="text-align:right">${sgst.toFixed(2)}</td><td style="text-align:right;font-weight:bold">${grand.toFixed(2)}</td></tr>`;
   });
-
-  html += `<tr style="background:#f0fdf4;font-weight:bold">`;
-  html += `<td colspan="6">TOTALS</td>`;
-  html += `<td style="text-align:right">${tRoom.toFixed(2)}</td>`;
-  html += `<td style="text-align:right">${tFood.toFixed(2)}</td>`;
-  html += `<td style="text-align:right">${tCgst.toFixed(2)}</td>`;
-  html += `<td style="text-align:right">${tSgst.toFixed(2)}</td>`;
-  html += `<td style="text-align:right">${tGrand.toFixed(2)}</td>`;
-  html += `</tr></table></body></html>`;
-
+  html += `<tr style="background:#f0fdf4;font-weight:bold"><td colspan="6">TOTALS</td><td style="text-align:right">${tRoom.toFixed(2)}</td><td style="text-align:right">${tFood.toFixed(2)}</td><td style="text-align:right">${tCgst.toFixed(2)}</td><td style="text-align:right">${tSgst.toFixed(2)}</td><td style="text-align:right">${tGrand.toFixed(2)}</td></tr></table></body></html>`;
   const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  const s = document.getElementById('startDate').value;
-  const e = document.getElementById('endDate').value;
-  a.download = `GST_Audit_${s}_to_${e}.xls`;
-  a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `GST_Audit_${document.getElementById('startDate').value}_to_${document.getElementById('endDate').value}.xls`; a.click();
 };
 
-// ============================================================
-// EXPORT EXPENSES TO EXCEL
-// ============================================================
 window.exportExpensesExcel = () => {
   if (!filteredExpenses.length) return alert("No expenses to export");
-
-  let html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>`;
-  html += `<table border="1" cellpadding="4" cellspacing="0">`;
-  html += `<tr style="background:#0f172a;color:#fff;font-weight:bold">`;
-  html += `<th>Date</th><th>Category</th><th>Description</th><th>Paid From</th><th>Amount (₹)</th>`;
-  html += `</tr>`;
-
+  let html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><table border="1" cellpadding="4" cellspacing="0">`;
+  html += `<tr style="background:#0f172a;color:#fff;font-weight:bold"><th>Date</th><th>Category</th><th>Description</th><th>Paid From</th><th>Amount (₹)</th></tr>`;
   let total = 0;
-  const sorted = [...filteredExpenses].sort((a, b) => {
-    const p = s => { const [dd, mm, yy] = s.split('/'); return new Date(`${yy}-${mm}-${dd}`).getTime() || 0; };
-    return p(b.date) - p(a.date);
-  });
+  const sorted = [...filteredExpenses].sort((a, b) => { const p = s => { const [dd, mm, yy] = s.split('/'); return new Date(`${yy}-${mm}-${dd}`).getTime() || 0; }; return p(b.date) - p(a.date); });
 
   sorted.forEach(e => {
-    const amt = parseFloat(e.amount) || 0;
-    total += amt;
-    html += `<tr>`;
-    html += `<td>${e.date || ''}</td>`;
-    html += `<td>${e.category || ''}</td>`;
-    html += `<td>${e.description || ''}</td>`;
-    html += `<td>${e.paymentSource || 'Cash'}</td>`;
-    html += `<td style="text-align:right">${amt.toFixed(2)}</td>`;
-    html += `</tr>`;
+    const amt = parseFloat(e.amount) || 0; total += amt;
+    html += `<tr><td>${e.date || ''}</td><td>${e.category || ''}</td><td>${e.description || ''}</td><td>${e.paymentSource || 'Cash'}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>`;
   });
-
-  html += `<tr style="background:#fef2f2;font-weight:bold">`;
-  html += `<td colspan="4">TOTAL</td>`;
-  html += `<td style="text-align:right">${total.toFixed(2)}</td>`;
-  html += `</tr></table></body></html>`;
-
+  html += `<tr style="background:#fef2f2;font-weight:bold"><td colspan="4">TOTAL</td><td style="text-align:right">${total.toFixed(2)}</td></tr></table></body></html>`;
   const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  const s = document.getElementById('startDate').value;
-  const e = document.getElementById('endDate').value;
-  a.download = `Expenses_${s}_to_${e}.xls`;
-  a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `Expenses_${document.getElementById('startDate').value}_to_${document.getElementById('endDate').value}.xls`; a.click();
 };
 
-// ============================================================
-// KEYBOARD SHORTCUTS
-// ============================================================
+// --- KEYBOARD ---
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.fixed.inset-0:not(.hidden)').forEach(m => {
-      if (m.id === 'licenseLockModal' || m.id === 'suspensionModal' || m.id === 'loginDisclaimerModal') return;
+      if (['licenseLockModal','suspensionModal','loginDisclaimerModal'].includes(m.id)) return;
       m.classList.add('hidden');
     });
   }
