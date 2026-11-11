@@ -3,23 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartFix HMS - Complete Hotel Management Software</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23ffffff'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ff5722'/%3E%3Cstop offset='100%25' stop-color='%23ff9800'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='80' y='160' width='60' height='260' rx='10' fill='url(%23g)'/%3E%3Crect x='372' y='160' width='60' height='260' rx='10' fill='url(%23g)'/%3E%3Cpath d='M170 140 L256 60 L342 140 L342 420 L170 420 Z' fill='url(%23g)'/%3E%3Ccircle cx='256' cy='260' r='70' fill='%23ffffff'/%3E%3Cpolyline points='220,260 245,285 295,235' fill='none' stroke='%23ff5722' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>SmartFix Suite - Premium Business Software</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%238b5cf6'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='96' y='96' width='320' height='320' rx='80' fill='url(%23g)'/%3E%3Cpath d='M200 256 L240 296 L312 216' fill='none' stroke='%23ffffff' stroke-width='30' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
-<meta name="description" content="Complete Hotel Management System. Manage bookings, restaurant, staff, and GST reports from any device.">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="Premium Suite of Software for Hotels, Restaurants, and Mobile Repair Shops.">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
   theme: {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#ff5722',
-          light: '#ff7a4d',
-          dark: '#e64a19'
-        }
+          DEFAULT: '#6d28d9', // Purple
+          light: '#8b5cf6',
+          dark: '#5b21b6'
+        },
+        accent: {
+          DEFAULT: '#06b6d4', // Cyan
+          light: '#22d3ee'
+        },
+        dark: '#0f172a'
       },
       fontFamily: { sans: ['Inter', 'sans-serif'] }
     }
@@ -27,68 +32,62 @@ tailwind.config = {
 }
 </script>
 <style>
-body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-.bg-brand-gradient { background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%); }
-.text-brand-gradient { background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.hero-bg { background: radial-gradient(circle at 100% 0%, #fff5ed 0%, #ffffff 50%, #fef2f2 100%); }
-.feature-card { transition: all 0.3s ease; }
-.feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(255, 87, 34, 0.1); border-color: #ff5722; }
-.glow-btn { box-shadow: 0 10px 30px rgba(255, 87, 34, 0.4); }
-.glow-btn:hover { box-shadow: 0 15px 40px rgba(255, 87, 34, 0.6); transform: translateY(-2px); }
-.animate-float { animation: float 6s ease-in-out infinite; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
+body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+.bg-brand-gradient { background: linear-gradient(135deg, #6d28d9 0%, #06b6d4 100%); }
+.text-brand-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #22d3ee 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+.glass-card:hover { border-color: rgba(139, 92, 246, 0.5); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(109, 40, 217, 0.2); }
+.glow-btn { box-shadow: 0 0 20px rgba(109, 40, 217, 0.5); transition: all 0.3s ease; }
+.glow-btn:hover { box-shadow: 0 0 30px rgba(109, 40, 217, 0.8); transform: translateY(-2px); }
+.glow-text { text-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+.grid-bg {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
 </style>
 </head>
-<body class="text-slate-800">
+<body class="antialiased overflow-x-hidden relative">
+
+<!-- Background Glow Effects -->
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+  <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand/20 blur-[120px] rounded-full"></div>
+  <div class="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full"></div>
+  <div class="absolute inset-0 grid-bg opacity-30"></div>
+</div>
 
 <!-- ============================================================ -->
 <!-- NAVBAR -->
 <!-- ============================================================ -->
-<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200">
+<nav class="sticky top-0 z-50 bg-dark/80 backdrop-blur-xl border-b border-white/10">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between h-16 sm:h-20">
-
-<!-- Logo -->
-<a href="#" class="flex items-center gap-2 sm:gap-3">
-<svg class="h-10 sm:h-12 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<linearGradient id="lg-brand" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#ff5722"/>
-<stop offset="100%" stop-color="#ff9800"/>
-</linearGradient>
-</defs>
-<g transform="translate(10,5)">
-<rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand)" stroke-width="2.5" fill="#fff5ed"/>
-<rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand)" stroke-width="2.5" fill="#fff5ed"/>
-<path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#lg-brand)" stroke-width="3" fill="#ff5722"/>
-<circle cx="45" cy="50" r="18" fill="#ffffff"/>
-<polyline points="37,50 43,56 55,42" fill="none" stroke="#ff5722" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="110" y="48" font-family="'Inter',sans-serif" font-weight="900" font-size="42" fill="#1e293b">Smart<tspan fill="url(#lg-brand)">Fix</tspan></text>
-<rect x="295" y="16" width="94" height="36" rx="8" fill="url(#lg-brand)"/>
-<text x="342" y="42" font-family="'Inter',sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle" letter-spacing="1">HMS</text>
-<text x="112" y="74" font-family="'Inter',sans-serif" font-weight="700" font-size="11" fill="#ff5722" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
-</svg>
+<div class="flex items-center justify-between h-20">
+  
+<!-- Premium Logo -->
+<a href="#" class="flex items-center gap-3 group">
+  <div class="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand/30 group-hover:scale-105 transition">
+    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+  </div>
+  <div>
+    <div class="text-xl font-black text-white leading-none tracking-tight">SMART<span class="text-brand-gradient">FIX</span> <span class="text-accent text-sm">SUITE</span></div>
+    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Business OS</div>
+  </div>
 </a>
 
-<!-- Desktop nav -->
-<div class="hidden md:flex items-center gap-8">
-<a href="#features" class="text-sm font-semibold text-slate-600 hover:text-brand transition">Features</a>
-<a href="#benefits" class="text-sm font-semibold text-slate-600 hover:text-brand transition">Benefits</a>
-<a href="#pricing" class="text-sm font-semibold text-slate-600 hover:text-brand transition">Pricing</a>
-<a href="#contact" class="text-sm font-semibold text-slate-600 hover:text-brand transition">Contact</a>
+<!-- Desktop Nav -->
+<div class="hidden lg:flex items-center gap-8">
+  <a href="#products" class="text-sm font-semibold text-slate-300 hover:text-white transition">Software Suite</a>
+  <a href="#features" class="text-sm font-semibold text-slate-300 hover:text-white transition">Features</a>
+  <a href="#why-us" class="text-sm font-semibold text-slate-300 hover:text-white transition">Why Us</a>
 </div>
 
-<!-- CTA buttons -->
-<div class="flex items-center gap-2">
-<a href="tel:+919046356631" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand hover:bg-orange-50 rounded-lg transition">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-<span class="hidden lg:inline">+91 90463 56631</span>
-</a>
-<button onclick="openLoginModal('owner')" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold text-slate-700 hover:text-brand transition">Sign In</button>
-<button onclick="openLoginModal('owner', 'register')" class="px-3 sm:px-5 py-2 sm:py-2.5 bg-brand-gradient text-white text-xs sm:text-sm font-bold rounded-lg glow-btn transition">Free Trial</button>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+  <a href="tel:+919046356631" class="hidden sm:flex items-center gap-2 px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-lg transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+    +91 90463 56631
+  </a>
+  <button onclick="openLoginModal('owner')" class="px-4 py-2 text-sm font-bold text-white hover:text-brand-light transition">Sign In</button>
+  <button onclick="openLoginModal('owner', 'register')" class="px-5 py-2.5 bg-brand-gradient text-white text-sm font-bold rounded-xl glow-btn">Free Trial</button>
 </div>
 </div>
 </div>
@@ -97,539 +96,356 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 <!-- ============================================================ -->
 <!-- HERO SECTION -->
 <!-- ============================================================ -->
-<section class="hero-bg relative overflow-hidden">
-<div class="absolute top-20 right-0 w-96 h-96 bg-orange-200/40 rounded-full blur-3xl pointer-events-none"></div>
-<div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-100/60 rounded-full blur-3xl pointer-events-none"></div>
+<section class="relative pt-24 pb-20 lg:pt-32 lg:pb-28">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+  
+  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand/10 border border-brand/30 text-xs font-bold text-brand-light mb-6">
+    <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+    Cloud v4.4 Active — Trusted by 500+ Businesses
+  </div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative">
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+  <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-tight mb-6 glow-text">
+    The Complete <span class="text-brand-gradient">Business OS</span><br>
+    For Modern Enterprises
+  </h1>
+  
+  <p class="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-10">
+    Stop juggling between registers, WhatsApp, and Excel. SmartFix unifies your billing, inventory, repairs, staff, GST, and customer communication into one beautifully fast, cloud-synced platform.
+  </p>
 
-<div class="text-center lg:text-left">
-<div class="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 border border-orange-300 rounded-full text-xs font-bold text-brand mb-4 sm:mb-6">
-<span class="w-2 h-2 bg-brand rounded-full animate-pulse"></span>
-Trusted by 500+ Hotels across India
-</div>
-<h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight">
-Run Your Entire Hotel<br>
-From <span class="text-brand-gradient">Any Device</span>,<br>
-<span class="text-brand-gradient">Anywhere</span>
-</h1>
-<p class="text-sm sm:text-base lg:text-lg text-slate-600 mt-4 sm:mt-6 leading-relaxed max-w-xl mx-auto lg:mx-0">
-Stop using registers. Manage check-ins, restaurant bills, staff payroll, and GST reports seamlessly from your mobile, tablet, or computer.
-</p>
-<div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 justify-center lg:justify-start">
-<button onclick="openLoginModal('owner', 'register')" class="px-6 sm:px-8 py-3 sm:py-4 bg-brand-gradient text-white text-sm sm:text-base font-bold rounded-xl glow-btn transition">
-Start 30-Day Free Trial →
-</button>
-<button onclick="openLoginModal('owner')" class="px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-slate-200 hover:border-brand text-slate-800 hover:text-brand text-sm sm:text-base font-bold rounded-xl transition">
-🔐 Owner Login
-</button>
-</div>
-<div class="flex items-center gap-4 mt-4 sm:mt-6 justify-center lg:justify-start text-xs text-slate-500">
-<span>✓ No Credit Card Required</span>
-<span>✓ Setup in 5 minutes</span>
-</div>
-</div>
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+    <button onclick="openLoginModal('owner', 'register')" class="w-full sm:w-auto px-8 py-4 bg-brand-gradient text-white text-base font-bold rounded-xl glow-btn">
+      Start 30-Day Free Trial
+    </button>
+    <button onclick="openLoginModal('owner')" class="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-base font-bold rounded-xl transition">
+      Sign In to Dashboard
+    </button>
+  </div>
 
-<div class="relative order-first lg:order-last">
-<div class="animate-float">
-<div class="bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 sm:p-4">
-<div class="bg-slate-900 rounded-xl overflow-hidden">
-<div class="p-2 sm:p-3 border-b border-slate-700 flex items-center gap-1.5">
-<div class="w-2 h-2 rounded-full bg-red-500"></div>
-<div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-<div class="w-2 h-2 rounded-full bg-green-500"></div>
-</div>
-<div class="p-3 sm:p-4 bg-slate-950 space-y-2">
-<div class="grid grid-cols-4 gap-1.5">
-<div class="bg-slate-900 rounded p-1.5 border border-slate-800"><div class="text-[6px] text-slate-500">Total</div><div class="text-[10px] font-black text-white">48</div></div>
-<div class="bg-orange-900/30 rounded p-1.5 border border-orange-700/50"><div class="text-[6px] text-orange-300">Occupied</div><div class="text-[10px] font-black text-orange-300">32</div></div>
-<div class="bg-emerald-900/30 rounded p-1.5 border border-emerald-700/50"><div class="text-[6px] text-emerald-300">Vacant</div><div class="text-[10px] font-black text-emerald-300">16</div></div>
-<div class="bg-cyan-900/30 rounded p-1.5 border border-cyan-700/50"><div class="text-[6px] text-cyan-300">Occupancy</div><div class="text-[10px] font-black text-cyan-300">67%</div></div>
-</div>
-<div class="bg-slate-900 rounded p-2 border border-slate-800">
-<div class="text-[6px] text-slate-500 mb-1">Live Floor Status</div>
-<div class="grid grid-cols-6 gap-1">
-<div class="h-5 bg-emerald-900/50 rounded border border-emerald-700/50 flex items-center justify-center text-[6px] text-emerald-300 font-bold">101</div>
-<div class="h-5 bg-orange-900/50 rounded border border-orange-700/50 flex items-center justify-center text-[6px] text-orange-300 font-bold">102</div>
-<div class="h-5 bg-orange-900/50 rounded border border-orange-700/50 flex items-center justify-center text-[6px] text-orange-300 font-bold">103</div>
-<div class="h-5 bg-emerald-900/50 rounded border border-emerald-700/50 flex items-center justify-center text-[6px] text-emerald-300 font-bold">104</div>
-<div class="h-5 bg-orange-900/50 rounded border border-orange-700/50 flex items-center justify-center text-[6px] text-orange-300 font-bold">105</div>
-<div class="h-5 bg-yellow-900/50 rounded border border-yellow-700/50 flex items-center justify-center text-[6px] text-yellow-300 font-bold">106</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+    <div class="glass-card p-6 rounded-2xl text-center">
+      <div class="text-3xl font-black text-white">10,000+</div>
+      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Invoices / Month</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl text-center">
+      <div class="text-3xl font-black text-white">5 min</div>
+      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Setup Time</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl text-center">
+      <div class="text-3xl font-black text-white">100%</div>
+      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Cloud Sync</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl text-center">
+      <div class="text-3xl font-black text-white">₹0</div>
+      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Setup Fee</div>
+    </div>
+  </div>
 
 </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- STATS BAR -->
+<!-- OUR SOFTWARE SUITE (NEW SECTION) -->
 <!-- ============================================================ -->
-<section class="bg-brand-gradient text-white">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-<div><div class="text-2xl sm:text-3xl font-black">500+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Hotels Trust Us</div></div>
-<div><div class="text-2xl sm:text-3xl font-black">50,000+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Bookings Processed</div></div>
-<div><div class="text-2xl sm:text-3xl font-black">₹10Cr+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Transactions Handled</div></div>
-<div><div class="text-2xl sm:text-3xl font-black">99.9%</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Uptime Guarantee</div></div>
-</div>
-</div>
-</section>
-
-<!-- ============================================================ -->
-<!-- FEATURES GRID -->
-<!-- ============================================================ -->
-<section id="features" class="py-16 sm:py-24 bg-white">
+<section id="products" class="py-20 bg-dark/50 border-y border-white/5">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="text-center mb-12 sm:mb-16">
-<div class="inline-block px-3 py-1 bg-orange-100 rounded-full text-xs font-bold text-brand uppercase tracking-widest mb-3">Features</div>
-<h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">Everything You Need.<br><span class="text-brand-gradient">Nothing You Don't.</span></h2>
-<p class="text-sm sm:text-base text-slate-600 mt-4 max-w-2xl mx-auto">A complete, professional toolkit designed for modern hoteliers to automate daily tasks.</p>
-</div>
+  <div class="text-center mb-16">
+    <h2 class="text-sm font-bold text-brand uppercase tracking-widest mb-2">Our Software Suite</h2>
+    <h3 class="text-3xl sm:text-4xl font-black text-white">One Ecosystem. Multiple Solutions.</h3>
+    <p class="text-slate-400 mt-4 max-w-2xl mx-auto">We build specialized ERPs for different industries. Choose the one that fits your business.</p>
+  </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <!-- Product 1: SmartFix Pro (Mobile Shop) -->
+    <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-brand/20 blur-3xl rounded-full"></div>
+      <div class="w-14 h-14 bg-brand/20 rounded-2xl flex items-center justify-center mb-6 border border-brand/30">
+        <svg class="w-7 h-7 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+      </div>
+      <h4 class="text-xl font-bold text-white mb-2">SmartFix Pro</h4>
+      <p class="text-xs font-bold text-brand-light uppercase tracking-widest mb-4">Mobile Repair OS</p>
+      <ul class="space-y-3 text-sm text-slate-400 mb-8">
+        <li class="flex items-center gap-2"><span class="text-brand">✓</span> IMEI Stock & Inventory</li>
+        <li class="flex items-center gap-2"><span class="text-brand">✓</span> Repair Job Cards & Tracking</li>
+        <li class="flex items-center gap-2"><span class="text-brand">✓</span> BIN EMI Tracking</li>
+        <li class="flex items-center gap-2"><span class="text-brand">✓</span> Used Mobile Sales CRM</li>
+      </ul>
+      <button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Explore SmartFix Pro</button>
+    </div>
 
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Live Floor Chart</h3>
-<p class="text-sm text-slate-600 leading-relaxed">See which rooms are vacant, occupied, or cleaning in real-time. One-click check-in/check-out.</p>
-</div>
+    <!-- Product 2: SmartFix TMP (Restaurant) -->
+    <div class="glass-card rounded-3xl p-8 relative overflow-hidden group border-accent/30">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-3xl rounded-full"></div>
+      <div class="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mb-6 border border-accent/30">
+        <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <h4 class="text-xl font-bold text-white mb-2">SmartFix TMP</h4>
+      <p class="text-xs font-bold text-accent uppercase tracking-widest mb-4">TableMaster Pro POS</p>
+      <ul class="space-y-3 text-sm text-slate-400 mb-8">
+        <li class="flex items-center gap-2"><span class="text-accent">✓</span> Direct QR Self-Ordering</li>
+        <li class="flex items-center gap-2"><span class="text-accent">✓</span> Live Kitchen KOT Display</li>
+        <li class="flex items-center gap-2"><span class="text-accent">✓</span> Swiggy/Zomato Ledger</li>
+        <li class="flex items-center gap-2"><span class="text-accent">✓</span> Advance Table Booking</li>
+      </ul>
+      <button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Explore TableMaster</button>
+    </div>
 
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Restaurant POS</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Digital menu, KOT system, room-service orders. Auto-transfer food bills to guest's room folio.</p>
-</div>
+    <!-- Product 3: SmartFix HMS (Hotel) -->
+    <div class="glass-card rounded-3xl p-8 relative overflow-hidden group border-emerald-500/30">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 blur-3xl rounded-full"></div>
+      <div class="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6 border border-emerald-500/30">
+        <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      </div>
+      <h4 class="text-xl font-bold text-white mb-2">SmartFix HMS</h4>
+      <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Hotel Management System</p>
+      <ul class="space-y-3 text-sm text-slate-400 mb-8">
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Live Floor Chart & Booking</li>
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Restaurant POS Integration</li>
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> CA-Ready GST Reports</li>
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Staff Payroll & Role Access</li>
+      </ul>
+      <button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Explore SmartFix HMS</button>
+    </div>
 
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">100% CA-Ready GST</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Automated 12% lodging and 5% food GST with SAC codes. Download Excel reports for your CA.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Staff & Payroll</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Manage staff, record salaries, generate payslips. Role-based access for owner, manager, receptionist.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">P&L Analytics</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Beautiful charts showing profit, revenue, expense breakdown, and top-selling food items.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Booking Calendar</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Month and week view calendar. See room availability at a glance. Prevent double bookings.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Market Due Tracker</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Track outstanding balances. Send automated WhatsApp payment reminders to guests.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Aadhaar QR Scanner</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Scan Aadhaar QR code with phone camera. Auto-fill guest name and ID. Fast check-in.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">UPI Payment QR</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Generate UPI QR codes for GPay/PhonePe/Paytm. Guests pay directly. Auto-mark settled.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Day Close Summary</h3>
-<p class="text-sm text-slate-600 leading-relaxed">End-of-day reconciliation. Verify cash drawer, UPI receipts, expenses — one click.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Thermal & A4 Print</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Print 58mm/80mm thermal bills instantly. Generate professional A4 tax invoices.</p>
-</div>
-
-<div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
-<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-<svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">1-Click Backup</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Download complete JSON backup anytime. Restore on any device. Never lose data.</p>
-</div>
-
-</div>
+  </div>
 </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- BENEFITS -->
+<!-- ALL FEATURES GRID -->
 <!-- ============================================================ -->
-<section id="benefits" class="py-16 sm:py-24 bg-slate-50">
+<section id="features" class="py-20">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="text-center mb-12 sm:mb-16">
-<div class="inline-block px-3 py-1 bg-orange-100 rounded-full text-xs font-bold text-brand uppercase tracking-widest mb-3">Benefits</div>
-<h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">Why Hotels Love SmartFix HMS</h2>
-<p class="text-sm sm:text-base text-slate-600 mt-4 max-w-2xl mx-auto">Real problems solved for real hoteliers every single day.</p>
-</div>
+  <div class="text-center mb-16">
+    <h2 class="text-sm font-bold text-brand uppercase tracking-widest mb-2">Plus, Everything Else You Need</h2>
+    <h3 class="text-3xl sm:text-4xl font-black text-white">Built by Business Owners, For Business Owners</h3>
+  </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Save 2-3 Hours Daily</h3>
-<p class="text-sm text-slate-600 leading-relaxed">No more paper registers. Auto calculations for bills, GST, and occupancy. Reception desk runs 3x faster.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">⚡</span> Manual work reduced by 80%</div>
-</div>
-</div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Zero Cash Leakage</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Every rupee tracked. Cash in hand, bank balance, refunds, expenses — all auto-calculated. Day-close summary catches theft.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">💰</span> Save ₹5000-15000/month</div>
-</div>
-</div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">GST & Tax Compliant</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Automated 12% + 5% GST calculation. SAC codes included. Your CA gets clean Excel reports — no more stress during filing.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">📊</span> CA-ready Excel exports</div>
-</div>
-</div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Access From Anywhere</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Home, office, or traveling — check your hotel's status from mobile. Real-time data. No installation needed.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">📱</span> Works on any device</div>
-</div>
-</div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Control Your Staff</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Role-based access. Receptionist can't see P&L. Housekeeping can't checkout. Suspend/reset passwords anytime.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">🔐</span> Prevent staff fraud</div>
-</div>
-</div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-</div>
-<div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Zero Technical Setup</h3>
-<p class="text-sm text-slate-600 leading-relaxed">No servers, no IT team, no software install. Just open browser and login. Works on existing laptop/phone.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">✨</span> Ready in 5 minutes</div>
-</div>
-</div>
-</div>
-
-</div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    
+    <!-- Feature Cards -->
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">🖨️</div>
+      <div><h5 class="text-sm font-bold text-white">Thermal & A4 Billing</h5><p class="text-xs text-slate-400 mt-1">58mm/80mm dual-print + A4 GST invoice.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">☁️</div>
+      <div><h5 class="text-sm font-bold text-white">Real-time Cloud Sync</h5><p class="text-xs text-slate-400 mt-1">Multiple devices, one truth. Live updates.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">💬</div>
+      <div><h5 class="text-sm font-bold text-white">WhatsApp Automation</h5><p class="text-xs text-slate-400 mt-1">Due reminders, invoice share, alerts.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">💰</div>
+      <div><h5 class="text-sm font-bold text-white">Cash, UPI & Daybook</h5><p class="text-xs text-slate-400 mt-1">Auto cash book, bank book, P&L.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">👥</div>
+      <div><h5 class="text-sm font-bold text-white">Customer Portal</h5><p class="text-xs text-slate-400 mt-1">Self-service tracking and history.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">🔐</div>
+      <div><h5 class="text-sm font-bold text-white">Role-based Access</h5><p class="text-xs text-slate-400 mt-1">Staff terminals, secure operations.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">📊</div>
+      <div><h5 class="text-sm font-bold text-white">Live P&L Dashboard</h5><p class="text-xs text-slate-400 mt-1">Real-time analytics & insights.</p></div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl flex items-start gap-3">
+      <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 text-lg">📥</div>
+      <div><h5 class="text-sm font-bold text-white">Excel CA Export</h5><p class="text-xs text-slate-400 mt-1">One-click export for accountants.</p></div>
+    </div>
+  </div>
 </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- HOW IT WORKS -->
+<!-- WHY CHOOSE US -->
 <!-- ============================================================ -->
-<section class="py-16 sm:py-24 bg-white">
+<section id="why-us" class="py-20 bg-dark/50">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="text-center mb-12 sm:mb-16">
-<div class="inline-block px-3 py-1 bg-orange-100 rounded-full text-xs font-bold text-brand uppercase tracking-widest mb-3">How It Works</div>
-<h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">Get Started in 3 Simple Steps</h2>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-<div class="text-center">
-<div class="w-16 h-16 bg-brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-white text-2xl font-black">1</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Register Free</h3>
-<p class="text-sm text-slate-600">Sign up with your email. Get 30-day free trial instantly. No credit card.</p>
-</div>
-<div class="text-center">
-<div class="w-16 h-16 bg-brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-white text-2xl font-black">2</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Add Your Hotel</h3>
-<p class="text-sm text-slate-600">Enter hotel details, rooms, and staff. Customize room rates and floors.</p>
-</div>
-<div class="text-center">
-<div class="w-16 h-16 bg-brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-white text-2xl font-black">3</div>
-<h3 class="text-lg font-bold text-slate-900 mb-2">Start Managing</h3>
-<p class="text-sm text-slate-600">Begin taking bookings, orders, and tracking everything from day one.</p>
-</div>
-</div>
-</div>
-</section>
-
-<!-- ============================================================ -->
-<!-- PRICING -->
-<!-- ============================================================ -->
-<section id="pricing" class="py-16 sm:py-24 bg-slate-50">
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="text-center mb-12">
-<div class="inline-block px-3 py-1 bg-orange-100 rounded-full text-xs font-bold text-brand uppercase tracking-widest mb-3">Pricing</div>
-<h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">Simple, Honest Pricing</h2>
-<p class="text-sm sm:text-base text-slate-600 mt-4">No hidden fees. No per-user charges.</p>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="bg-white border-2 border-slate-200 rounded-3xl p-6 sm:p-8 relative">
-<div class="absolute top-4 right-4 px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-full uppercase">Flexible</div>
-<h3 class="text-lg font-bold text-slate-900 mb-1">6 Months Plan</h3>
-<p class="text-sm text-slate-500 mb-6">For small properties</p>
-<div class="flex items-baseline gap-1 mb-6"><span class="text-4xl sm:text-5xl font-black text-slate-900">₹4,999</span><span class="text-sm text-slate-500">/ 6 months</span></div>
-<ul class="space-y-3 mb-6 text-sm">
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Unlimited Rooms & Bookings</li>
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Restaurant POS + KOT</li>
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> CA-Ready GST Reports</li>
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Thermal & A4 Printing</li>
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Up to 10 Staff Logins</li>
-<li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> WhatsApp Support</li>
-</ul>
-<button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition">Start Free Trial</button>
-</div>
-
-<div class="bg-brand-gradient border-2 border-brand rounded-3xl p-6 sm:p-8 relative shadow-2xl shadow-brand/30">
-<div class="absolute top-4 right-4 px-2 py-1 bg-white text-brand text-[10px] font-bold rounded-full uppercase">Save 25%</div>
-<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-yellow-300 text-slate-900 text-xs font-black rounded-full uppercase">Best Value</div>
-<h3 class="text-lg font-bold text-white mb-1">1 Year Plan</h3>
-<p class="text-sm text-white/80 mb-6">For growing hotels</p>
-<div class="flex items-baseline gap-1 mb-6"><span class="text-4xl sm:text-5xl font-black text-white">₹8,999</span><span class="text-sm text-white/80">/ year</span></div>
-<ul class="space-y-3 mb-6 text-sm text-white">
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Everything in 6-Month Plan</li>
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Unlimited Staff Logins</li>
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Priority WhatsApp Support</li>
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Free Staff Onboarding</li>
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Dedicated Account Manager</li>
-<li class="flex items-start gap-2"><span class="font-bold">✓</span> Free Updates & New Features</li>
-</ul>
-<button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-white text-brand font-black rounded-xl hover:scale-[1.02] transition shadow-lg">Start 30-Day Free Trial</button>
-</div>
-</div>
-<p class="text-center text-xs text-slate-500 mt-8">All prices in INR. GST extra. Cancel anytime during trial.</p>
-</div>
-</section>
-
-<!-- ============================================================ -->
-<!-- CONTACT / CTA -->
-<!-- ============================================================ -->
-<section id="contact" class="py-16 sm:py-24 bg-brand-gradient text-white relative overflow-hidden">
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-<h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">Ready to Modernize Your Hotel?</h2>
-<p class="text-sm sm:text-base lg:text-lg opacity-90 mb-8 max-w-2xl mx-auto">Join 500+ hotels already using SmartFix HMS. Start your 30-day free trial today — no credit card required.</p>
-<div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-<button onclick="openLoginModal('owner', 'register')" class="px-8 py-4 bg-white text-brand font-black rounded-xl hover:scale-[1.02] transition shadow-2xl text-sm sm:text-base">Start Free Trial →</button>
-<a href="tel:+919046356631" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition text-sm sm:text-base flex items-center justify-center gap-2">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-+91 90463 56631
-</a>
-</div>
+  <div class="glass-card rounded-3xl p-8 sm:p-12 border-brand/20">
+    <h3 class="text-2xl font-black text-white mb-8 text-center">Why Shopkeepers Choose SmartFix</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="flex gap-4">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div><h4 class="text-base font-bold text-white mb-1">No monthly subscription wall</h4><p class="text-sm text-slate-400">Start free with all features. Scale when your business grows.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div><h4 class="text-base font-bold text-white mb-1">Set up in under 5 minutes</h4><p class="text-sm text-slate-400">No training needed. Designed for shopkeepers, not accountants.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div><h4 class="text-base font-bold text-white mb-1">Your data, always yours</h4><p class="text-sm text-slate-400">AES-256 encrypted. Export everything anytime as JSON or Excel.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div><h4 class="text-base font-bold text-white mb-1">Installs like a native app</h4><p class="text-sm text-slate-400">Add to home screen on any phone or computer. Works offline.</p></div>
+      </div>
+    </div>
+  </div>
 </div>
 </section>
 
 <!-- ============================================================ -->
 <!-- FOOTER -->
 <!-- ============================================================ -->
-<footer class="bg-slate-900 text-slate-300 py-12">
+<footer class="bg-[#0b1120] border-t border-white/10 pt-16 pb-8">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-<div class="md:col-span-2">
-<div class="flex items-center gap-2 mb-4">
-<svg class="h-10 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="lg-brand2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff5722"/><stop offset="100%" stop-color="#ff9800"/></linearGradient></defs>
-<g transform="translate(10,5)"><rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand2)" stroke-width="2.5" fill="#1e293b"/><rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand2)" stroke-width="2.5" fill="#1e293b"/><path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#lg-brand2)" stroke-width="3" fill="#ff5722"/><circle cx="45" cy="50" r="18" fill="#ffffff"/><polyline points="37,50 43,56 55,42" fill="none" stroke="#ff5722" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="110" y="48" font-family="'Inter',sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#lg-brand2)">Fix</tspan></text>
-<rect x="295" y="16" width="94" height="36" rx="8" fill="url(#lg-brand2)"/><text x="342" y="42" font-family="'Inter',sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">HMS</text>
-<text x="112" y="74" font-family="'Inter',sans-serif" font-weight="700" font-size="11" fill="#ff9800" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
-</svg>
-</div>
-<p class="text-sm text-slate-400 max-w-md">Complete cloud-based hotel management solution. Manage bookings, restaurant, staff, GST, and analytics from any device.</p>
-<div class="mt-4 space-y-2">
-<a href="tel:+919046356631" class="flex items-center gap-2 text-sm hover:text-brand transition">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-+91 90463 56631
-</a>
-<a href="https://wa.me/919046356631" target="_blank" class="flex items-center gap-2 text-sm hover:text-brand transition">
-<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-WhatsApp Support
-</a>
-</div>
-</div>
-<div>
-<h4 class="text-sm font-bold text-white uppercase mb-4">Quick Links</h4>
-<ul class="space-y-2 text-sm">
-<li><a href="#features" class="hover:text-brand transition">Features</a></li>
-<li><a href="#benefits" class="hover:text-brand transition">Benefits</a></li>
-<li><a href="#pricing" class="hover:text-brand transition">Pricing</a></li>
-<li><a href="#contact" class="hover:text-brand transition">Contact</a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-sm font-bold text-white uppercase mb-4">Get Started</h4>
-<ul class="space-y-2 text-sm">
-<li><button onclick="openLoginModal('owner')" class="hover:text-brand transition">Owner Login</button></li>
-<li><button onclick="openLoginModal('staff')" class="hover:text-brand transition">Staff Login</button></li>
-<li><button onclick="openLoginModal('owner', 'register')" class="hover:text-brand transition">Free Trial</button></li>
-</ul>
-</div>
-</div>
-<div class="mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-© 2026 SmartFix HMS. All rights reserved. | Made with ❤️ for Indian Hotels
-</div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+    
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-brand-gradient flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <div class="text-xl font-black text-white tracking-tight">SMART<span class="text-brand-gradient">FIX</span> SUITE</div>
+      </div>
+      <p class="text-sm text-slate-400 max-w-sm mb-6">Complete cloud-based solutions for Hotels, Restaurants, and Mobile Repair Shops. Manage everything from any device.</p>
+      
+      <div class="space-y-3">
+        <a href="tel:+919046356631" class="flex items-center gap-3 text-sm text-slate-300 hover:text-white transition">
+          <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+          +91 90463 56631
+        </a>
+        <a href="https://wa.me/919046356631" target="_blank" class="flex items-center gap-3 text-sm text-slate-300 hover:text-white transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+          WhatsApp Support
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li><a href="#products" class="hover:text-brand transition">Software Suite</a></li>
+        <li><a href="#features" class="hover:text-brand transition">All Features</a></li>
+        <li><a href="#why-us" class="hover:text-brand transition">Why Choose Us</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Get Started</h4>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li><button onclick="openLoginModal('owner')" class="hover:text-brand transition">Owner Login</button></li>
+        <li><button onclick="openLoginModal('staff')" class="hover:text-brand transition">Staff Login</button></li>
+        <li><button onclick="openLoginModal('owner', 'register')" class="hover:text-brand transition">Start Free Trial</button></li>
+      </ul>
+    </div>
+
+  </div>
+  
+  <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+    <p>© 2026 SmartFix Suite. All rights reserved.</p>
+    <p>Lead Dev: Debapriya Sarkar</p>
+  </div>
 </div>
 </footer>
 
 <!-- ============================================================ -->
-<!-- LOGIN / REGISTER MODAL -->
+<!-- LOGIN / REGISTER MODAL (FIXED) -->
 <!-- ============================================================ -->
-<div id="loginModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4 overflow-y-auto">
-<div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 space-y-4 my-auto max-h-[95vh] overflow-y-auto">
-<div class="flex justify-between items-start">
-<div>
-<h2 id="loginTitle" class="text-xl sm:text-2xl font-black text-slate-900">Welcome Back</h2>
-<p id="loginSubtitle" class="text-xs text-slate-500 mt-1">Login to your hotel dashboard</p>
-</div>
-<button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-700 text-2xl leading-none w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center">×</button>
-</div>
+<div id="loginModal" class="hidden fixed inset-0 bg-dark/90 backdrop-blur-md z-[200] flex items-center justify-center p-4 overflow-y-auto">
+<div class="w-full max-w-md bg-slate-900 border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-5 my-auto max-h-[95vh] overflow-y-auto relative">
+  
+  <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl w-8 h-8 rounded-full bg-white/5 flex items-center justify-center transition">×</button>
 
-<div id="loginTabs" class="bg-slate-100 rounded-xl p-1 grid grid-cols-2 gap-1">
-<button onclick="switchLoginMode('owner')" id="tabOwner" class="py-2 text-xs font-bold rounded-lg transition">🏨 Owner</button>
-<button onclick="switchLoginMode('staff')" id="tabStaff" class="py-2 text-xs font-bold rounded-lg text-slate-500 transition">👥 Staff</button>
-</div>
+  <div class="text-center">
+    <h2 id="loginTitle" class="text-2xl font-black text-white">Owner Authorization</h2>
+    <p id="loginSubtitle" class="text-xs text-slate-400 mt-1">Sign in with your registered credentials</p>
+  </div>
 
-<form id="loginForm" onsubmit="event.preventDefault(); submitLogin();" class="space-y-3">
-<div id="registerFields" class="hidden space-y-2">
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Hotel Name *</label><input type="text" id="regHotelName" placeholder="Grand Palace Hotel" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Hotel Address</label><input type="text" id="regHotelAddress" placeholder="Street, City, PIN" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
-<div class="grid grid-cols-2 gap-2">
-<div><label class="block text-xs font-bold text-slate-700 mb-1">GSTIN</label><input type="text" id="regHotelGstin" placeholder="19ABCDE..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono uppercase"></div>
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Phone</label><input type="tel" id="regHotelPhone" placeholder="9876543210" maxlength="10" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
-</div>
-</div>
+  <!-- Tabs -->
+  <div id="loginTabs" class="bg-slate-950 rounded-xl p-1 grid grid-cols-2 gap-1 border border-white/5">
+    <button type="button" onclick="switchLoginMode('owner')" id="tabOwner" class="py-2 text-xs font-bold rounded-lg transition">🏨 Owner</button>
+    <button type="button" onclick="switchLoginMode('staff')" id="tabStaff" class="py-2 text-xs font-bold rounded-lg text-slate-500 transition">👥 Staff</button>
+  </div>
 
-<div id="ownerFields">
-<div class="mb-2"><label class="block text-xs font-bold text-slate-700 mb-1">Email</label><input type="email" id="ownerEmail" placeholder="you@hotel.com" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="ownerPassword" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
-</div>
+  <form id="loginForm" onsubmit="event.preventDefault(); window.submitLogin();" class="space-y-4">
+    
+    <!-- Register Fields -->
+    <div id="registerFields" class="hidden space-y-3">
+      <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hotel Name *</label><input type="text" id="regHotelName" placeholder="Grand Palace" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-brand outline-none"></div>
+      <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hotel Address</label><input type="text" id="regHotelAddress" placeholder="Street, City" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-brand outline-none"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">GSTIN</label><input type="text" id="regHotelGstin" placeholder="19ABCDE..." class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white font-mono uppercase focus:border-brand outline-none"></div>
+        <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Phone</label><input type="tel" id="regHotelPhone" placeholder="9876543210" maxlength="10" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white font-mono focus:border-brand outline-none"></div>
+      </div>
+    </div>
 
-<div id="staffFields" class="hidden">
-<div class="mb-2">
-<label class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
-<input type="tel" id="staffPhone" maxlength="10" placeholder="9876543210" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono">
-<span class="text-[10px] text-slate-500">Phone your owner registered for you</span>
-</div>
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="staffPassword" placeholder="Your password" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
-</div>
+    <!-- Owner Fields -->
+    <div id="ownerFields" class="space-y-3">
+      <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Email</label><input type="email" id="ownerEmail" placeholder="owner@hotel.com" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-brand outline-none"></div>
+      <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Password</label><input type="password" id="ownerPassword" placeholder="••••••••" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white font-mono focus:border-brand outline-none"></div>
+    </div>
 
-<div id="loginError" class="hidden text-xs p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700"></div>
-<div id="loginSuccess" class="hidden text-xs p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700"></div>
+    <!-- Staff Fields -->
+    <div id="staffFields" class="hidden space-y-3">
+      <div>
+        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Phone Number</label>
+        <input type="tel" id="staffPhone" maxlength="10" placeholder="9876543210" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white font-mono focus:border-brand outline-none">
+      </div>
+      <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Password</label><input type="password" id="staffPassword" placeholder="Your password" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm text-white font-mono focus:border-brand outline-none"></div>
+    </div>
 
-<button type="submit" id="loginBtn" class="w-full py-3 bg-brand-gradient text-white font-black text-sm uppercase tracking-wider rounded-xl glow-btn transition">
-Login
-</button>
+    <div id="loginError" class="hidden text-xs p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400"></div>
+    <div id="loginSuccess" class="hidden text-xs p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"></div>
 
-<div id="toggleAuth" class="text-center text-xs text-slate-600">
-Don't have an account? <button type="button" onclick="toggleRegister()" class="text-brand font-bold hover:underline">Register Free</button>
-</div>
-</form>
+    <button type="submit" id="loginBtn" class="w-full py-3.5 bg-brand-gradient text-white font-black text-sm uppercase tracking-wider rounded-xl glow-btn transition">
+      Sign In to Dashboard
+    </button>
 
-<div id="disclaimerInModal" class="hidden space-y-2">
-<div class="p-3 bg-amber-50 border border-amber-200 rounded-lg max-h-64 overflow-y-auto text-[11px] text-slate-700 leading-relaxed">
-<p class="font-bold text-amber-800 mb-2">⚠️ Important Disclaimer</p>
-<p><b class="text-slate-900">Guest Register / Form C:</b> <span class="text-rose-600 font-bold">LEGAL REQUIREMENT</span> — SmartFix does NOT provide this. Hotel must maintain manually.</p>
-<p class="mt-1.5"><b class="text-slate-900">Data Backup:</b> Take <span class="text-rose-600 font-bold">EVERY DAY</span>. We are not responsible for data loss.</p>
-<p class="mt-1.5"><b class="text-slate-900">ID Verification:</b> Manual verification by hotel staff.</p>
-<p class="mt-1.5"><b class="text-slate-900">Legal Compliance:</b> All GST, police verification, guest records — hotel owner's responsibility.</p>
-<p class="mt-1.5"><b class="text-slate-900">Refunds:</b> Record in system. Unrecorded refunds not our responsibility.</p>
-<p class="mt-1.5 font-bold">मैं सहमत हूँ • আমি সম্মত আছি</p>
-</div>
-<label class="flex items-start gap-2 p-2 bg-cyan-50 border-2 border-cyan-200 rounded-lg cursor-pointer">
-<input type="checkbox" id="disclaimerModalCheck" class="w-4 h-4 mt-0.5 accent-brand">
-<span class="text-[11px] text-slate-700"><b>I have read and agree to above terms.</b></span>
-</label>
-<button type="button" id="disclaimerContinueBtn" onclick="continueAfterDisclaimer()" disabled class="w-full py-2.5 bg-brand-gradient text-white font-black text-sm uppercase rounded-xl disabled:opacity-40">Agree & Continue → Login</button>
-</div>
+    <div id="toggleAuth" class="text-center text-xs text-slate-400">
+      Don't have an account? <button type="button" onclick="window.toggleRegister()" class="text-brand-light font-bold hover:underline">Register Free</button>
+    </div>
+  </form>
+
+  <!-- Disclaimer Inside Modal -->
+  <div id="disclaimerInModal" class="hidden space-y-3">
+    <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl max-h-48 overflow-y-auto text-[11px] text-slate-300 leading-relaxed">
+      <p class="font-bold text-amber-500 mb-2">⚠️ Important Disclaimer</p>
+      <p><b class="text-white">Guest Register / Form C:</b> <span class="text-rose-400 font-bold">LEGAL REQUIREMENT</span> — SmartFix does NOT provide this.</p>
+      <p class="mt-1.5"><b class="text-white">Data Backup:</b> Take <span class="text-rose-400 font-bold">EVERY DAY</span>. We are not responsible for data loss.</p>
+      <p class="mt-1.5"><b class="text-white">Legal Compliance:</b> All GST, police verification — owner's responsibility.</p>
+    </div>
+    <label class="flex items-start gap-3 p-3 bg-brand/10 border border-brand/30 rounded-xl cursor-pointer">
+      <input type="checkbox" id="disclaimerModalCheck" class="w-4 h-4 mt-0.5 accent-brand">
+      <span class="text-[11px] text-slate-300"><b class="text-white">I have read and agree to above terms.</b></span>
+    </label>
+    <button type="button" id="disclaimerContinueBtn" onclick="window.continueAfterDisclaimer()" disabled class="w-full py-3 bg-brand-gradient text-white font-black text-sm uppercase rounded-xl disabled:opacity-40 transition">Agree & Continue → Login</button>
+  </div>
 
 </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- SCRIPTS -->
+<!-- SCRIPTS (FIXED GLOBAL SCOPE) -->
 <!-- ============================================================ -->
 <script type="module">
 import { db, auth } from "./js/firebase-config.js";
 import { loginUser, registerNewHotel } from "./js/auth.js";
 import { hashPassword } from "./js/common.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// ============================================================
-// STATE
-// ============================================================
 let loginMode = 'owner';
 let isRegistering = false;
 let pendingLoginData = null;
 
-// ============================================================
-// AUTO REDIRECT IF LOGGED IN
-// ============================================================
+// Auth state listener for auto-redirect
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
@@ -647,18 +463,16 @@ onAuthStateChanged(auth, async (user) => {
         }));
         window.location.href = 'dashboard.html';
       }
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Auto-redirect error:", e); }
   }
 });
 
-// Check staff session
+// Check for existing staff session
 if (sessionStorage.getItem('smartfix_staff_session')) {
   window.location.href = 'dashboard.html';
 }
 
-// ============================================================
-// MODAL (Expose on window for inline onclick)
-// ============================================================
+// GLOBAL SCOPE EXPOSURE (Fixes the button not clicking issue)
 window.openLoginModal = (mode = 'owner', action = 'login') => {
   loginMode = mode;
   isRegistering = (action === 'register');
@@ -710,13 +524,13 @@ function updateUI() {
     ownerFields.classList.remove('hidden');
     staffFields.classList.add('hidden');
     loginBtn.innerText = 'Register & Start Trial';
-    toggleAuth.innerHTML = `Already have account? <button type="button" onclick="toggleRegister()" class="text-brand font-bold hover:underline">Login</button>`;
+    toggleAuth.innerHTML = `Already have an account? <button type="button" onclick="window.toggleRegister()" class="text-brand-light font-bold hover:underline">Login</button>`;
   } else {
-    title.innerText = loginMode === 'staff' ? 'Staff Login' : 'Welcome Back';
-    subtitle.innerText = loginMode === 'staff' ? 'Login with your phone and password' : 'Login to your hotel dashboard';
+    title.innerText = loginMode === 'staff' ? 'Staff Login' : 'Owner Authorization';
+    subtitle.innerText = loginMode === 'staff' ? 'Login with your phone and password' : 'Sign in with your registered credentials';
     tabs.classList.remove('hidden');
     registerFields.classList.add('hidden');
-    loginBtn.innerText = 'Login';
+    loginBtn.innerText = 'Sign In to Dashboard';
 
     if (loginMode === 'owner') {
       ownerFields.classList.remove('hidden');
@@ -729,13 +543,10 @@ function updateUI() {
       tabOwner.className = 'py-2 text-xs font-bold rounded-lg text-slate-500';
       tabStaff.className = 'py-2 text-xs font-bold rounded-lg bg-brand text-white';
     }
-    toggleAuth.innerHTML = `Don't have an account? <button type="button" onclick="toggleRegister()" class="text-brand font-bold hover:underline">Register Free</button>`;
+    toggleAuth.innerHTML = `Don't have an account? <button type="button" onclick="window.toggleRegister()" class="text-brand-light font-bold hover:underline">Register Free</button>`;
   }
 }
 
-// ============================================================
-// SUBMIT LOGIN (exposed on window)
-// ============================================================
 window.submitLogin = async () => {
   const errEl = document.getElementById('loginError');
   const successEl = document.getElementById('loginSuccess');
@@ -751,25 +562,16 @@ window.submitLogin = async () => {
       const email = document.getElementById('ownerEmail').value.trim();
       const pwd = document.getElementById('ownerPassword').value;
       const hotelName = document.getElementById('regHotelName').value.trim();
-      const hotelAddress = document.getElementById('regHotelAddress').value.trim();
-      const hotelGstin = document.getElementById('regHotelGstin').value.trim();
-      const hotelPhone = document.getElementById('regHotelPhone').value.trim();
 
-      if (!email || !pwd) throw new Error('Email and password required');
-      if (!hotelName) throw new Error('Hotel Name required');
+      if (!email || !pwd || !hotelName) throw new Error('Required fields missing');
       if (pwd.length < 6) throw new Error('Password must be 6+ characters');
 
-      await registerNewHotel(
-        { name: hotelName, address: hotelAddress, gstin: hotelGstin, phone: hotelPhone },
-        email, pwd
-      );
-
+      await registerNewHotel({ name: hotelName, address: document.getElementById('regHotelAddress').value, gstin: document.getElementById('regHotelGstin').value, phone: document.getElementById('regHotelPhone').value }, email, pwd);
+      
       successEl.innerText = '✅ Registration successful! Please login now.';
       successEl.classList.remove('hidden');
       isRegistering = false;
       updateUI();
-      document.getElementById('ownerEmail').value = email;
-      document.getElementById('ownerPassword').value = '';
       return;
     }
 
@@ -786,14 +588,10 @@ window.submitLogin = async () => {
         return;
       }
       
-      sessionStorage.setItem('smartfix_owner_session', JSON.stringify({
-        role: res.profile.role || 'owner',
-        hotelId: res.profile.hotelId,
-        email: res.user.email
-      }));
+      sessionStorage.setItem('smartfix_owner_session', JSON.stringify({ role: res.profile.role || 'owner', hotelId: res.profile.hotelId, email: res.user.email }));
       window.location.href = 'dashboard.html';
     } else {
-      // Staff login
+      // Staff Login Logic
       const phone = document.getElementById('staffPhone').value.trim();
       const pwd = document.getElementById('staffPassword').value;
 
@@ -811,25 +609,18 @@ window.submitLogin = async () => {
 
       // Check disclaimer for staff
       if (sessionStorage.getItem('smartfix_disclaimer_agreed') !== 'true') {
-        pendingLoginData = {
-          role: data.role, hotelId: data.hotelId,
-          staffName: data.staffName, staffPhone: phone,
-          staffId: data.staffId, phone
-        };
+        pendingLoginData = { role: data.role, hotelId: data.hotelId, staffName: data.staffName, staffPhone: phone, staffId: data.staffId, phone };
         document.getElementById('disclaimerInModal').classList.remove('hidden');
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('disclaimerModalCheck').checked = false;
         document.getElementById('disclaimerContinueBtn').disabled = true;
-        btn.innerText = 'Login';
+        btn.innerText = 'Sign In to Dashboard';
         btn.disabled = false;
         return;
       }
 
-      await completeStaffLogin({
-        role: data.role, hotelId: data.hotelId,
-        staffName: data.staffName, staffPhone: phone,
-        staffId: data.staffId, phone
-      });
+      // Proceed to dashboard
+      await completeStaffLogin(pendingLoginData || { role: data.role, hotelId: data.hotelId, staffName: data.staffName, staffPhone: phone, staffId: data.staffId, phone });
     }
   } catch(err) {
     errEl.innerText = err.message;
@@ -837,7 +628,7 @@ window.submitLogin = async () => {
     console.error('Login error:', err);
   } finally {
     if (!pendingLoginData) {
-      btn.innerText = isRegistering ? 'Register & Start Trial' : 'Login';
+      btn.innerText = isRegistering ? 'Register & Start Trial' : 'Sign In to Dashboard';
       btn.disabled = false;
     }
   }
@@ -846,21 +637,15 @@ window.submitLogin = async () => {
 async function completeStaffLogin(data) {
   try {
     await updateDoc(doc(db, "staff_logins", data.phone), { lastLoginAt: new Date().toISOString() });
-    await updateDoc(doc(db, "hotels", data.hotelId, "staff_logins", data.phone), { lastLoginAt: new Date().toISOString() }).catch(() => {});
   } catch(e) { }
 
   sessionStorage.setItem('smartfix_staff_session', JSON.stringify({
-    role: data.role, hotelId: data.hotelId,
-    staffName: data.staffName, staffPhone: data.staffPhone,
-    staffId: data.staffId
+    role: data.role, hotelId: data.hotelId, staffName: data.staffName, staffPhone: data.staffPhone, staffId: data.staffId
   }));
 
   window.location.href = 'dashboard.html';
 }
 
-// ============================================================
-// DISCLAIMER IN MODAL
-// ============================================================
 document.addEventListener('change', (e) => {
   if (e.target.id === 'disclaimerModalCheck') {
     document.getElementById('disclaimerContinueBtn').disabled = !e.target.checked;
@@ -874,20 +659,6 @@ window.continueAfterDisclaimer = async () => {
   document.getElementById('loginForm').classList.remove('hidden');
   await completeStaffLogin(pendingLoginData);
 };
-
-// ============================================================
-// SCROLL ANIMATIONS
-// ============================================================
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.feature-card').forEach(el => {
-  el.classList.add('fade-in');
-  observer.observe(el);
-});
 </script>
 </body>
 </html>
