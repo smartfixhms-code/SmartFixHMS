@@ -32,6 +32,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 <div class="flex items-center gap-2">
 <span id="licenseBadgeText" class="hidden sm:block text-[10px] font-mono text-cyan-400 bg-cyan-950/50 px-2 py-1 rounded border border-cyan-900">Checking...</span>
+<span id="roleBadgeText" class="hidden sm:block text-[10px] font-mono text-amber-400 bg-amber-950/50 px-2 py-1 rounded border border-amber-900">Owner</span>
 <button onclick="downloadBackup()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-800 transition" title="Backup"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
 <input type="file" id="restoreFileInput" class="hidden" accept=".json" onchange="handleRestoreFile(event)">
 <button onclick="triggerRestore()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-slate-800 transition" title="Restore"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
@@ -44,6 +45,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <aside class="hidden md:flex flex-col w-64 border-r border-slate-800/80 p-4 space-y-1 bg-slate-950/40">
 <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Main Menu</div>
 <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400"><span>Dashboard</span></button>
+<button onclick="switchView('calendar')" id="nav-calendar" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>📅 Booking Calendar</span></button>
 <button onclick="switchView('pos')" id="nav-pos" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Restaurant POS</span></button>
 <button onclick="switchView('room-manager')" id="nav-room-manager" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Rooms & Tariffs</span></button>
 <button onclick="switchView('billing-archive')" id="nav-billing-archive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Invoices Archive</span></button>
@@ -54,7 +56,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <button onclick="switchView('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>P&L Analytics</span></button>
 <button onclick="switchView('gst-audit')" id="nav-gst-audit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>GST CA Audit</span></button>
 <button onclick="switchView('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 transition"><span>Settings</span></button>
-<button onclick="openBookingModal()" class="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">+ Book Walk-In</button>
+<button onclick="openBookingModal()" id="btnBookWalkIn" class="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">+ Book Walk-In</button>
 </aside>
 
 <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
@@ -71,7 +73,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <div onclick="switchView('reports')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Net Profit</span><div id="statNetProfit" class="text-xl font-black text-emerald-400 mt-1 font-mono">₹0.00</div></div>
 </div>
 
-<div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-3">
+<div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-2 sm:gap-3">
 <button onclick="openBookingModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Book Room</span></button>
 <button onclick="openCheckInList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-In</span></button>
 <button onclick="openCheckOutList()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-rose-500/50 transition"><svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">Check-Out</span></button>
@@ -81,6 +83,7 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <button onclick="switchView('pos')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">POS</span></button>
 <button onclick="switchView('room-manager')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Rooms</span></button>
 <button onclick="switchView('billing-archive')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Invoices</span></button>
+<button onclick="openDayClose()" class="flex flex-col items-center justify-center gap-1.5 bg-gradient-to-br from-cyan-950 to-emerald-950 border border-cyan-700/50 p-2 sm:p-3 rounded-2xl hover:border-cyan-400/70 transition"><svg class="w-5 h-5 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="text-[9px] sm:text-[10px] font-bold text-cyan-300 text-center leading-tight">Day Close</span></button>
 <button onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Expenses</span></button>
 <button onclick="switchView('reports')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300">Reports</span></button>
 <button onclick="switchView('gst-audit')" class="flex flex-col items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 p-2 sm:p-3 rounded-2xl hover:bg-slate-800 hover:border-cyan-500/50 transition"><svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><span class="text-[9px] sm:text-[10px] font-semibold text-slate-300 text-center leading-tight">GST</span></button>
@@ -113,6 +116,26 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <tbody id="recentExpenseDashboard" class="divide-y divide-slate-800/60"></tbody>
 </table>
 </div>
+</div>
+</section>
+
+<section id="view-calendar" class="hidden space-y-6">
+<div class="flex flex-wrap justify-between items-center gap-3">
+<h2 class="text-base font-bold text-white uppercase tracking-wider">Booking Calendar</h2>
+<div class="flex items-center gap-2">
+<button onclick="changeCalendarMonth(-1)" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-700">←</button>
+<span id="calendarMonthLabel" class="text-sm font-bold text-cyan-400 font-mono min-w-[150px] text-center"></span>
+<button onclick="changeCalendarMonth(1)" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-700">→</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 text-[10px] font-mono">
+<span class="flex items-center gap-1"><span class="w-3 h-3 bg-rose-950/60 border border-rose-900 rounded"></span> In-House</span>
+<span class="flex items-center gap-1"><span class="w-3 h-3 bg-amber-950/60 border border-amber-900 rounded"></span> Reserved</span>
+<span class="flex items-center gap-1"><span class="w-3 h-3 bg-slate-800/60 border border-slate-700 rounded"></span> Cleaning</span>
+<span class="flex items-center gap-1"><span class="w-3 h-3 bg-slate-900/50 border border-slate-800 rounded"></span> Free</span>
+</div>
+<div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 overflow-x-auto">
+<div id="calendarGrid" class="min-w-[900px]"></div>
 </div>
 </section>
 
@@ -258,8 +281,118 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <button onclick="switchView('dashboard')" class="flex flex-col items-center gap-1 text-cyan-400"><svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span class="text-[10px] font-bold">Home</span></button>
 <button onclick="switchView('followup')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-[10px] font-bold">Follow-up</span></button>
 <div class="relative -top-5"><button onclick="openBookingModal()" class="w-16 h-16 rounded-full bg-cyan-400 border-[5px] border-slate-950 flex items-center justify-center glow-btn"><svg class="w-8 h-8 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg></button></div>
-<button onclick="switchView('marketdue')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[10px] font-bold">Due</span></button>
+<button onclick="openDayClose()" class="flex flex-col items-center gap-1 text-cyan-300"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="text-[10px] font-bold">Close</span></button>
 <button onclick="switchView('settings')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg><span class="text-[10px] font-bold">Menu</span></button>
+</div>
+
+<div id="loginDisclaimerModal" class="hidden fixed inset-0 bg-slate-950/98 z-[200] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
+<div class="w-full max-w-2xl bg-slate-900 border-2 border-amber-700/50 rounded-3xl shadow-2xl shadow-amber-500/10 max-h-[95vh] overflow-hidden flex flex-col">
+<div class="p-4 sm:p-5 border-b border-slate-800 bg-gradient-to-r from-amber-950/40 to-rose-950/40 flex items-center gap-3 flex-shrink-0">
+<div class="w-10 h-10 bg-amber-950 rounded-full flex items-center justify-center text-xl border border-amber-700 flex-shrink-0">⚠️</div>
+<div><h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider">Important Disclaimer</h2><p class="text-[10px] text-amber-400 font-bold">महत्वपूर्ण सूचना • গুরুত্বপূর্ণ সতর্কতা</p></div>
+</div>
+<div class="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1">
+<div class="bg-slate-950 p-3 sm:p-4 rounded-xl border border-slate-800">
+<div class="flex items-center gap-2 mb-2"><span class="text-base">🇬🇧</span><h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">English</h3></div>
+<ul class="text-[11px] sm:text-xs text-slate-300 space-y-1.5 list-disc pl-4">
+<li><b class="text-white">Guest Register / Form C:</b> Maintaining this is a <b class="text-rose-400">LEGAL REQUIREMENT</b>. It must be done manually by hotel staff. SmartFix does NOT provide this feature and is NOT responsible for any legal consequences.</li>
+<li><b class="text-white">Data Backup:</b> Take a data backup at closing time <b class="text-rose-400">EVERY DAY</b>. If data is lost for any reason, our company will NOT be held responsible.</li>
+<li><b class="text-white">ID Verification:</b> All guest IDs must be manually verified by hotel staff. We do NOT guarantee authenticity of scanned Aadhaar or other IDs.</li>
+<li><b class="text-white">Legal Compliance:</b> The hotel owner is solely and fully responsible for all legal compliance including GST, police verification, and guest records.</li>
+<li><b class="text-white">Refunds:</b> All refunds must be recorded in the system. Unrecorded refunds are NOT our responsibility.</li>
+<li><b class="text-white">Software Use:</b> This software is a management tool. Any operational or financial decision is the hotel owner's responsibility.</li>
+</ul>
+</div>
+<div class="bg-slate-950 p-3 sm:p-4 rounded-xl border border-slate-800">
+<div class="flex items-center gap-2 mb-2"><span class="text-base">🇮🇳</span><h3 class="text-xs font-black text-orange-400 uppercase tracking-wider">हिंदी</h3></div>
+<ul class="text-[11px] sm:text-xs text-slate-300 space-y-1.5 list-disc pl-4">
+<li><b class="text-white">गेस्ट रजिस्टर / फॉर्म सी:</b> यह <b class="text-rose-400">कानूनी रूप से अनिवार्य</b> है। इसे होटल स्टाफ द्वारा मैन्युअली रूप से बनाए रखना होगा। SmartFix यह सुविधा प्रदान नहीं करता और किसी भी कानूनी परिणाम के लिए ज़िम्मेदार नहीं है।</li>
+<li><b class="text-white">डेटा बैकअप:</b> <b class="text-rose-400">प्रतिदिन</b> क्लोज़िंग के समय डेटा का बैकअप लें। किसी भी कारण से डेटा खो जाने पर हमारी कंपनी ज़िम्मेदार नहीं होगी।</li>
+<li><b class="text-white">आईडी सत्यापन:</b> सभी गेस्ट की आईडी होटल स्टाफ द्वारा मैन्युअली सत्यापित की जानी चाहिए। स्कैन किए गए आधार की प्रामाणिकता की हम गारंटी नहीं देते।</li>
+<li><b class="text-white">कानूनी अनुपालन:</b> GST, पुलिस सत्यापन और गेस्ट रिकॉर्ड सहित सभी कानूनी अनुपालन के लिए होटल मालिक पूर्ण रूप से ज़िम्मेदार है।</li>
+<li><b class="text-white">रिफंड:</b> सभी रिफंड सिस्टम में दर्ज किए जाने चाहिए। बिना रिकॉर्ड किए गए रिफंड की ज़िम्मेदारी हमारी नहीं है।</li>
+<li><b class="text-white">सॉफ्टवेयर उपयोग:</b> यह सॉफ्टवेयर एक प्रबंधन उपकरण है। कोई भी परिचालन या वित्तीय निर्णय होटल मालिक की ज़िम्मेदारी है।</li>
+</ul>
+</div>
+<div class="bg-slate-950 p-3 sm:p-4 rounded-xl border border-slate-800">
+<div class="flex items-center gap-2 mb-2"><span class="text-base">🇧🇩</span><h3 class="text-xs font-black text-emerald-400 uppercase tracking-wider">বাংলা</h3></div>
+<ul class="text-[11px] sm:text-xs text-slate-300 space-y-1.5 list-disc pl-4">
+<li><b class="text-white">গেস্ট রেজিস্টার / ফর্ম সি:</b> এটি <b class="text-rose-400">আইনি বাধ্যবাধকতা</b>। এটি হোটেল স্টাফ দ্বারা ম্যানুয়ালি রাখতে হবে। SmartFix এই সুবিধা প্রদান করে না এবং কোনো আইনি পরিণতির জন্য দায়ী নয়।</li>
+<li><b class="text-white">ডাটা ব্যাকআপ:</b> <b class="text-rose-400">প্রতিদিন</b> ক্লোজিংয়ের সময় ডাটা ব্যাকআপ নিন। কোনো কারণে ডাটা হারালে আমাদের কোম্পানি দায়ী থাকবে না।</li>
+<li><b class="text-white">আইডি ভেরিফিকেশন:</b> সব গেস্টের আইডি হোটেল স্টাফ দ্বারা ম্যানুয়ালি যাচাই করতে হবে। স্ক্যান করা আধারের সত্যতা আমরা গ্যারান্টি দিই না।</li>
+<li><b class="text-white">আইনি সম্মতি:</b> GST, পুলিশ ভেরিফিকেশন এবং গেস্ট রেকর্ড সহ সমস্ত আইনি সম্মতির জন্য হোটেল মালিক সম্পূর্ণ দায়ী।</li>
+<li><b class="text-white">রিফান্ড:</b> সমস্ত রিফান্ড সিস্টেমে রেকর্ড করতে হবে। রেকর্ড না করা রিফান্ডের দায়িত্ব আমাদের নয়।</li>
+<li><b class="text-white">সফটওয়্যার ব্যবহার:</b> এই সফটওয়্যার একটি ম্যানেজমেন্ট টুল। যেকোনো অপারেশনাল বা আর্থিক সিদ্ধান্ত হোটেল মালিকের দায়িত্ব।</li>
+</ul>
+</div>
+<label class="flex items-start gap-3 p-3 sm:p-4 bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 border-2 border-cyan-800/60 rounded-xl cursor-pointer hover:border-cyan-500/70 transition">
+<input type="checkbox" id="disclaimerAgreeCheck" class="w-5 h-5 mt-0.5 accent-cyan-500 flex-shrink-0">
+<span class="text-[11px] sm:text-xs text-slate-200 leading-relaxed">
+<b class="text-white text-xs">✓ I have read and agree to all above terms and conditions.</b><br>
+<span class="text-slate-400 text-[10px]">मैंने ऊपर दी गई सभी शर्तें पढ़ ली हैं और सहमत हूँ।</span><br>
+<span class="text-slate-400 text-[10px]">আমি উপরের সমস্ত শর্তাবলী পড়েছি এবং সম্মত আছি।</span>
+</span>
+</label>
+</div>
+<div class="p-4 border-t border-slate-800 bg-slate-950/50 flex-shrink-0">
+<button id="disclaimerAgreeBtn" onclick="agreeToDisclaimer()" disabled class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:scale-[1.01] transition">
+Agree & Continue → सहमत हूँ → সম্মত আছি
+</button>
+</div>
+</div>
+</div>
+
+<div id="refundModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
+<div class="w-full max-w-sm bg-slate-900 border border-rose-800/50 p-6 rounded-2xl space-y-4">
+<h3 class="text-sm font-bold uppercase text-rose-400 text-center">💰 Process Refund</h3>
+<div class="text-xs space-y-1.5 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800">
+<div class="flex justify-between"><span class="text-slate-400">Guest:</span><span id="refundGuestName" class="text-white font-bold">---</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Invoice:</span><span id="refundInvoiceId" class="text-cyan-400">---</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Total Paid:</span><span id="refundTotalPaid" class="text-emerald-400">₹0.00</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Already Refunded:</span><span id="refundAlreadyAmount" class="text-amber-400">₹0.00</span></div>
+<div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-slate-400">Max Refundable:</span><span id="refundMaxAmount" class="text-white font-bold text-sm">₹0.00</span></div>
+</div>
+<div>
+<label class="block text-xs text-slate-400 mb-1">Refund Amount (₹)</label>
+<input type="number" id="refundAmount" oninput="validateRefundAmount()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-lg text-rose-400 font-bold font-mono outline-none">
+<div id="refundAmountError" class="text-[10px] text-rose-400 mt-1 hidden">⚠️ Amount exceeds refundable limit!</div>
+</div>
+<div>
+<label class="block text-xs text-slate-400 mb-1">Refund Reason</label>
+<input type="text" id="refundReason" placeholder="e.g., Booking cancelled, Overpayment" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white outline-none">
+</div>
+<div>
+<label class="block text-xs text-slate-400 mb-1">Refund Mode</label>
+<select id="refundPaymentMode" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white outline-none">
+<option value="Cash">💵 Cash</option>
+<option value="Bank">🏦 Bank / UPI</option>
+</select>
+</div>
+<div class="flex gap-2 pt-2">
+<button onclick="document.getElementById('refundModal').classList.add('hidden')" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+<button onclick="submitRefund()" class="flex-1 py-2.5 bg-rose-500 hover:bg-rose-400 text-white text-xs font-black uppercase rounded-xl">Process Refund</button>
+</div>
+</div>
+</div>
+
+<div id="dayCloseModal" class="hidden fixed inset-0 bg-slate-950/95 z-[70] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
+<div class="w-full max-w-lg bg-slate-900 border border-cyan-800/50 rounded-2xl max-h-[95vh] overflow-hidden flex flex-col">
+<div class="p-4 border-b border-slate-800 flex justify-between items-center bg-gradient-to-r from-cyan-950/30 to-emerald-950/30 flex-shrink-0">
+<div class="flex items-center gap-2">
+<span class="text-xl">📊</span>
+<div>
+<h3 class="text-sm font-bold uppercase text-cyan-400">Day Close Summary</h3>
+<p class="text-[10px] text-slate-400">End-of-day reconciliation</p>
+</div>
+</div>
+<button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="text-slate-400 hover:text-white text-2xl leading-none">×</button>
+</div>
+<div id="dayCloseContent" class="p-4 space-y-3 font-mono text-xs overflow-y-auto flex-1"></div>
+<div class="p-4 border-t border-slate-800 flex gap-2 flex-shrink-0">
+<button onclick="printDayClose()" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase rounded-xl">🖨️ Print Summary</button>
+<button onclick="document.getElementById('dayCloseModal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl font-bold">Close</button>
+</div>
+</div>
 </div>
 
 <div id="upiPaymentModal" class="hidden fixed inset-0 bg-slate-950/95 z-[70] flex items-center justify-center p-4 backdrop-blur-md">
@@ -501,6 +634,7 @@ import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/1
 import { collection, doc, setDoc, deleteDoc, updateDoc, getDocs, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let currentHotelId = null, currentHotelProfile = null;
+let currentUserRole = 'owner';
 let cachedRooms = [], cachedBookings = [], cachedExpenses = [], cachedMenuItems = [], cachedStaff = [], cachedDeposits = [];
 let hotelFloors = ["Floor 1", "Floor 2", "Floor 3"];
 let currentPosOrder = [];
@@ -509,33 +643,85 @@ let profitChartInstance = null, expenseChartInstance = null;
 let activeUpiBookingId = null, qrCodeInstance = null;
 let html5QrCode = null, isScanning = false;
 let liveRoomBill = 0, liveFoodBill = 0, liveTotalBill = 0, liveAlreadyPaid = 0, liveBalanceDue = 0;
-let _checkoutInProgress = false; // FIX C: Guard flag for double-submit prevention
+let _checkoutInProgress = false;
+let _calMonth = new Date().getMonth();
+let _calYear = new Date().getFullYear();
+let _activeRefundBooking = null;
+let _maxRefundable = 0;
 
 window._cachedPosOrders = [];
+window._cachedRefunds = [];
 window._topItemsChartInst = null;
 
 // ============================================================
-// FIX B: GLOBAL KEYBOARD & UNLOAD LISTENERS (Camera Leak Fix)
+// DISCLAIMER LOGIC (Multi-language, every login)
+// ============================================================
+function showLoginDisclaimer() {
+  if (sessionStorage.getItem('smartfix_disclaimer_agreed') === 'true') return false;
+  document.getElementById('loginDisclaimerModal').classList.remove('hidden');
+  return true;
+}
+
+window.agreeToDisclaimer = () => {
+  const chk = document.getElementById('disclaimerAgreeCheck');
+  if (!chk || !chk.checked) return;
+  sessionStorage.setItem('smartfix_disclaimer_agreed', 'true');
+  document.getElementById('loginDisclaimerModal').classList.add('hidden');
+};
+
+document.addEventListener('change', (e) => {
+  if (e.target && e.target.id === 'disclaimerAgreeCheck') {
+    const btn = document.getElementById('disclaimerAgreeBtn');
+    if (btn) btn.disabled = !e.target.checked;
+  }
+});
+
+// ============================================================
+// ROLE-BASED ACCESS
+// ============================================================
+function applyRoleBasedAccess(role) {
+  currentUserRole = (role || 'owner').toLowerCase();
+  const visibilityMap = {
+    'owner': ['dashboard','calendar','pos','room-manager','billing-archive','followup','marketdue','staff','reports','gst-audit','settings'],
+    'manager': ['dashboard','calendar','pos','room-manager','billing-archive','followup','marketdue','staff','reports','gst-audit','settings'],
+    'receptionist': ['dashboard','calendar','pos','room-manager','billing-archive','followup','marketdue'],
+    'housekeeping': ['dashboard','calendar']
+  };
+  const allowed = visibilityMap[currentUserRole] || visibilityMap['owner'];
+  ['dashboard','calendar','pos','room-manager','billing-archive','followup','marketdue','staff','reports','gst-audit','settings'].forEach(v => {
+    const navEl = document.getElementById(`nav-${v}`);
+    if (navEl) navEl.style.display = allowed.includes(v) ? '' : 'none';
+  });
+  const bookBtn = document.getElementById('btnBookWalkIn');
+  if (bookBtn) bookBtn.style.display = currentUserRole === 'housekeeping' ? 'none' : '';
+  const roleBadge = document.getElementById('roleBadgeText');
+  if (roleBadge) {
+    const labels = { owner: '👑 Owner', manager: '👔 Manager', receptionist: '🛎️ Reception', housekeeping: '🧹 Housekeeping' };
+    roleBadge.innerText = labels[currentUserRole] || 'Owner';
+    roleBadge.style.display = 'block';
+  }
+  const current = Array.from(document.querySelectorAll('main > section')).find(s => !s.classList.contains('hidden'));
+  if (current) {
+    const vid = current.id.replace('view-', '');
+    if (!allowed.includes(vid)) window.switchView('dashboard');
+  }
+}
+
+// ============================================================
+// CAMERA LEAK FIX
 // ============================================================
 function forceStopCamera() {
   if (isScanning && html5QrCode) {
     try {
       html5QrCode.stop().then(() => {
         isScanning = false;
-        const reader = document.getElementById("reader");
-        const btn = document.getElementById("scanBtn");
-        const status = document.getElementById("scanStatus");
-        if (reader) reader.classList.add("hidden");
-        if (status) status.classList.add("hidden");
-        if (btn) {
-          btn.innerText = "Scan Aadhaar";
-          btn.classList.replace("bg-rose-500", "bg-cyan-500");
-          btn.classList.replace("hover:bg-rose-400", "hover:bg-cyan-400");
-        }
+        const r = document.getElementById("reader"), b = document.getElementById("scanBtn"), s = document.getElementById("scanStatus");
+        if (r) r.classList.add("hidden");
+        if (s) s.classList.add("hidden");
+        if (b) { b.innerText = "Scan Aadhaar"; b.classList.replace("bg-rose-500","bg-cyan-500"); b.classList.replace("hover:bg-rose-400","hover:bg-cyan-400"); }
       }).catch(err => console.log("Scanner stop error:", err));
-    } catch(e) { console.log("Stop sync error:", e); }
+    } catch(e) { console.log("Stop error:", e); }
   }
-  // Belt-and-suspenders: kill any lingering media streams
   const videoEl = document.querySelector('#reader video');
   if (videoEl && videoEl.srcObject) {
     try { videoEl.srcObject.getTracks().forEach(t => t.stop()); } catch(e) {}
@@ -545,24 +731,17 @@ function forceStopCamera() {
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    const bookingModal = document.getElementById('bookingModal');
-    if (bookingModal && !bookingModal.classList.contains('hidden')) {
-      if (typeof window.closeBookingModal === 'function') window.closeBookingModal();
-      return;
-    }
-    // Close other modals normally
+    const bm = document.getElementById('bookingModal');
+    if (bm && !bm.classList.contains('hidden')) { window.closeBookingModal(); return; }
     document.querySelectorAll('.fixed.inset-0:not(.hidden)').forEach(m => {
-      // Don't close license/suspension lock screens
-      if (m.id === 'licenseLockModal' || m.id === 'suspensionModal') return;
+      if (m.id === 'licenseLockModal' || m.id === 'suspensionModal' || m.id === 'loginDisclaimerModal') return;
       m.classList.add('hidden');
     });
   }
 });
 
 window.addEventListener('beforeunload', () => {
-  if (isScanning && html5QrCode) {
-    try { html5QrCode.stop(); } catch(e) {}
-  }
+  if (isScanning && html5QrCode) { try { html5QrCode.stop(); } catch(e) {} }
   const videoEl = document.querySelector('#reader video');
   if (videoEl && videoEl.srcObject) {
     try { videoEl.srcObject.getTracks().forEach(t => t.stop()); } catch(e) {}
@@ -587,6 +766,8 @@ monitorAuthState(async (state) => {
     currentHotelProfile = lic.details || { hotelName: "Hotel Paradise" };
     document.getElementById("navHotelTitle").innerText = currentHotelProfile.hotelName || "Property";
     document.getElementById("licenseBadgeText").innerText = `${lic.daysRemaining} Days License`;
+    applyRoleBasedAccess(state.profile.role || 'owner');
+    showLoginDisclaimer();
     try { await initializeDefaultRooms(currentHotelId); await loadHotelFloors(); await loadMenuItems(); await loadStaff(); } catch (e) { console.log("Init warning:", e); }
     onSnapshot(collection(db, "hotels", currentHotelId, "rooms"), (snap) => {
       cachedRooms = []; snap.forEach(d => cachedRooms.push({ id: d.id, ...d.data() }));
@@ -609,10 +790,13 @@ window.forceSeedRooms = async () => {
   } catch (e) { alert("Error: " + e.message); }
 };
 
-window.handleSignOut = () => logoutUser();
+window.handleSignOut = () => {
+  sessionStorage.removeItem('smartfix_disclaimer_agreed');
+  logoutUser();
+};
 
 window.switchView = (vId) => {
-  ['dashboard','followup','marketdue','staff','pos','room-manager','billing-archive','reports','gst-audit','settings'].forEach(v => {
+  ['dashboard','calendar','followup','marketdue','staff','pos','room-manager','billing-archive','reports','gst-audit','settings'].forEach(v => {
     document.getElementById(`view-${v}`)?.classList.add('hidden');
     document.getElementById(`nav-${v}`)?.classList.remove('bg-cyan-500/10','text-cyan-400');
   });
@@ -625,6 +809,262 @@ window.switchView = (vId) => {
   if (vId === 'marketdue') loadMarketDue();
   if (vId === 'staff') loadStaffTable();
   if (vId === 'reports') renderCharts();
+  if (vId === 'calendar') renderCalendar();
+};
+
+// ============================================================
+// CALENDAR VIEW (FIXED: no inline alert on apostrophe)
+// ============================================================
+window.renderCalendar = () => {
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("calendarMonthLabel").innerText = `${monthNames[_calMonth]} ${_calYear}`;
+  const daysInMonth = new Date(_calYear, _calMonth + 1, 0).getDate();
+  const grid = document.getElementById("calendarGrid");
+  if (!grid) return;
+  const todayStr = new Date().toLocaleDateString('en-CA');
+  let html = `<table class="w-full text-xs font-mono border-collapse"><thead><tr><th class="p-1 bg-slate-950 text-cyan-400 sticky left-0 z-10 border-r border-slate-800">Room</th>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayOfWeek = new Date(dateStr + 'T00:00:00').getDay();
+    const dayName = ['Su','Mo','Tu','We','Th','Fr','Sa'][dayOfWeek];
+    const isToday = dateStr === todayStr;
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    html += `<th class="p-1 bg-slate-950 text-center ${isToday ? 'text-emerald-400 bg-emerald-950/30' : (isWeekend ? 'text-rose-400' : 'text-slate-400')}"><div class="text-[9px]">${dayName}</div><div class="text-xs font-bold">${d}</div></th>`;
+  }
+  html += `</tr></thead><tbody>`;
+  const sortedRooms = [...cachedRooms].sort((a,b) => (parseInt(a.roomNumber)||0) - (parseInt(b.roomNumber)||0));
+  sortedRooms.forEach(room => {
+    html += `<tr><td class="p-1.5 bg-slate-950 text-white font-bold sticky left-0 z-10 border-r border-slate-800 whitespace-nowrap">R-${room.roomNumber}</td>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const booking = cachedBookings.find(b => {
+        if (b.roomNumber !== room.roomNumber) return false;
+        if (b.status === 'cancelled' || b.status === 'checked_out') return false;
+        if (!b.checkInDate) return false;
+        const bStart = b.checkInDate;
+        const bEnd = new Date(b.checkInDate);
+        bEnd.setDate(bEnd.getDate() + (b.nights || 1));
+        const endStr = bEnd.toLocaleDateString('en-CA');
+        return dateStr >= bStart && dateStr < endStr;
+      });
+      let cellClass = "bg-slate-900/30 text-slate-700";
+      let cellText = "·";
+      let title = `Room ${room.roomNumber} on ${dateStr} - Available`;
+      if (booking) {
+        if (booking.status === 'checked_in') { cellClass = "bg-rose-950/60 text-rose-300"; cellText = "IN"; title = `${booking.guestName} | In-House | ${booking.phone || ''}`; }
+        else if (booking.status === 'confirmed') { cellClass = "bg-amber-950/60 text-amber-300"; cellText = "BK"; title = `${booking.guestName} | Reserved | ${booking.phone || ''}`; }
+      } else if (room.status === 'cleaning') {
+        cellClass = "bg-slate-800/60 text-slate-500"; cellText = "CL"; title = `Room ${room.roomNumber} - Cleaning`;
+      }
+      const clickHandler = booking ? `openCalendarDetails('${room.roomNumber}', '${booking.bookingId}')` : '';
+      html += `<td class="p-1 text-center ${cellClass} cursor-pointer text-[10px] font-bold border border-slate-800/50 hover:opacity-80" title="${title}" onclick="${clickHandler}">${cellText}</td>`;
+    }
+    html += `</tr>`;
+  });
+  html += `</tbody></table>`;
+  grid.innerHTML = html;
+};
+
+window.openCalendarDetails = (roomNo, bookingId) => {
+  const b = cachedBookings.find(x => x.bookingId === bookingId);
+  if (!b) return;
+  const statusLabel = b.status === 'checked_in' ? 'In-House' : (b.status === 'confirmed' ? 'Reserved' : b.status);
+  alert(`Room ${roomNo}\n\nGuest: ${b.guestName}\nPhone: ${b.phone || 'N/A'}\nStatus: ${statusLabel}\nCheck-In: ${b.checkInDate}\nNights: ${b.nights}`);
+};
+
+window.changeCalendarMonth = (delta) => {
+  _calMonth += delta;
+  if (_calMonth < 0) { _calMonth = 11; _calYear--; }
+  if (_calMonth > 11) { _calMonth = 0; _calYear++; }
+  renderCalendar();
+};
+
+// ============================================================
+// DAY CLOSE SUMMARY (FIXED: counts all check-ins today)
+// ============================================================
+window.openDayClose = () => {
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+  const tomorrow = new Date(todayDate); tomorrow.setDate(tomorrow.getDate() + 1);
+  // FIX: Count ALL bookings with checkInTime today, regardless of current status
+  const todayCheckIns = cachedBookings.filter(b => { if (!b.checkInTime) return false; const d = new Date(b.checkInTime); return d >= todayDate && d < tomorrow; });
+  const todayCheckOuts = cachedBookings.filter(b => { if (b.status !== 'checked_out' || !b.settledAt) return false; const d = new Date(b.settledAt); return d >= todayDate && d < tomorrow; });
+  let todayCash = 0, todayBank = 0;
+  cachedBookings.forEach(b => {
+    if (b.payments && Array.isArray(b.payments)) {
+      b.payments.forEach(p => {
+        const pDate = new Date(p.date || b.createdAt);
+        if (pDate >= todayDate && pDate < tomorrow) {
+          const amt = parseFloat(p.amount) || 0;
+          if (p.mode === 'Bank') todayBank += amt; else todayCash += amt;
+        }
+      });
+    }
+  });
+  let todayRefundCash = 0, todayRefundBank = 0;
+  (window._cachedRefunds || []).forEach(r => {
+    const rDate = new Date(r.date);
+    if (rDate >= todayDate && rDate < tomorrow) {
+      const amt = parseFloat(r.amount) || 0;
+      if (r.mode === 'Bank') todayRefundBank += amt; else todayRefundCash += amt;
+    }
+  });
+  let todayCashExp = 0, todayBankExp = 0;
+  cachedExpenses.forEach(e => {
+    const parts = (e.date || '').split('/');
+    if (parts.length !== 3) return;
+    const eDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    if (eDate >= todayDate && eDate < tomorrow) {
+      const amt = parseFloat(e.amount) || 0;
+      if (e.paymentSource === 'Bank') todayBankExp += amt; else todayCashExp += amt;
+    }
+  });
+  let todayDeposits = 0;
+  cachedDeposits.forEach(dep => {
+    const parts = (dep.date || '').split('/');
+    if (parts.length !== 3) return;
+    const dDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    if (dDate >= todayDate && dDate < tomorrow) todayDeposits += (parseFloat(dep.amount) || 0);
+  });
+  const netCashToday = todayCash - todayRefundCash - todayCashExp - todayDeposits;
+  const netBankToday = todayBank - todayRefundBank - todayBankExp + todayDeposits;
+  const content = document.getElementById("dayCloseContent");
+  content.innerHTML = `
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><div class="text-cyan-400 font-bold">📅 ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}</div></div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+      <div class="text-cyan-400 font-bold mb-2">🏨 Occupancy</div>
+      <div class="flex justify-between"><span class="text-slate-400">Check-Ins Today:</span><span class="text-emerald-400 font-bold">${todayCheckIns.length}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Check-Outs Today:</span><span class="text-rose-400 font-bold">${todayCheckOuts.length}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Currently In-House:</span><span class="text-white font-bold">${cachedBookings.filter(b => b.status === 'checked_in').length}</span></div>
+    </div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+      <div class="text-cyan-400 font-bold mb-2">💵 Cash Flow</div>
+      <div class="flex justify-between"><span class="text-slate-400">Cash Collected:</span><span class="text-emerald-400">₹${todayCash.toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Cash Refunds:</span><span class="text-rose-400">- ₹${todayRefundCash.toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Cash Expenses:</span><span class="text-rose-400">- ₹${todayCashExp.toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Bank Deposits:</span><span class="text-rose-400">- ₹${todayDeposits.toFixed(2)}</span></div>
+      <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Cash:</span><span class="text-emerald-400 font-bold">₹${netCashToday.toFixed(2)}</span></div>
+    </div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+      <div class="text-cyan-400 font-bold mb-2">🏦 Bank Flow</div>
+      <div class="flex justify-between"><span class="text-slate-400">Bank Collected:</span><span class="text-emerald-400">₹${todayBank.toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Bank Refunds:</span><span class="text-rose-400">- ₹${todayRefundBank.toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">Bank Expenses:</span><span class="text-rose-400">- ₹${todayBankExp.toFixed(2)}</span></div>
+      <div class="flex justify-between border-t border-slate-800 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Bank:</span><span class="text-blue-400 font-bold">₹${netBankToday.toFixed(2)}</span></div>
+    </div>
+    <div class="bg-cyan-950/20 p-3 rounded-xl border border-cyan-800/50 space-y-1.5">
+      <div class="text-cyan-400 font-bold mb-2">📊 Today's Summary</div>
+      <div class="flex justify-between"><span class="text-slate-300">Total Revenue:</span><span class="text-emerald-400 font-bold">₹${(todayCash + todayBank).toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-300">Total Expenses:</span><span class="text-rose-400 font-bold">₹${(todayCashExp + todayBankExp).toFixed(2)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-300">Total Refunds:</span><span class="text-rose-400 font-bold">₹${(todayRefundCash + todayRefundBank).toFixed(2)}</span></div>
+      <div class="flex justify-between border-t border-cyan-800/50 pt-1.5 mt-1.5"><span class="text-white font-bold">Net Today:</span><span class="text-emerald-400 font-bold text-base">₹${((todayCash + todayBank) - (todayCashExp + todayBankExp) - (todayRefundCash + todayRefundBank)).toFixed(2)}</span></div>
+    </div>
+    <div class="bg-yellow-950/30 p-3 rounded-xl border border-yellow-800/50 text-yellow-400 text-[10px] leading-relaxed">
+      ⚠️ <b>Important:</b> Verify physical drawer cash matches "Net Cash". Report discrepancies immediately. Also ensure DAILY BACKUP is taken before closing.
+    </div>
+  `;
+  window._dayCloseData = { date: new Date().toLocaleDateString('en-IN', { dateStyle: 'full' }), todayCheckIns, todayCheckOuts, todayCash, todayBank, todayRefundCash, todayRefundBank, todayCashExp, todayBankExp, todayDeposits, netCashToday, netBankToday };
+  document.getElementById("dayCloseModal").classList.remove("hidden");
+};
+
+window.printDayClose = () => {
+  const d = window._dayCloseData;
+  if (!d) return;
+  const hotelName = currentHotelProfile?.hotelName || "HOTEL";
+  const html = `<div style="width:210mm;min-height:297mm;padding:20mm;margin:0 auto;background:#fff;color:#000;font-family:'Segoe UI',sans-serif;">
+    <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px;">
+      <h1 style="font-size:24px;font-weight:900;text-transform:uppercase;">${hotelName}</h1>
+      <p style="font-size:14px;font-weight:bold;">DAY CLOSE SUMMARY</p>
+      <p style="font-size:12px;">${d.date}</p>
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;">
+      <tr style="background:#0f172a;color:#fff;"><th colspan="2" style="padding:8px;text-align:left;">Occupancy</th></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Check-Ins Today</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckIns.length}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Check-Outs Today</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">${d.todayCheckOuts.length}</td></tr>
+    </table>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;">
+      <tr style="background:#0f172a;color:#fff;"><th style="padding:8px;text-align:left;">Cash Flow</th><th style="padding:8px;text-align:right;">Amount</th></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Cash Collected</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">₹${d.todayCash.toFixed(2)}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Cash Refunds</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayRefundCash.toFixed(2)}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Cash Expenses</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayCashExp.toFixed(2)}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Bank Deposits</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayDeposits.toFixed(2)}</td></tr>
+      <tr style="background:#f0fdf4;font-weight:bold;"><td style="padding:8px;border:1px solid #000;">Net Cash in Drawer</td><td style="padding:8px;border:1px solid #000;text-align:right;">₹${d.netCashToday.toFixed(2)}</td></tr>
+    </table>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;">
+      <tr style="background:#0f172a;color:#fff;"><th style="padding:8px;text-align:left;">Bank Flow</th><th style="padding:8px;text-align:right;">Amount</th></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Bank Collected</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">₹${d.todayBank.toFixed(2)}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Bank Refunds</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayRefundBank.toFixed(2)}</td></tr>
+      <tr><td style="padding:6px;border:1px solid #ccc;">Bank Expenses</td><td style="padding:6px;border:1px solid #ccc;text-align:right;">- ₹${d.todayBankExp.toFixed(2)}</td></tr>
+      <tr style="background:#eff6ff;font-weight:bold;"><td style="padding:8px;border:1px solid #000;">Net Bank Change</td><td style="padding:8px;border:1px solid #000;text-align:right;">₹${d.netBankToday.toFixed(2)}</td></tr>
+    </table>
+    <div style="margin-top:50px;display:flex;justify-content:space-between;">
+      <div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;">Cashier Signature</p></div>
+      <div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;">Manager Signature</p></div>
+    </div>
+  </div>`;
+  const w = window.open("", "_blank", "width=850,height=950");
+  if (!w) return alert("Please allow popups.");
+  w.document.open();
+  w.document.write(`<!DOCTYPE html><html><head><title>Day Close</title></head><body onload="window.print(); setTimeout(() => { window.close(); }, 500);">${html}</body></html>`);
+  w.document.close();
+};
+
+// ============================================================
+// REFUND MANAGEMENT
+// ============================================================
+window.openRefundModal = async (bookingId) => {
+  const booking = cachedBookings.find(b => b.id === bookingId || b.bookingId === bookingId);
+  if (!booking) return alert("Booking not found");
+  const refSnap = await getDocs(collection(db, "hotels", currentHotelId, "refunds"));
+  const existingRefunds = [];
+  refSnap.forEach(d => { const r = d.data(); if (r.bookingId === booking.bookingId) existingRefunds.push(r); });
+  const alreadyRefunded = existingRefunds.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+  const totalPaid = booking.totalPaid || booking.advancePaid || 0;
+  const maxRefundable = Math.max(0, totalPaid - alreadyRefunded);
+  _activeRefundBooking = booking;
+  _maxRefundable = maxRefundable;
+  document.getElementById("refundGuestName").innerText = booking.guestName;
+  document.getElementById("refundInvoiceId").innerText = booking.bookingId;
+  document.getElementById("refundTotalPaid").innerText = `₹${totalPaid.toFixed(2)}`;
+  document.getElementById("refundAlreadyAmount").innerText = `₹${alreadyRefunded.toFixed(2)}`;
+  document.getElementById("refundMaxAmount").innerText = `₹${maxRefundable.toFixed(2)}`;
+  document.getElementById("refundAmount").value = maxRefundable > 0 ? maxRefundable.toFixed(2) : "0.00";
+  document.getElementById("refundReason").value = "";
+  document.getElementById("refundAmountError").classList.add("hidden");
+  if (maxRefundable <= 0) return alert("No refundable amount. Either nothing was paid or everything is already refunded.");
+  document.getElementById("refundModal").classList.remove("hidden");
+};
+
+window.validateRefundAmount = () => {
+  const amt = parseFloat(document.getElementById("refundAmount").value) || 0;
+  const errEl = document.getElementById("refundAmountError");
+  if (amt > _maxRefundable) errEl.classList.remove("hidden");
+  else errEl.classList.add("hidden");
+};
+
+window.submitRefund = async () => {
+  if (!_activeRefundBooking) return;
+  const amt = parseFloat(document.getElementById("refundAmount").value) || 0;
+  const reason = document.getElementById("refundReason").value.trim() || "No reason provided";
+  const mode = document.getElementById("refundPaymentMode").value;
+  if (amt <= 0) return alert("Enter a valid amount");
+  if (amt > _maxRefundable) return alert("Amount exceeds refundable limit");
+  try {
+    const refundId = "REF_" + Date.now().toString().slice(-6);
+    await setDoc(doc(db, "hotels", currentHotelId, "refunds", refundId), {
+      id: refundId,
+      bookingId: _activeRefundBooking.bookingId,
+      guestName: _activeRefundBooking.guestName,
+      amount: amt,
+      reason: reason,
+      mode: mode,
+      date: new Date().toISOString(),
+      processedBy: auth.currentUser?.email || "System"
+    });
+    alert(`✓ Refund of ₹${amt.toFixed(2)} processed via ${mode}.\n\nReason: ${reason}`);
+    document.getElementById("refundModal").classList.add("hidden");
+    await loadInvoiceArchives();
+    await loadFinancialReports();
+  } catch (e) { alert("Refund error: " + e.message); }
 };
 
 // ============================================================
@@ -635,21 +1075,21 @@ window.showUpiQrCode = async (bookingId) => {
   if(!booking) return alert("Booking not found");
   let upiId = currentHotelProfile.upiId;
   if (!upiId) {
-    const hotelSnap = await getDoc(doc(db, "hotels", currentHotelId));
-    if (hotelSnap.exists() && hotelSnap.data().upiId) { upiId = hotelSnap.data().upiId; currentHotelProfile.upiId = upiId; }
+    const snap = await getDoc(doc(db, "hotels", currentHotelId));
+    if (snap.exists() && snap.data().upiId) { upiId = snap.data().upiId; currentHotelProfile.upiId = upiId; }
   }
-  if(!upiId) return alert("Please set your Hotel UPI ID in Settings first.");
-  const dueAmount = booking.balanceDue || 0;
-  if(dueAmount <= 0) return alert("This invoice is already fully settled!");
+  if(!upiId) return alert("Please set Hotel UPI ID in Settings first.");
+  const due = booking.balanceDue || 0;
+  if(due <= 0) return alert("This invoice is already settled!");
   activeUpiBookingId = booking.id;
   document.getElementById("upiPayeeName").innerText = currentHotelProfile.hotelName;
   document.getElementById("upiPayeeId").innerText = upiId;
-  document.getElementById("upiAmount").innerText = `₹${dueAmount.toFixed(2)}`;
-  const encodedName = encodeURIComponent(currentHotelProfile.hotelName);
-  const encodedNote = encodeURIComponent(`Payment for Invoice ${booking.bookingId}`);
-  const upiUri = `upi://pay?pa=${upiId}&pn=${encodedName}&am=${dueAmount.toFixed(2)}&cu=INR&tn=${encodedNote}`;
+  document.getElementById("upiAmount").innerText = `₹${due.toFixed(2)}`;
+  const encName = encodeURIComponent(currentHotelProfile.hotelName);
+  const encNote = encodeURIComponent(`Payment for Invoice ${booking.bookingId}`);
+  const uri = `upi://pay?pa=${upiId}&pn=${encName}&am=${due.toFixed(2)}&cu=INR&tn=${encNote}`;
   document.getElementById("qrcode").innerHTML = "";
-  qrCodeInstance = new QRCode(document.getElementById("qrcode"), { text: upiUri, width: 200, height: 200, colorDark:"#000000", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H });
+  qrCodeInstance = new QRCode(document.getElementById("qrcode"), { text: uri, width: 200, height: 200, colorDark:"#000000", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H });
   document.getElementById("upiPaymentModal").classList.remove("hidden");
 };
 
@@ -660,19 +1100,14 @@ window.confirmUpiPaymentReceived = async () => {
   const btn = document.getElementById("upiConfirmBtn");
   btn.innerText = "Processing..."; btn.disabled = true;
   try {
-    const upiAmount = booking.balanceDue || 0;
-    const newPaid = (booking.totalPaid || booking.advancePaid || 0) + upiAmount;
-    const existingPayments = booking.payments || [];
-    const newPayments = [...existingPayments];
-    if (upiAmount > 0) {
-      newPayments.push({ amount: upiAmount, mode: "Bank", date: new Date().toISOString(), type: "upi" });
-    }
+    const amt = booking.balanceDue || 0;
+    const newPaid = (booking.totalPaid || booking.advancePaid || 0) + amt;
+    const newPayments = [...(booking.payments || [])];
+    if (amt > 0) newPayments.push({ amount: amt, mode: "Bank", date: new Date().toISOString(), type: "upi" });
     await updateDoc(doc(db, "hotels", currentHotelId, "bookings", activeUpiBookingId), { totalPaid: newPaid, balanceDue: 0, isSettled: true, lastPaymentMode: "Bank", payments: newPayments });
-    alert("Payment recorded successfully!");
+    alert("Payment recorded!");
     document.getElementById("upiPaymentModal").classList.add("hidden");
     await loadInvoiceArchives(); await loadFinancialReports();
-    if(!document.getElementById("view-marketdue").classList.contains('hidden')) loadMarketDue();
-    if(!document.getElementById("view-followup").classList.contains('hidden')) loadFollowupBookings();
   } catch(e) { alert("Error: " + e.message); }
   finally { btn.innerText = "Payment Received (Mark as Settled)"; btn.disabled = false; }
 };
@@ -682,15 +1117,14 @@ window.confirmUpiPaymentReceived = async () => {
 // ============================================================
 window.toggleAadhaarScanner = () => {
   const reader = document.getElementById("reader"), btn = document.getElementById("scanBtn"), status = document.getElementById("scanStatus");
-  if (isScanning) {
-    forceStopCamera();
-  } else {
+  if (isScanning) { forceStopCamera(); }
+  else {
     reader.classList.remove("hidden"); status.classList.remove("hidden"); btn.innerText = "Stop Scanner";
     btn.classList.replace("bg-cyan-500","bg-rose-500"); btn.classList.replace("hover:bg-cyan-400","hover:bg-rose-400");
     html5QrCode = new Html5Qrcode("reader");
     html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText) => { handleAadhaarScan(decodedText); toggleAadhaarScanner(); },
-      (errorMessage) => {}
+      (txt) => { handleAadhaarScan(txt); toggleAadhaarScanner(); },
+      () => {}
     ).catch(err => { alert("Camera access denied. " + err); toggleAadhaarScanner(); });
     isScanning = true;
   }
@@ -702,22 +1136,22 @@ function handleAadhaarScan(qrText) {
       alert("⚠️ This appears to be a Secure QR Code (newer Aadhaar).\n\nSecure QR codes are compressed binary and cannot be read as plain XML. Please enter the Aadhaar number manually.");
       return;
     }
-    let aadhaarNumber = "", guestName = "";
+    let uid = "", name = "";
     const xmlDoc = new DOMParser().parseFromString(qrText, "text/xml");
     const root = xmlDoc.getElementsByTagName("PrintLetterBarcodeData")[0];
-    if(root) { guestName = root.getAttribute("name") || ""; aadhaarNumber = root.getAttribute("uid") || ""; }
-    if (aadhaarNumber) { document.getElementById("bookIdType").value = "Aadhaar"; document.getElementById("bookIdNumber").value = aadhaarNumber; }
-    if (guestName) document.getElementById("bookGuestName").value = guestName;
+    if(root) { name = root.getAttribute("name") || ""; uid = root.getAttribute("uid") || ""; }
+    if (uid) { document.getElementById("bookIdType").value = "Aadhaar"; document.getElementById("bookIdNumber").value = uid; }
+    if (name) document.getElementById("bookGuestName").value = name;
     document.getElementById("verifiedBadge").classList.remove("hidden");
-    alert("Aadhaar Scanned Successfully!");
-  } catch (e) { alert("QR detected, but could not read format. Please enter manually."); }
+    alert("Aadhaar Scanned!");
+  } catch (e) { alert("QR detected but format invalid. Enter manually."); }
 }
 
 window.manualVerifyId = () => {
-  const idVal = document.getElementById("bookIdNumber").value.trim();
-  if(idVal.length < 8) return alert("Enter a valid ID number first.");
+  const v = document.getElementById("bookIdNumber").value.trim();
+  if(v.length < 8) return alert("Enter valid ID first.");
   document.getElementById("verifiedBadge").classList.remove("hidden");
-  alert("ID marked as manually verified.");
+  alert("ID marked verified.");
 };
 
 // ============================================================
@@ -726,7 +1160,7 @@ window.manualVerifyId = () => {
 window.openCheckInList = () => {
   const list = document.getElementById('checkinList');
   const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
-  if(inHouse.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
+  if(inHouse.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests checked in.</div>`;
   else list.innerHTML = inHouse.map(b => `<div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800"><div><div class="text-sm font-bold text-white">${b.guestName} <span class="text-[10px] text-slate-500">(${b.phone})</span></div><div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | Bill: ₹${((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2)}</div></div><span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span></div>`).join('');
   document.getElementById('checkinModal').classList.remove('hidden');
 };
@@ -734,9 +1168,9 @@ window.openCheckInList = () => {
 window.openCheckOutList = () => {
   const list = document.getElementById('checkoutList');
   const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
-  if(inHouse.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
+  if(inHouse.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests checked in.</div>`;
   else list.innerHTML = inHouse.map(b => {
-    const due = (b.balanceDue || 0);
+    const due = b.balanceDue || 0;
     return `<div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800"><div><div class="text-sm font-bold text-white">${b.guestName}</div><div class="text-xs text-slate-400 mt-1">Room ${b.roomNumber} | Due: <span class="${due > 0 ? 'text-rose-400' : 'text-emerald-400'} font-bold">₹${due.toFixed(2)}</span></div></div><button onclick="initiateCheckoutFromList('${b.bookingId}', '${b.roomId}')" class="px-3 py-1.5 bg-rose-500 text-white text-[10px] font-bold rounded-lg hover:bg-rose-400">Settle</button></div>`;
   }).join('');
   document.getElementById('checkoutListModal').classList.remove('hidden');
@@ -747,7 +1181,7 @@ window.initiateCheckoutFromList = (bid, rid) => { document.getElementById('check
 window.openCleaningList = () => {
   const list = document.getElementById('cleaningList');
   const cleaning = cachedRooms.filter(r => r.status === 'cleaning');
-  if(cleaning.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No rooms in cleaning status.</div>`;
+  if(cleaning.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No cleaning rooms.</div>`;
   else list.innerHTML = cleaning.map(r => `<div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800"><div><div class="text-sm font-bold text-white">Room ${r.roomNumber}</div><div class="text-xs text-amber-400 mt-1">${r.type}</div></div><button onclick="markCleanedFromList('${r.id}')" class="px-3 py-1.5 bg-emerald-500 text-slate-950 text-[10px] font-bold rounded-lg hover:bg-emerald-400">Mark Cleaned</button></div>`).join('');
   document.getElementById('cleaningModal').classList.remove('hidden');
 };
@@ -790,12 +1224,12 @@ window.filterRoomsStatus = (st) => { if (st === 'all') renderFloorGrid(cachedRoo
 // CHECK-IN / NO-SHOW
 // ============================================================
 window.checkInUpcoming = async (bookingId, roomId) => {
-  if(!confirm("Confirm Check-In for this upcoming booking?")) return;
+  if(!confirm("Confirm Check-In?")) return;
   const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
   try {
     await updateDoc(doc(db, "hotels", currentHotelId, "bookings", bookingId), { status: "checked_in", checkInTime: inTime });
     await updateDoc(doc(db, "hotels", currentHotelId, "rooms", roomId), { status: "occupied", currentBookingId: bookingId });
-    alert("Guest checked in! Room is now occupied.");
+    alert("Checked in!");
     await loadInvoiceArchives(); loadFollowupBookings();
   } catch (e) { alert("Error: " + e.message); }
 };
@@ -803,23 +1237,22 @@ window.checkInUpcoming = async (bookingId, roomId) => {
 window.cancelNoShowBooking = async (bookingId, roomId) => {
   const b = cachedBookings.find(x => x.id === bookingId || x.bookingId === bookingId);
   if(!b) return;
-  const advance = b.totalPaid || b.advancePaid || 0;
-  const msg = `Cancel this booking as NO-SHOW?\n\nGuest: ${b.guestName}\nPhone: ${b.phone}\nAdvance: ₹${advance.toFixed(2)} → WILL BE RETAINED (as per policy)\n\nRoom stays vacant & available for new bookings.`;
-  if(!confirm(msg)) return;
+  const adv = b.totalPaid || b.advancePaid || 0;
+  if(!confirm(`Cancel as NO-SHOW?\n\nGuest: ${b.guestName}\nAdvance: ₹${adv.toFixed(2)} → RETAINED\n\nRoom stays available.`)) return;
   try {
     await updateDoc(doc(db, "hotels", currentHotelId, "bookings", b.id), { status: "cancelled", cancelledAt: new Date().toISOString(), cancelReason: "No-Show", isSettled: true, balanceDue: 0 });
-    alert("Booking cancelled. Advance retained. Room is now available.");
+    alert("Cancelled. Advance retained.");
     await loadInvoiceArchives(); loadFollowupBookings(); loadMarketDue(); await loadFinancialReports();
   } catch(e) { alert("Error: " + e.message); }
 };
 
 // ============================================================
-// ROOM ACTION & CHECKOUT
+// CHECKOUT
 // ============================================================
 window.handleRoomAction = async (rId) => {
   const r = cachedRooms.find(x => x.id === rId); if (!r) return;
   if (r.status === "vacant") { openBookingModal(r.roomNumber); }
-  else if (r.status === "cleaning") { if (confirm(`Room ${r.roomNumber} cleaned? Mark as Vacant?`)) await markRoomCleaned(currentHotelId, r.id); }
+  else if (r.status === "cleaning") { if (confirm(`Room ${r.roomNumber} cleaned?`)) await markRoomCleaned(currentHotelId, r.id); }
   else {
     const booking = cachedBookings.find(b => b.bookingId === r.currentBookingId);
     if (!booking) return alert("Booking data not found.");
@@ -851,52 +1284,44 @@ window.calcFinalSettlement = () => {
   displayBal.className = newBal <= 0 ? "text-xl font-black text-emerald-400 font-mono" : "text-xl font-black text-rose-400 font-mono";
 };
 
-// FIX C: Double-submit guard added
 window.confirmCheckout = async () => {
   if (_checkoutInProgress) return;
+  if (!checkoutBookingData || !checkoutRoomId) { alert("Session expired. Reopen room."); return; }
   _checkoutInProgress = true;
-  const collectNow = parseFloat(document.getElementById("outFinalPayment").value) || 0;
-  const collectedBy = document.getElementById("outCollectedBy").value.trim() || "Front Desk";
-  const paymentMode = document.getElementById("outPaymentMode").value;
-  const totalPaid = liveAlreadyPaid + collectNow;
-  const newBal = liveTotalBill - totalPaid;
-  const isFullySettled = newBal <= 0;
-  const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-  const bookingId = checkoutBookingData.bookingId;
   try {
-    const existingPayments = checkoutBookingData.payments || [];
-    const newPayments = [...existingPayments];
-    if (collectNow > 0) {
-      newPayments.push({ amount: collectNow, mode: paymentMode, date: new Date().toISOString(), type: "checkout" });
-    }
+    const collectNow = parseFloat(document.getElementById("outFinalPayment").value) || 0;
+    const collectedBy = document.getElementById("outCollectedBy").value.trim() || "Front Desk";
+    const paymentMode = document.getElementById("outPaymentMode").value;
+    const totalPaid = liveAlreadyPaid + collectNow;
+    const newBal = liveTotalBill - totalPaid;
+    const isFullySettled = newBal <= 0;
+    const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+    const bookingId = checkoutBookingData.bookingId;
+    const newPayments = [...(checkoutBookingData.payments || [])];
+    if (collectNow > 0) newPayments.push({ amount: collectNow, mode: paymentMode, date: new Date().toISOString(), type: "checkout" });
     await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), {
-      "foodTotal": liveFoodBill,
-      "totalPaid": totalPaid,
-      "balanceDue": newBal > 0 ? newBal : 0,
-      "isSettled": isFullySettled,
-      "lastPaymentMode": paymentMode,
-      "collectedBy": collectedBy,
-      "payments": newPayments
+      "foodTotal": liveFoodBill, "totalPaid": totalPaid, "balanceDue": newBal > 0 ? newBal : 0,
+      "isSettled": isFullySettled, "lastPaymentMode": paymentMode, "collectedBy": collectedBy, "payments": newPayments
     });
-    await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { checkOutTime: outTime, totalPaid: totalPaid, balanceDue: newBal > 0 ? newBal : 0, isSettled: isFullySettled, collectedBy: collectedBy });
+    await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { checkOutTime: outTime, totalPaid, balanceDue: newBal > 0 ? newBal : 0, isSettled: isFullySettled, collectedBy });
     await settleRoomFoodOrders(currentHotelId, checkoutBookingData.roomNumber);
     document.getElementById("checkoutModal").classList.add("hidden");
-    if (confirm(`Checkout complete! Collected By: ${collectedBy}.\n\nPrint final invoice?`)) await triggerPrint('a4', bookingId);
+    if (confirm(`Checkout complete!\nCollected: ${collectedBy}\n\nPrint invoice?`)) await triggerPrint('a4', bookingId);
     await loadInvoiceArchives(); await loadFinancialReports();
   } catch(e) { alert("Error: " + e.message); }
   finally { _checkoutInProgress = false; }
 };
 
 // ============================================================
-// FOLLOW-UP
+// FOLLOWUP
 // ============================================================
 window.loadFollowupBookings = () => {
   const tbody = document.getElementById("followupTableBody");
   const upcoming = cachedBookings.filter(b => b.status === 'confirmed').sort((a,b) => (a.checkInDate||'').localeCompare(b.checkInDate||''));
-  if (upcoming.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No upcoming bookings found.</td></tr>`; return; }
+  if (upcoming.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No upcoming bookings.</td></tr>`; return; }
   const today = new Date(); today.setHours(0,0,0,0);
   tbody.innerHTML = upcoming.map(b => {
-    const due = (b.balanceDue || 0);
+    const due = b.balanceDue || 0;
     const bDate = b.checkInDate ? new Date(b.checkInDate) : null;
     const isOverdue = bDate && bDate < today;
     const dateLabel = b.checkInDate + (isOverdue ? ' <span class="text-rose-400 text-[9px] font-bold ml-1">OVERDUE</span>' : '');
@@ -917,12 +1342,12 @@ window.loadFollowupBookings = () => {
 
 window.sendWhatsAppReminder = (id, phone, name, date, due) => {
   const hotelName = currentHotelProfile.hotelName || "Our Hotel";
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
-  const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
-  let message = `Hello *${name}*,\n\nGreetings from *${hotelName}*! 🏨\n\nYour booking is confirmed for *${date}*.\n\n`;
-  if(due > 0) message += `💰 Balance Due: ₹${due.toFixed(2)}\nPlease clear the due amount at the reception or using the UPI QR code sent to you.\n\n`;
-  message += `We look forward to hosting you. Have a safe journey! ✨`;
-  window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
+  const clean = phone.replace(/[^0-9]/g, '');
+  const final = clean.length === 10 ? '91' + clean : clean;
+  let msg = `Hello *${name}*,\n\nGreetings from *${hotelName}*! 🏨\n\nYour booking is confirmed for *${date}*.\n\n`;
+  if(due > 0) msg += `💰 Balance Due: ₹${due.toFixed(2)}\nPlease clear at reception or via UPI QR sent.\n\n`;
+  msg += `Safe travels! ✨`;
+  window.open(`https://wa.me/${final}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
 // ============================================================
@@ -932,7 +1357,7 @@ window.loadMarketDue = () => {
   const tbody = document.getElementById("marketDueTableBody"), totalText = document.getElementById("totalMarketDueText");
   const dueBookings = cachedBookings.filter(b => (b.balanceDue || 0) > 0 && b.status !== 'cancelled');
   let totalDue = 0;
-  if (dueBookings.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No outstanding dues. Great job!</td></tr>`; totalText.innerText = `Total Due: ₹0.00`; return; }
+  if (dueBookings.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No dues!</td></tr>`; totalText.innerText = `Total Due: ₹0.00`; return; }
   tbody.innerHTML = dueBookings.map(b => {
     totalDue += b.balanceDue;
     return `<tr class="hover:bg-slate-800/40">
@@ -952,10 +1377,10 @@ window.loadMarketDue = () => {
 
 window.sendDueWhatsApp = (phone, name, due) => {
   const hotelName = currentHotelProfile.hotelName || "Our Hotel";
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
-  const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
-  const message = `Hello *${name}*,\n\nGreetings from *${hotelName}*! 🏨\n\nThis is a gentle reminder regarding your outstanding balance of *₹${due.toFixed(2)}*.\n\nKindly clear the due amount at your earliest convenience.\n\nThank you! ✨`;
-  window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
+  const clean = phone.replace(/[^0-9]/g, '');
+  const final = clean.length === 10 ? '91' + clean : clean;
+  const msg = `Hello *${name}*,\n\nGreetings from *${hotelName}*! 🏨\n\nReminder: Outstanding balance of *₹${due.toFixed(2)}*.\n\nKindly clear at earliest.\n\nThank you! ✨`;
+  window.open(`https://wa.me/${final}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
 window.openDueModal = (id) => {
@@ -991,16 +1416,9 @@ window.submitDueCollection = async () => {
   const newBal = Math.max(0, totalBill - newPaid);
   const isSettled = newBal <= 0;
   try {
-    const existingPayments = dueBookingData.payments || [];
-    const newPayments = [...existingPayments, { amount: collect, mode: pMode, date: new Date().toISOString(), type: "due" }];
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), {
-      totalPaid: newPaid,
-      balanceDue: newBal,
-      isSettled: isSettled,
-      lastPaymentMode: pMode,
-      payments: newPayments
-    });
-    alert("Payment collected successfully!");
+    const newPayments = [...(dueBookingData.payments || []), { amount: collect, mode: pMode, date: new Date().toISOString(), type: "due" }];
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), { totalPaid: newPaid, balanceDue: newBal, isSettled, lastPaymentMode: pMode, payments: newPayments });
+    alert("Payment received!");
     document.getElementById("dueModal").classList.add("hidden");
     await loadInvoiceArchives(); await loadFinancialReports(); loadMarketDue();
   } catch(e) { alert("Error: " + e.message); }
@@ -1013,8 +1431,8 @@ window.checkCustomerHistory = () => {
   const phone = document.getElementById("bookPhone").value.trim();
   const statusDiv = document.getElementById("crmStatus");
   if (phone.length < 10) { statusDiv.classList.add("hidden"); return; }
-  const previousVisits = cachedBookings.filter(b => b.phone === phone).length;
-  if (previousVisits > 0) { statusDiv.innerText = `⭐ Returning Guest! Visited ${previousVisits} times.`; statusDiv.classList.remove("hidden"); statusDiv.className = "text-[10px] text-emerald-400 mt-1 font-bold"; }
+  const prev = cachedBookings.filter(b => b.phone === phone).length;
+  if (prev > 0) { statusDiv.innerText = `⭐ Returning Guest! Visited ${prev} times.`; statusDiv.classList.remove("hidden"); statusDiv.className = "text-[10px] text-emerald-400 mt-1 font-bold"; }
   else { statusDiv.innerText = `✨ New Guest Profile`; statusDiv.classList.remove("hidden"); statusDiv.className = "text-[10px] text-cyan-400 mt-1 font-bold"; }
 };
 
@@ -1029,16 +1447,12 @@ window.openBookingModal = (presetRoomNo = null) => {
   const sel = document.getElementById("bookRoomSelect");
   sel.innerHTML = "";
   const vac = cachedRooms.filter(r => r.status === "vacant");
-  if (!vac.length) return alert("No vacant rooms available!");
+  if (!vac.length) return alert("No vacant rooms!");
   const today = new Date().toLocaleDateString('en-CA');
   vac.forEach(r => {
-    const upcoming = cachedBookings.filter(b =>
-      b.roomNumber === r.roomNumber &&
-      b.status === 'confirmed' &&
-      b.checkInDate && b.checkInDate >= today
-    ).sort((a,b) => a.checkInDate.localeCompare(b.checkInDate));
-    const warning = upcoming.length > 0 ? ` ⚠️ Reserved ${upcoming[0].checkInDate}` : '';
-    sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 0}" data-type="${r.type}" data-package="${r.packageType || 'lodging_only'}">Room ${r.roomNumber} (${r.type})${warning}</option>`;
+    const upcoming = cachedBookings.filter(b => b.roomNumber === r.roomNumber && b.status === 'confirmed' && b.checkInDate && b.checkInDate >= today).sort((a,b) => a.checkInDate.localeCompare(b.checkInDate));
+    const warn = upcoming.length > 0 ? ` ⚠️ Reserved ${upcoming[0].checkInDate}` : '';
+    sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 0}" data-type="${r.type}" data-package="${r.packageType || 'lodging_only'}">Room ${r.roomNumber} (${r.type})${warn}</option>`;
   });
   if (presetRoomNo) sel.value = presetRoomNo;
   document.getElementById("bookAdvancePaid").value = "0";
@@ -1055,11 +1469,7 @@ window.openBookingModal = (presetRoomNo = null) => {
   document.getElementById("bookingModal").classList.remove("hidden");
 };
 
-// FIX B (UI side): Stop camera when modal closed
-window.closeBookingModal = () => {
-  forceStopCamera();
-  document.getElementById("bookingModal").classList.add("hidden");
-};
+window.closeBookingModal = () => { forceStopCamera(); document.getElementById("bookingModal").classList.add("hidden"); };
 
 window.handleRoomSelectChange = () => {
   const sel = document.getElementById("bookRoomSelect");
@@ -1072,16 +1482,16 @@ window.handleRoomSelectChange = () => {
 window.recalcBill = () => {
   const sel = document.getElementById("bookRoomSelect");
   const isGrp = document.getElementById("bookIsGroup").checked;
-  const manualGrpRate = parseFloat(document.getElementById("bookGroupRate").value) || 0;
-  let roomRate = isGrp ? manualGrpRate : (parseFloat(document.getElementById("bookRoomRate").value) || 800);
-  if (isGrp) document.getElementById("bookRoomRate").value = manualGrpRate;
+  const grpRate = parseFloat(document.getElementById("bookGroupRate").value) || 0;
+  let roomRate = isGrp ? grpRate : (parseFloat(document.getElementById("bookRoomRate").value) || 800);
+  if (isGrp) document.getElementById("bookRoomRate").value = grpRate;
   const foodRate = parseFloat(sel.options[sel.selectedIndex]?.dataset.food) || 0;
   const nights = parseInt(document.getElementById("bookNights").value) || 1;
   const adults = parseInt(document.getElementById("bookAdults").value) || 1;
   const pkg = document.getElementById("bookPackageSelect").value;
   const gstMode = document.getElementById("bookGstMode").value;
   const discount = parseFloat(document.getElementById("bookDiscount").value) || 0;
-  const charges = calculateBookingCharges({ roomRatePerNight: roomRate, packageType: pkg, foodRatePerAdult: foodRate, numberOfAdults: adults, numberOfNights: nights, gstMode: gstMode, discount: discount });
+  const charges = calculateBookingCharges({ roomRatePerNight: roomRate, packageType: pkg, foodRatePerAdult: foodRate, numberOfAdults: adults, numberOfNights: nights, gstMode, discount });
   document.getElementById("liveTotal").innerText = `₹${charges.summary.grandTotal.toFixed(2)}`;
   const adv = parseFloat(document.getElementById("bookAdvancePaid").value) || 0;
   const bal = charges.summary.grandTotal - adv;
@@ -1108,51 +1518,40 @@ window.submitBooking = async () => {
   const advancePaid = parseFloat(document.getElementById("bookAdvancePaid").value) || 0;
   const advanceMode = document.getElementById("bookAdvanceMode").value;
   const checkInDate = document.getElementById("bookCheckInDate").value;
-  if (!idNumber) return alert("ID Document Number is mandatory!");
-  if (isGroup && !groupName) return alert("Please enter Group/Company Name.");
+  if (!idNumber) return alert("ID Number required!");
+  if (isGroup && !groupName) return alert("Enter Group Name.");
   const roomData = cachedRooms.find(r => r.roomNumber === roomNo);
   const charges = recalcBill();
   const todayStr = new Date().toLocaleDateString('en-CA');
   const isFutureBooking = checkInDate > todayStr;
-
-  // Double-booking conflict check
   const newStart = new Date(checkInDate);
-  const newEnd = new Date(checkInDate);
-  newEnd.setDate(newEnd.getDate() + nights);
+  const newEnd = new Date(checkInDate); newEnd.setDate(newEnd.getDate() + nights);
   const conflicts = cachedBookings.filter(b => {
     if (b.roomNumber !== roomNo) return false;
     if (b.status === 'cancelled' || b.status === 'checked_out') return false;
     if (!b.checkInDate) return false;
     const bStart = new Date(b.checkInDate);
-    const bEnd = new Date(b.checkInDate);
-    bEnd.setDate(bEnd.getDate() + (b.nights || 1));
+    const bEnd = new Date(b.checkInDate); bEnd.setDate(bEnd.getDate() + (b.nights || 1));
     return !(newEnd <= bStart || newStart >= bEnd);
   });
   if (conflicts.length > 0) {
-    const conflictMsg = conflicts.map(c => `• ${c.guestName} — ${c.checkInDate} (${c.nights}N)`).join('\n');
-    if (!confirm(`⚠️ DOUBLE BOOKING WARNING!\n\nRoom ${roomNo} already has these bookings overlapping your dates:\n\n${conflictMsg}\n\nContinue anyway? (Guest may face issue at check-in)`)) {
-      return;
-    }
+    const msg = conflicts.map(c => `• ${c.guestName} — ${c.checkInDate} (${c.nights}N)`).join('\n');
+    if (!confirm(`⚠️ DOUBLE BOOKING!\n\nRoom ${roomNo} already has:\n\n${msg}\n\nContinue anyway?`)) return;
   }
-
   const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
   const payload = {
     roomId: roomNo, roomNumber: roomNo, roomType: roomData?.type || "Standard",
     floor: roomData?.floor || "Floor 1",
     guestName: isGroup ? `${groupName} (${guestName})` : guestName,
     phone, idType, idNumber, adults, children, packageType: pkg, gstMode, nights,
-    checkInTime: isFutureBooking ? null : inTime,
-    checkInDate: checkInDate,
-    isFutureBooking: isFutureBooking,
-    isGroup, groupName, advancePaid, discount,
+    checkInTime: isFutureBooking ? null : inTime, checkInDate, isFutureBooking, isGroup, groupName, advancePaid, discount,
     lastPaymentMode: advanceMode,
     payments: advancePaid > 0 ? [{ amount: advancePaid, mode: advanceMode, date: new Date().toISOString(), type: "advance" }] : [],
     ...charges
   };
   try {
     const res = await createNewBooking(currentHotelId, payload);
-    if (isFutureBooking) alert(`Future booking confirmed for Room ${roomNo}!`);
-    else alert(`Guest checked in to Room ${roomNo}! Bill #${res.bookingId}`);
+    alert(isFutureBooking ? `Future booking confirmed for Room ${roomNo}!` : `Checked in to Room ${roomNo}! Bill #${res.bookingId}`);
     closeBookingModal();
     await loadInvoiceArchives(); await loadFinancialReports();
   } catch (e) { alert("Error: " + e.message); }
@@ -1163,12 +1562,12 @@ window.submitBooking = async () => {
 // ============================================================
 async function loadStaff() {
   try { const snap = await getDocs(collection(db, "hotels", currentHotelId, "staff")); cachedStaff = []; snap.forEach(d => cachedStaff.push({ id: d.id, ...d.data() })); }
-  catch(e) { console.error("Staff load error:", e); cachedStaff = []; }
+  catch(e) { console.error("Staff load:", e); cachedStaff = []; }
 }
 
 window.loadStaffTable = () => {
   const tbody = document.getElementById("staffTableBody");
-  if(cachedStaff.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No staff added yet.</td></tr>`; return; }
+  if(cachedStaff.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No staff yet.</td></tr>`; return; }
   tbody.innerHTML = cachedStaff.map(s => `<tr class="hover:bg-slate-800/40"><td class="py-3 px-4 font-sans text-white font-bold">${s.name}</td><td class="py-3 px-4">${s.idType} (${s.idNo})</td><td class="py-3 px-4">${s.phone}</td><td class="py-3 px-4 text-emerald-400 font-bold">₹${s.salary}</td><td class="py-3 px-4 text-right space-x-2"><button onclick="openSalaryModal('${s.id}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-bold">Pay Salary</button></td></tr>`).join('');
 };
 
@@ -1195,7 +1594,7 @@ window.submitStaff = async () => {
     await setDoc(doc(db, "hotels", currentHotelId, "staff", staffId), { id: staffId, name, idType, idNo, phone, address, salary, createdAt: new Date().toISOString() });
     document.getElementById("staffModal").classList.add("hidden");
     await loadStaff(); loadStaffTable();
-    alert("Staff added successfully!");
+    alert("Staff added!");
   } catch (error) { alert("Failed: " + error.message); }
 };
 
@@ -1212,11 +1611,9 @@ window.openSalaryModal = (staffId) => {
 };
 
 window.recalcSalary = () => {
-  const staffId = document.getElementById("salStaffId").value;
-  const staff = cachedStaff.find(s => s.id === staffId); if(!staff) return;
+  const staff = cachedStaff.find(s => s.id === document.getElementById("salStaffId").value); if(!staff) return;
   const ded = parseFloat(document.getElementById("salDeduction").value) || 0;
-  const net = Math.max(0, staff.salary - ded);
-  document.getElementById("salAmount").value = net;
+  document.getElementById("salAmount").value = Math.max(0, staff.salary - ded);
 };
 
 window.processSalary = async () => {
@@ -1226,13 +1623,13 @@ window.processSalary = async () => {
   const deduction = parseFloat(document.getElementById("salDeduction").value) || 0;
   const deductionReason = document.getElementById("salDeductionReason").value.trim();
   const amount = parseFloat(document.getElementById("salAmount").value) || 0;
-  if(!month || amount <= 0) return alert("Enter valid month and amount");
+  if(!month || amount <= 0) return alert("Enter valid month/amount");
   const staff = cachedStaff.find(s => s.id === staffId); if(!staff) return;
   try {
     const expId = "EXP_" + Date.now().toString().slice(-4);
-    await setDoc(doc(db, "hotels", currentHotelId, "expenses", expId), { id: expId, category: "Salary", description: `${staff.name} - ${month}`, amount: amount, paymentSource: source, date: new Date().toLocaleDateString("en-IN") });
+    await setDoc(doc(db, "hotels", currentHotelId, "expenses", expId), { id: expId, category: "Salary", description: `${staff.name} - ${month}`, amount, paymentSource: source, date: new Date().toLocaleDateString("en-IN") });
     await updateDoc(doc(db, "hotels", currentHotelId, "staff", staffId), { lastPaidMonth: month, lastPaidDate: new Date().toISOString() });
-    if(confirm(`Salary of ₹${amount} paid to ${staff.name}.\n\nPrint salary slip?`)) printSalarySlip(staff, month, amount, deduction, deductionReason);
+    if(confirm(`Salary ₹${amount} paid to ${staff.name}.\n\nPrint slip?`)) printSalarySlip(staff, month, amount, deduction, deductionReason);
     document.getElementById("salaryModal").classList.add("hidden");
     await loadFinancialReports();
   } catch(e) { alert("Error: " + e.message); }
@@ -1240,16 +1637,14 @@ window.processSalary = async () => {
 
 window.printSalarySlip = (staff, month, amount, deduction = 0, reason = "N/A") => {
   const hotel = currentHotelProfile;
-  const html = `<div style="width:210mm;min-height:297mm;display:flex;flex-direction:column;padding:20mm;margin:0 auto;background:#fff;color:#000;font-family:'Segoe UI',sans-serif;"><div style="flex:1;"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px;"><h1 style="font-size:28px;font-weight:900;text-transform:uppercase;">${hotel.hotelName || "HOTEL"}</h1><p style="font-size:12px;color:#333;">${hotel.address || "Address Here"}</p><p style="font-size:12px;color:#333;">GSTIN: ${hotel.gstin || ""} | Ph: ${hotel.phone || ""}</p></div><h2 style="text-align:center;font-size:18px;font-weight:bold;text-decoration:underline;margin-bottom:30px;">SALARY SLIP - ${month.toUpperCase()}</h2><div style="display:flex;justify-content:space-between;margin-bottom:30px;font-size:14px;"><div><p><strong>Staff Name:</strong> ${staff.name}</p><p><strong>ID Proof:</strong> ${staff.idType} (${staff.idNo})</p><p><strong>Phone:</strong> ${staff.phone}</p><p><strong>Address:</strong> ${staff.address}</p></div><div><p><strong>Date:</strong> ${new Date().toLocaleDateString("en-IN")}</p><p><strong>Status:</strong> PAID</p></div></div><table style="width:100%;border-collapse:collapse;margin-bottom:30px;font-size:14px;"><thead><tr style="background:#0f172a;color:#fff;"><th style="padding:10px;text-align:left;">Particulars</th><th style="padding:10px;text-align:right;">Amount (₹)</th></tr></thead><tbody><tr><td style="padding:10px;border-bottom:1px solid #ccc;">Basic Salary</td><td style="padding:10px;border-bottom:1px solid #ccc;text-align:right;">${staff.salary.toFixed(2)}</td></tr><tr><td style="padding:10px;border-bottom:1px solid #ccc;color:#c00;">Deductions <span style="font-size:12px;">(${reason})</span></td><td style="padding:10px;border-bottom:1px solid #ccc;text-align:right;color:#c00;">- ${deduction.toFixed(2)}</td></tr><tr style="font-weight:bold;background:#f8fafc;"><td style="padding:12px;border-top:2px solid #000;border-bottom:2px solid #000;">Net Payable Amount</td><td style="padding:12px;border-top:2px solid #000;border-bottom:2px solid #000;text-align:right;">₹${amount.toFixed(2)}</td></tr></tbody></table></div><div style="margin-top:50px;display:flex;justify-content:space-between;align-items:flex-end;"><div style="font-size:12px;color:#555;"><p>This is a computer-generated salary slip.</p></div><div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;font-weight:bold;">Authorized Signature</p></div></div></div>`;
+  const html = `<div style="width:210mm;min-height:297mm;padding:20mm;margin:0 auto;background:#fff;color:#000;font-family:'Segoe UI',sans-serif;"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px;"><h1 style="font-size:28px;font-weight:900;">${hotel.hotelName || "HOTEL"}</h1><p style="font-size:12px;">${hotel.address || ""}</p><p style="font-size:12px;">GSTIN: ${hotel.gstin || ""} | Ph: ${hotel.phone || ""}</p></div><h2 style="text-align:center;font-size:18px;font-weight:bold;text-decoration:underline;margin-bottom:30px;">SALARY SLIP - ${month.toUpperCase()}</h2><div style="display:flex;justify-content:space-between;margin-bottom:30px;font-size:14px;"><div><p><strong>Staff:</strong> ${staff.name}</p><p><strong>ID:</strong> ${staff.idType} (${staff.idNo})</p><p><strong>Phone:</strong> ${staff.phone}</p><p><strong>Address:</strong> ${staff.address}</p></div><div><p><strong>Date:</strong> ${new Date().toLocaleDateString("en-IN")}</p><p><strong>Status:</strong> PAID</p></div></div><table style="width:100%;border-collapse:collapse;font-size:14px;"><thead><tr style="background:#0f172a;color:#fff;"><th style="padding:10px;text-align:left;">Particulars</th><th style="padding:10px;text-align:right;">Amount</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #ccc;">Basic Salary</td><td style="padding:10px;border:1px solid #ccc;text-align:right;">${staff.salary.toFixed(2)}</td></tr><tr><td style="padding:10px;border:1px solid #ccc;color:#c00;">Deductions (${reason})</td><td style="padding:10px;border:1px solid #ccc;text-align:right;color:#c00;">- ${deduction.toFixed(2)}</td></tr><tr style="font-weight:bold;background:#f8fafc;"><td style="padding:12px;border:2px solid #000;">Net Payable</td><td style="padding:12px;border:2px solid #000;text-align:right;">₹${amount.toFixed(2)}</td></tr></tbody></table><div style="margin-top:50px;display:flex;justify-content:space-between;"><div style="font-size:12px;color:#555;"><p>Computer-generated.</p></div><div style="text-align:center;"><div style="width:200px;border-top:1px solid #000;margin-bottom:5px;"></div><p style="font-size:12px;font-weight:bold;">Authorized Signature</p></div></div></div>`;
   const w = window.open("", "_blank", "width=850,height=950");
-  if (!w) return alert("Please allow popups.");
-  w.document.open();
-  w.document.write(`<!DOCTYPE html><html><head><title>Salary Slip</title></head><body onload="window.print(); setTimeout(() => { window.close(); }, 500);">${html}</body></html>`);
-  w.document.close();
+  if (!w) return alert("Allow popups.");
+  w.document.open(); w.document.write(`<!DOCTYPE html><html><head><title>Salary Slip</title></head><body onload="window.print(); setTimeout(() => { window.close(); }, 500);">${html}</body></html>`); w.document.close();
 };
 
 // ============================================================
-// POS MENU
+// POS
 // ============================================================
 async function loadMenuItems() {
   const snap = await getDocs(collection(db, "hotels", currentHotelId, "menu_items"));
@@ -1260,7 +1655,6 @@ async function loadMenuItems() {
 }
 
 window.openMenuModal = () => document.getElementById("menuModal").classList.remove("hidden");
-
 window.submitMenuItem = async () => {
   const name = document.getElementById("menuName").value.trim();
   const price = parseFloat(document.getElementById("menuPrice").value) || 0;
@@ -1269,7 +1663,7 @@ window.submitMenuItem = async () => {
   await setDoc(doc(db, "hotels", currentHotelId, "menu_items", id), { name, price });
   document.getElementById("menuModal").classList.add("hidden");
   await loadMenuItems();
-  alert("Menu item added!");
+  alert("Item added!");
 };
 
 window.handleMenuSelectChange = () => {
@@ -1278,70 +1672,6 @@ window.handleMenuSelectChange = () => {
   if(opt.value) { document.getElementById("posItemName").value = opt.dataset.name; document.getElementById("posItemPrice").value = opt.dataset.price; }
 };
 
-// ============================================================
-// INVOICE ARCHIVE
-// ============================================================
-window.loadInvoiceArchives = async () => {
-  try {
-    const snap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
-    cachedBookings = []; snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
-    cachedBookings.sort((a, b) => { const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0; const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0; return tb - ta; });
-    const tbody = document.getElementById("invoiceTableBody");
-    let html = "";
-    cachedBookings.forEach(b => {
-      const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
-      const total = ((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2);
-      const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
-      const due = (b.balanceDue || 0).toFixed(2);
-      let statusBadge = "";
-      if(b.status === "confirmed") statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">UPCOMING</span>`;
-      else if(b.status === "cancelled") statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-900/50 text-rose-400 border border-rose-800">CANCELLED</span>`;
-      else if(b.status === "checked_in") statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">IN-HOUSE</span>`;
-      else if (isSettled) statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">✓ SETTLED</span>`;
-      else statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">DUE ₹${due}</span>`;
-      html += `<tr class="hover:bg-slate-800/40">
-        <td class="py-3 px-4 font-bold text-cyan-400">${b.bookingId || b.id}</td>
-        <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName} ${b.isGroup ? '<span class="text-[9px] bg-slate-800 text-slate-300 px-1 rounded ml-1 border border-slate-700">GRP</span>' : ''}</td>
-        <td class="py-3 px-4">R-${b.roomNumber} (${b.nights}N)</td>
-        <td class="py-3 px-4 text-xs font-mono"><div class="text-white">₹${total}</div><div class="text-emerald-400 text-[10px]">P: ₹${paid}</div></td>
-        <td class="py-3 px-4 font-sans">${statusBadge}</td>
-        <td class="py-3 px-4 text-right space-x-1 font-sans">
-          <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded hover:bg-slate-700">58</button>
-          <button onclick="triggerPrint('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold hover:bg-cyan-900">A4</button>
-          <button onclick="showUpiQrCode('${b.id}')" class="px-2 py-1 bg-purple-950 text-purple-400 border border-purple-800 text-[10px] rounded font-bold hover:bg-purple-900">UPI QR</button>
-          <button onclick="deleteInvoice('${b.id}', '${b.roomId}')" class="px-2 py-1 bg-rose-950 text-rose-400 border border-rose-900 text-[10px] rounded hover:bg-rose-900">Del</button>
-        </td>
-      </tr>`;
-    });
-    tbody.innerHTML = html;
-    return cachedBookings;
-  } catch(e) { console.error("Invoice load error:", e); }
-};
-
-window.filterInvoicesTable = () => {
-  const q = document.getElementById("billSearchInput").value.toLowerCase();
-  document.querySelectorAll("#invoiceTableBody tr").forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none"; });
-};
-
-window.deleteInvoice = async (bId, rId) => {
-  if (prompt("WARNING: Type 'CONFIRM' to delete permanently:") !== "CONFIRM") return alert("Deletion cancelled.");
-  try { await deleteDoc(doc(db, "hotels", currentHotelId, "bookings", bId)); alert("Invoice deleted."); await loadInvoiceArchives(); await loadFinancialReports(); }
-  catch (e) { alert("Error: " + e.message); }
-};
-
-window.triggerPrint = async (format, bId) => {
-  const bDoc = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bId));
-  if (!bDoc.exists()) return alert("Bill not found.");
-  const bData = bDoc.data();
-  const food = await getBookingFoodOrders(currentHotelId, bData.bookingId);
-  if (format === "58mm") print58mmThermalReceipt(currentHotelProfile, bData, food.orders);
-  else if (format === "80mm") print80mmThermalReceipt(currentHotelProfile, bData, food.orders);
-  else printA4TaxInvoice(currentHotelProfile, bData, food.orders);
-};
-
-// ============================================================
-// POS ORDER
-// ============================================================
 window.populatePosRooms = () => {
   const sel = document.getElementById("posRoomSelect");
   sel.innerHTML = "";
@@ -1354,7 +1684,7 @@ window.addPosItem = () => {
   const name = document.getElementById("posItemName").value.trim();
   const price = parseFloat(document.getElementById("posItemPrice").value) || 0;
   const qty = parseInt(document.getElementById("posItemQty").value) || 1;
-  if (!name || price <= 0) return alert("Enter valid item name and price");
+  if (!name || price <= 0) return alert("Enter valid item/price");
   currentPosOrder.push({ name, price, quantity: qty });
   document.getElementById("posItemName").value = "";
   document.getElementById("posItemQty").value = "1";
@@ -1379,16 +1709,16 @@ window.submitPosOrder = async () => {
   const sel = document.getElementById("posRoomSelect");
   const roomNo = sel.value;
   const bid = sel.options[sel.selectedIndex]?.dataset.bid;
-  if (!roomNo) return alert("Select a valid occupied room.");
+  if (!roomNo) return alert("Select occupied room.");
   if (currentPosOrder.length === 0) return alert("Add items first.");
-  const orderTotal = currentPosOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = currentPosOrder.reduce((s, i) => s + (i.price * i.quantity), 0);
   const orderId = "KOT_" + Date.now().toString().slice(-6);
   try {
     await setDoc(doc(db, "hotels", currentHotelId, "pos_orders", orderId), { orderId, bookingId: bid, roomNumber: roomNo, items: currentPosOrder, status: "served", isSettled: false, createdAt: new Date().toISOString() });
-    alert(`Food order of ₹${orderTotal} sent to Room ${roomNo} folio!`);
+    alert(`Food order ₹${total} sent to Room ${roomNo}!`);
     currentPosOrder = []; renderPosOrder();
-    const posSnap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
-    window._cachedPosOrders = []; posSnap.forEach(d => window._cachedPosOrders.push(d.data()));
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
+    window._cachedPosOrders = []; snap.forEach(d => window._cachedPosOrders.push(d.data()));
   } catch (e) { alert("Error: " + e.message); }
 };
 
@@ -1401,15 +1731,14 @@ window.loadRoomManager = () => {
 };
 
 window.forceVacant = async (rid) => {
-  if(!confirm("Force this room to be Vacant?")) return;
-  try { await updateDoc(doc(db, "hotels", currentHotelId, "rooms", rid), { status: "vacant", currentBookingId: null, guestName: null }); alert("Room forced to vacant!"); }
+  if(!confirm("Force vacant?")) return;
+  try { await updateDoc(doc(db, "hotels", currentHotelId, "rooms", rid), { status: "vacant", currentBookingId: null, guestName: null }); alert("Room forced vacant!"); }
   catch(e) { alert("Error: " + e.message); }
 };
 
 window.toggleFoodRateInput = () => {
   const pkg = document.getElementById("inputRoomPackage").value;
-  const div = document.getElementById("foodRateDiv");
-  const inp = document.getElementById("inputFoodRate");
+  const div = document.getElementById("foodRateDiv"), inp = document.getElementById("inputFoodRate");
   if (pkg === "fooding_lodging") { div.classList.remove("hidden"); inp.required = true; if (inp.value == "0") inp.value = "500"; }
   else { div.classList.add("hidden"); inp.required = false; inp.value = "0"; }
 };
@@ -1462,20 +1791,25 @@ window.deleteRoom = async (rId) => {
 // ============================================================
 window.loadFinancialReports = async () => {
   try {
-    const expSnap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
-    cachedExpenses = []; expSnap.forEach(d => cachedExpenses.push(d.data()));
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
+    cachedExpenses = []; snap.forEach(d => cachedExpenses.push(d.data()));
     cachedExpenses.sort((a,b) => { const p = s => { if(!s) return 0; const [dd,mm,yy] = s.split("/"); return new Date(`${yy}-${mm}-${dd}`).getTime() || 0; }; return p(b.date) - p(a.date); });
-  } catch(e) { console.error("Expenses load:", e); }
+  } catch(e) { console.error("Expenses:", e); }
 
   try {
-    const depSnap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
-    cachedDeposits = []; depSnap.forEach(d => cachedDeposits.push(d.data()));
-  } catch(e) { console.error("Deposits load:", e); }
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "bank_deposits"));
+    cachedDeposits = []; snap.forEach(d => cachedDeposits.push(d.data()));
+  } catch(e) { console.error("Deposits:", e); }
 
   try {
-    const posSnap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
-    window._cachedPosOrders = []; posSnap.forEach(d => window._cachedPosOrders.push(d.data()));
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
+    window._cachedPosOrders = []; snap.forEach(d => window._cachedPosOrders.push(d.data()));
   } catch(e) { window._cachedPosOrders = []; }
+
+  try {
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "refunds"));
+    window._cachedRefunds = []; snap.forEach(d => window._cachedRefunds.push(d.data()));
+  } catch(e) { window._cachedRefunds = []; }
 
   let cashRevenue = 0, bankRevenue = 0, totalRevenue = 0;
   cachedBookings.forEach(b => {
@@ -1483,15 +1817,19 @@ window.loadFinancialReports = async () => {
       b.payments.forEach(p => {
         const amt = parseFloat(p.amount) || 0;
         totalRevenue += amt;
-        if (p.mode === "Bank") bankRevenue += amt;
-        else cashRevenue += amt;
+        if (p.mode === "Bank") bankRevenue += amt; else cashRevenue += amt;
       });
     } else {
       const paid = b.totalPaid || b.advancePaid || 0;
       totalRevenue += paid;
-      if (b.lastPaymentMode === "Bank") bankRevenue += paid;
-      else cashRevenue += paid;
+      if (b.lastPaymentMode === "Bank") bankRevenue += paid; else cashRevenue += paid;
     }
+  });
+
+  (window._cachedRefunds || []).forEach(r => {
+    const amt = parseFloat(r.amount) || 0;
+    totalRevenue -= amt;
+    if (r.mode === "Bank") bankRevenue -= amt; else cashRevenue -= amt;
   });
 
   let cashExpenses = 0, bankExpenses = 0, totalExpenses = 0;
@@ -1518,7 +1856,6 @@ window.loadFinancialReports = async () => {
   if(document.getElementById("repBankBalance")) document.getElementById("repBankBalance").innerText = `₹${bankBalance.toFixed(2)}`;
 
   const expenseRows = cachedExpenses.map(e => `<tr class="hover:bg-slate-800/40"><td class="py-2 px-3 text-slate-400">${e.date}</td><td class="py-2 px-3 font-bold text-cyan-400 font-sans">${e.category}</td><td class="py-2 px-3 text-white font-sans">${e.description}</td><td class="py-2 px-3 text-xs"><span class="px-1.5 py-0.5 rounded ${e.paymentSource === 'Bank' ? 'bg-blue-900/50 text-blue-300' : 'bg-emerald-900/50 text-emerald-300'}">${e.paymentSource || 'Cash'}</span></td><td class="py-2 px-3 text-rose-400 text-right font-bold">₹${parseFloat(e.amount).toFixed(2)}</td></tr>`).join('');
-
   if(document.getElementById("expenseTableBody")) document.getElementById("expenseTableBody").innerHTML = expenseRows;
   if(document.getElementById("recentExpenseDashboard")) filterDashboardExpenses();
 };
@@ -1560,11 +1897,7 @@ window.exportDashboardExpenses = () => {
   const list = filterExpList(s, e);
   let csv = "Date,Category,Description,Source,Amount\n";
   list.forEach(x => csv += `"${x.date}","${x.category}","${x.description}","${x.paymentSource || 'Cash'}",${x.amount}\n`);
-  const blob = new Blob([csv], { type: 'text/csv;' });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `Expenses_${s || 'all'}_to_${e || 'all'}.csv`;
-  a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' })); a.download = `Expenses_${s || 'all'}_to_${e || 'all'}.csv`; a.click();
 };
 
 // ============================================================
@@ -1576,44 +1909,24 @@ window.renderCharts = () => {
   const start = startInput ? new Date(startInput) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const end = endInput ? new Date(endInput) : new Date();
   start.setHours(0,0,0,0); end.setHours(23,59,59,999);
-
-  const filteredBookings = cachedBookings.filter(b => {
-    if(!b.createdAt) return false;
-    const d = new Date(b.createdAt);
-    return d >= start && d <= end;
-  });
-
-  const filteredExpenses = cachedExpenses.filter(e => {
-    const d = parseExpDate(e.date);
-    if(!d) return false;
-    return d >= start && d <= end;
-  });
+  const filteredBookings = cachedBookings.filter(b => { if(!b.createdAt) return false; const d = new Date(b.createdAt); return d >= start && d <= end; });
+  const filteredExpenses = cachedExpenses.filter(e => { const d = parseExpDate(e.date); if(!d) return false; return d >= start && d <= end; });
+  const filteredRefunds = (window._cachedRefunds || []).filter(r => { const d = new Date(r.date); return d >= start && d <= end; });
 
   let totalRev = 0;
   filteredBookings.forEach(b => {
     if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
-      b.payments.forEach(p => {
-        const pDate = new Date(p.date || b.createdAt);
-        if (pDate >= start && pDate <= end) {
-          totalRev += (parseFloat(p.amount) || 0);
-        }
-      });
+      b.payments.forEach(p => { const pd = new Date(p.date || b.createdAt); if (pd >= start && pd <= end) totalRev += (parseFloat(p.amount) || 0); });
     } else {
-      const paidDate = b.createdAt ? new Date(b.createdAt) : null;
-      if (paidDate && paidDate >= start && paidDate <= end) {
-        totalRev += (b.totalPaid || b.advancePaid || 0);
-      }
+      const pd = b.createdAt ? new Date(b.createdAt) : null;
+      if (pd && pd >= start && pd <= end) totalRev += (b.totalPaid || b.advancePaid || 0);
     }
   });
+  filteredRefunds.forEach(r => totalRev -= (parseFloat(r.amount) || 0));
 
   let totalExp = 0;
-  const expenseByCategory = {};
-  filteredExpenses.forEach(e => {
-    const amt = parseFloat(e.amount) || 0;
-    totalExp += amt;
-    if(!expenseByCategory[e.category]) expenseByCategory[e.category] = 0;
-    expenseByCategory[e.category] += amt;
-  });
+  const expByCat = {};
+  filteredExpenses.forEach(e => { const a = parseFloat(e.amount) || 0; totalExp += a; if(!expByCat[e.category]) expByCat[e.category] = 0; expByCat[e.category] += a; });
 
   document.getElementById("repTotalRevenue").innerText = `₹${totalRev.toFixed(2)}`;
   document.getElementById("repNetProfit").innerText = `₹${(totalRev - totalExp).toFixed(2)}`;
@@ -1624,40 +1937,29 @@ window.renderCharts = () => {
   filteredBookings.forEach(b => { days[b.checkInDate || new Date().toISOString().split('T')[0]] = true; });
   const sortedDays = Object.keys(days).sort();
   const profitData = sortedDays.map(day => {
-    let dayRev = 0;
+    let rev = 0;
     filteredBookings.forEach(b => {
-      if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
-        b.payments.forEach(p => {
-          const pDate = new Date(p.date || b.createdAt).toLocaleDateString('en-CA');
-          if (pDate === day) dayRev += (parseFloat(p.amount) || 0);
-        });
+      if (b.payments && Array.isArray(b.payments)) {
+        b.payments.forEach(p => { const pd = new Date(p.date || b.createdAt).toLocaleDateString('en-CA'); if (pd === day) rev += (parseFloat(p.amount) || 0); });
       } else if(b.checkInDate === day || (!b.checkInDate && day === new Date().toISOString().split('T')[0])) {
-        dayRev += (b.totalPaid || b.advancePaid || 0);
+        rev += (b.totalPaid || b.advancePaid || 0);
       }
     });
-    return dayRev;
+    filteredRefunds.forEach(r => { if (new Date(r.date).toLocaleDateString('en-CA') === day) rev -= (parseFloat(r.amount) || 0); });
+    return rev;
   });
 
   profitChartInstance = new Chart(ctxProfit, {
     type: 'bar',
-    data: {
-      labels: sortedDays.length > 0 ? sortedDays : ['No Data'],
-      datasets: [{ label: 'Revenue (₹)', data: profitData.length > 0 ? profitData : [0], backgroundColor: '#00ffa3', borderRadius: 4 }]
-    },
+    data: { labels: sortedDays.length > 0 ? sortedDays : ['No Data'], datasets: [{ label: 'Revenue (₹)', data: profitData.length > 0 ? profitData : [0], backgroundColor: '#00ffa3', borderRadius: 4 }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
   });
 
-  const ctxExpense = document.getElementById('expenseChart').getContext('2d');
+  const ctxExp = document.getElementById('expenseChart').getContext('2d');
   if(expenseChartInstance) expenseChartInstance.destroy();
-  const catLabels = Object.keys(expenseByCategory);
-  const catData = Object.values(expenseByCategory);
-
-  expenseChartInstance = new Chart(ctxExpense, {
+  expenseChartInstance = new Chart(ctxExp, {
     type: 'doughnut',
-    data: {
-      labels: catLabels.length > 0 ? catLabels : ['No Expenses'],
-      datasets: [{ data: catData.length > 0 ? catData : [1], backgroundColor: ['#f43f5e','#3b82f6','#eab308','#8b5cf6','#22d3ee','#10b981'], borderWidth: 0 }]
-    },
+    data: { labels: Object.keys(expByCat).length > 0 ? Object.keys(expByCat) : ['No Expenses'], datasets: [{ data: Object.values(expByCat).length > 0 ? Object.values(expByCat) : [1], backgroundColor: ['#f43f5e','#3b82f6','#eab308','#8b5cf6','#22d3ee','#10b981'], borderWidth: 0 }] },
     options: { plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }, cutout: '70%' }
   });
 
@@ -1666,9 +1968,7 @@ window.renderCharts = () => {
     if(!o.createdAt) return;
     const od = new Date(o.createdAt);
     if(od < start || od > end) return;
-    (o.items || []).forEach(it => {
-      itemTotals[it.name] = (itemTotals[it.name] || 0) + (it.quantity || 1);
-    });
+    (o.items || []).forEach(it => { itemTotals[it.name] = (itemTotals[it.name] || 0) + (it.quantity || 1); });
   });
   const sortedItems = Object.entries(itemTotals).sort((a,b) => b[1] - a[1]).slice(0, 8);
   const ctxTop = document.getElementById('topItemsChart')?.getContext('2d');
@@ -1676,23 +1976,8 @@ window.renderCharts = () => {
     if(window._topItemsChartInst) window._topItemsChartInst.destroy();
     window._topItemsChartInst = new Chart(ctxTop, {
       type: 'bar',
-      data: {
-        labels: sortedItems.length ? sortedItems.map(x => x[0]) : ['No Orders Yet'],
-        datasets: [{
-          label: 'Orders Placed',
-          data: sortedItems.length ? sortedItems.map(x => x[1]) : [0],
-          backgroundColor: ['#10b981','#22d3ee','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#ec4899','#f97316'],
-          borderRadius: 6
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#94a3b8' }, beginAtZero: true },
-          y: { ticks: { color: '#e2e8f0', font: { size: 10 } } }
-        }
-      }
+      data: { labels: sortedItems.length ? sortedItems.map(x => x[0]) : ['No Orders Yet'], datasets: [{ label: 'Orders', data: sortedItems.length ? sortedItems.map(x => x[1]) : [0], backgroundColor: ['#10b981','#22d3ee','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#ec4899','#f97316'], borderRadius: 6 }] },
+      options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, beginAtZero: true }, y: { ticks: { color: '#e2e8f0', font: { size: 10 } } } } }
     });
   }
 };
@@ -1701,7 +1986,6 @@ window.renderCharts = () => {
 // EXPENSE / DEPOSIT
 // ============================================================
 window.openAddExpenseModal = () => document.getElementById("expenseModal").classList.remove("hidden");
-
 window.submitExpense = async () => {
   const cat = document.getElementById("expCategory").value.trim();
   const desc = document.getElementById("expDescription").value.trim();
@@ -1710,83 +1994,116 @@ window.submitExpense = async () => {
   const id = "EXP_" + Date.now().toString().slice(-4);
   await setDoc(doc(db, "hotels", currentHotelId, "expenses", id), { id, category: cat, description: desc, amount: amt, paymentSource: source, date: new Date().toLocaleDateString("en-IN") });
   document.getElementById("expenseModal").classList.add("hidden");
-  await loadFinancialReports();
-  renderCharts();
+  await loadFinancialReports(); renderCharts();
 };
 
-window.openDepositModal = () => {
-  document.getElementById("depAmount").value = "";
-  document.getElementById("depNote").value = "";
-  document.getElementById("depositModal").classList.remove("hidden");
-};
-
+window.openDepositModal = () => { document.getElementById("depAmount").value = ""; document.getElementById("depNote").value = ""; document.getElementById("depositModal").classList.remove("hidden"); };
 window.submitDeposit = async () => {
   const amt = parseFloat(document.getElementById("depAmount").value) || 0;
-  const note = document.getElementById("depNote").value.trim() || "Cash Deposit to Bank";
-  if(amt <= 0) return alert("Enter valid deposit amount.");
+  const note = document.getElementById("depNote").value.trim() || "Cash Deposit";
+  if(amt <= 0) return alert("Enter valid amount.");
   const depId = "DEP_" + Date.now().toString().slice(-4);
-  try {
-    await setDoc(doc(db, "hotels", currentHotelId, "bank_deposits", depId), { id: depId, amount: amt, note: note, date: new Date().toLocaleDateString("en-IN") });
-    alert("Cash deposited to bank successfully!");
-    document.getElementById("depositModal").classList.add("hidden");
-    await loadFinancialReports();
-  } catch (e) { alert("Error: " + e.message); }
+  try { await setDoc(doc(db, "hotels", currentHotelId, "bank_deposits", depId), { id: depId, amount: amt, note, date: new Date().toLocaleDateString("en-IN") }); alert("Deposited!"); document.getElementById("depositModal").classList.add("hidden"); await loadFinancialReports(); }
+  catch (e) { alert("Error: " + e.message); }
 };
 
 window.exportExpensesCsv = () => {
   let csv = "Date,Category,Description,Payment Source,Amount\n";
   cachedExpenses.forEach(e => { csv += `"${e.date}","${e.category}","${e.description}","${e.paymentSource || 'Cash'}",${e.amount}\n`; });
-  const blob = new Blob([csv], { type: 'text/csv;' });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `Expenses_${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' })); a.download = `Expenses_${new Date().toISOString().split('T')[0]}.csv`; a.click();
 };
 
 // ============================================================
-// FIX A: GST AUDIT — Now includes POS food total with proper tax breakup
+// INVOICE ARCHIVE
+// ============================================================
+window.loadInvoiceArchives = async () => {
+  try {
+    const snap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
+    cachedBookings = []; snap.forEach(d => cachedBookings.push({ id: d.id, ...d.data() }));
+    cachedBookings.sort((a, b) => { const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0; const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0; return tb - ta; });
+    const tbody = document.getElementById("invoiceTableBody");
+    let html = "";
+    cachedBookings.forEach(b => {
+      const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
+      const total = ((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2);
+      const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
+      const due = (b.balanceDue || 0).toFixed(2);
+      let badge = "";
+      if(b.status === "confirmed") badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">UPCOMING</span>`;
+      else if(b.status === "cancelled") badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-900/50 text-rose-400 border border-rose-800">CANCELLED</span>`;
+      else if(b.status === "checked_in") badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">IN-HOUSE</span>`;
+      else if (isSettled) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">✓ SETTLED</span>`;
+      else badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">DUE ₹${due}</span>`;
+      html += `<tr class="hover:bg-slate-800/40">
+        <td class="py-3 px-4 font-bold text-cyan-400">${b.bookingId || b.id}</td>
+        <td class="py-3 px-4 font-sans text-white font-bold">${b.guestName} ${b.isGroup ? '<span class="text-[9px] bg-slate-800 text-slate-300 px-1 rounded ml-1 border border-slate-700">GRP</span>' : ''}</td>
+        <td class="py-3 px-4">R-${b.roomNumber} (${b.nights}N)</td>
+        <td class="py-3 px-4 text-xs font-mono"><div class="text-white">₹${total}</div><div class="text-emerald-400 text-[10px]">P: ₹${paid}</div></td>
+        <td class="py-3 px-4 font-sans">${badge}</td>
+        <td class="py-3 px-4 text-right space-x-1 font-sans">
+          <button onclick="triggerPrint('58mm', '${b.id}')" class="px-2 py-1 bg-slate-800 text-[10px] rounded hover:bg-slate-700">58</button>
+          <button onclick="triggerPrint('a4', '${b.id}')" class="px-2 py-1 bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] rounded font-bold hover:bg-cyan-900">A4</button>
+          <button onclick="showUpiQrCode('${b.id}')" class="px-2 py-1 bg-purple-950 text-purple-400 border border-purple-800 text-[10px] rounded font-bold hover:bg-purple-900">UPI</button>
+          <button onclick="openRefundModal('${b.id}')" class="px-2 py-1 bg-amber-950 text-amber-400 border border-amber-800 text-[10px] rounded font-bold hover:bg-amber-900">↩ Refund</button>
+          <button onclick="deleteInvoice('${b.id}', '${b.roomId}')" class="px-2 py-1 bg-rose-950 text-rose-400 border border-rose-900 text-[10px] rounded hover:bg-rose-900">Del</button>
+        </td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+  } catch(e) { console.error("Invoice load:", e); }
+};
+
+window.filterInvoicesTable = () => {
+  const q = document.getElementById("billSearchInput").value.toLowerCase();
+  document.querySelectorAll("#invoiceTableBody tr").forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none"; });
+};
+
+window.deleteInvoice = async (bId, rId) => {
+  if (prompt("Type 'CONFIRM' to delete:") !== "CONFIRM") return alert("Cancelled.");
+  try { await deleteDoc(doc(db, "hotels", currentHotelId, "bookings", bId)); alert("Deleted."); await loadInvoiceArchives(); await loadFinancialReports(); }
+  catch (e) { alert("Error: " + e.message); }
+};
+
+window.triggerPrint = async (format, bId) => {
+  const snap = await getDoc(doc(db, "hotels", currentHotelId, "bookings", bId));
+  if (!snap.exists()) return alert("Not found.");
+  const bData = snap.data();
+  const food = await getBookingFoodOrders(currentHotelId, bData.bookingId);
+  if (format === "58mm") print58mmThermalReceipt(currentHotelProfile, bData, food.orders);
+  else if (format === "80mm") print80mmThermalReceipt(currentHotelProfile, bData, food.orders);
+  else printA4TaxInvoice(currentHotelProfile, bData, food.orders);
+};
+
+// ============================================================
+// GST AUDIT
 // ============================================================
 window.renderGstAudit = () => {
   const tbody = document.getElementById("gstAuditTableBody");
   tbody.innerHTML = cachedBookings.map(b => {
     const foodTotal = b.foodTotal || 0;
-    const foodTaxable = foodTotal / 1.05; // Food GST 5% inclusive assumption
+    const foodTaxable = foodTotal / 1.05;
     const foodGst = foodTotal - foodTaxable;
     const pkgTaxable = (b.summary?.grandTaxable || 0);
     const totalCgst = (b.summary?.totalCgst || 0) + (foodGst / 2);
     const totalSgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
-    const totalAmount = (b.summary?.grandTotal || 0) + foodTotal;
-    return `<tr class="hover:bg-slate-800/40">
-      <td class="py-2.5 px-3 text-slate-400">${b.checkInTime?.split(",")[0] || 'Today'}</td>
-      <td class="py-2.5 px-3 text-cyan-400 font-bold">${b.bookingId}</td>
-      <td class="py-2.5 px-3 text-amber-400">996311 / 996331</td>
-      <td class="py-2.5 px-3">₹${pkgTaxable.toFixed(2)}</td>
-      <td class="py-2.5 px-3 text-emerald-300">₹${foodTaxable.toFixed(2)}</td>
-      <td class="py-2.5 px-3 text-cyan-300">₹${totalCgst.toFixed(2)}</td>
-      <td class="py-2.5 px-3 text-cyan-300">₹${totalSgst.toFixed(2)}</td>
-      <td class="py-2.5 px-3 text-emerald-400 font-bold text-right">₹${totalAmount.toFixed(2)}</td>
-    </tr>`;
+    const total = (b.summary?.grandTotal || 0) + foodTotal;
+    return `<tr class="hover:bg-slate-800/40"><td class="py-2.5 px-3 text-slate-400">${b.checkInTime?.split(",")[0] || 'Today'}</td><td class="py-2.5 px-3 text-cyan-400 font-bold">${b.bookingId}</td><td class="py-2.5 px-3 text-amber-400">996311/996331</td><td class="py-2.5 px-3">₹${pkgTaxable.toFixed(2)}</td><td class="py-2.5 px-3 text-emerald-300">₹${foodTaxable.toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${totalCgst.toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${totalSgst.toFixed(2)}</td><td class="py-2.5 px-3 text-emerald-400 font-bold text-right">₹${total.toFixed(2)}</td></tr>`;
   }).join('');
 };
 
-// FIX A + your refinement: 10-column CSV with matching header/data
 window.exportGstToCsv = () => {
   let csv = "Date,Invoice,Guest,Phone,ID,Room Taxable,Food Taxable,CGST,SGST,Grand Total\n";
   cachedBookings.forEach(b => {
-    const foodTotal = b.foodTotal || 0;
-    const foodTaxable = foodTotal / 1.05;
-    const foodGst = foodTotal - foodTaxable;
-    const roomTaxable = (b.summary?.grandTaxable || 0);
-    const totalCgst = (b.summary?.totalCgst || 0) + (foodGst / 2);
-    const totalSgst = (b.summary?.totalSgst || 0) + (foodGst / 2);
-    const totalAmount = (b.summary?.grandTotal || 0) + foodTotal;
-    csv += `"${b.checkInTime || ''}","${b.bookingId}","${b.guestName}","${b.phone || ''}","${b.idType} (${b.idNumber})",${roomTaxable.toFixed(2)},${foodTaxable.toFixed(2)},${totalCgst.toFixed(2)},${totalSgst.toFixed(2)},${totalAmount.toFixed(2)}\n`;
+    const ft = b.foodTotal || 0;
+    const fTax = ft / 1.05;
+    const fGst = ft - fTax;
+    const rTax = (b.summary?.grandTaxable || 0);
+    const cgst = (b.summary?.totalCgst || 0) + (fGst / 2);
+    const sgst = (b.summary?.totalSgst || 0) + (fGst / 2);
+    const total = (b.summary?.grandTotal || 0) + ft;
+    csv += `"${b.checkInTime || ''}","${b.bookingId}","${b.guestName}","${b.phone || ''}","${b.idType} (${b.idNumber})",${rTax.toFixed(2)},${fTax.toFixed(2)},${cgst.toFixed(2)},${sgst.toFixed(2)},${total.toFixed(2)}\n`;
   });
-  const blob = new Blob([csv], { type: 'text/csv;' });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `GST_Audit_${currentHotelId}.csv`;
-  a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' })); a.download = `GST_Audit_${currentHotelId}.csv`; a.click();
 };
 
 // ============================================================
@@ -1797,47 +2114,41 @@ async function loadHotelFloors() {
   if (snap.exists() && snap.data().floors) hotelFloors = snap.data().floors;
   renderFloorsList(); populateFloorOptions(); renderFloorWifiInputs();
 }
-
 function renderFloorsList() {
   const list = document.getElementById("floorsList"); if (!list) return;
   list.innerHTML = hotelFloors.map(f => `<div class="flex items-center gap-2 p-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs"><span>${f}</span><button onclick="removeFloor('${f}')" class="text-rose-400 font-bold ml-2">×</button></div>`).join('');
 }
-
 function populateFloorOptions() {
   const sel = document.getElementById("inputRoomFloor"); if (!sel) return;
   sel.innerHTML = hotelFloors.map(f => `<option value="${f}">${f}</option>`).join('');
 }
-
 window.addNewFloor = async () => {
-  const fName = document.getElementById("newFloorName").value.trim();
-  if (!fName || hotelFloors.includes(fName)) return;
-  hotelFloors.push(fName);
+  const f = document.getElementById("newFloorName").value.trim();
+  if (!f || hotelFloors.includes(f)) return;
+  hotelFloors.push(f);
   await updateDoc(doc(db, "hotels", currentHotelId), { floors: hotelFloors });
   document.getElementById("newFloorName").value = "";
   await loadHotelFloors();
 };
-
-window.removeFloor = async (fName) => {
-  if (hotelFloors.length <= 1) return alert("Must keep at least 1 floor.");
-  hotelFloors = hotelFloors.filter(x => x !== fName);
+window.removeFloor = async (f) => {
+  if (hotelFloors.length <= 1) return alert("Keep at least 1 floor.");
+  hotelFloors = hotelFloors.filter(x => x !== f);
   await updateDoc(doc(db, "hotels", currentHotelId), { floors: hotelFloors });
   await loadHotelFloors();
 };
-
 function renderFloorWifiInputs() {
-  const container = document.getElementById("floorWifiInputs"); if (!container) return;
-  container.innerHTML = hotelFloors.map(f => {
-    const pass = (currentHotelProfile.floorWifi && currentHotelProfile.floorWifi[f]) ? currentHotelProfile.floorWifi[f] : "Paradise@123";
-    return `<div><label class="block text-slate-400 mb-0.5">${f} WiFi Password</label><input type="text" id="wifi_${f.replace(/\s+/g, '_')}" value="${pass}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"></div>`;
+  const c = document.getElementById("floorWifiInputs"); if (!c) return;
+  c.innerHTML = hotelFloors.map(f => {
+    const p = (currentHotelProfile.floorWifi && currentHotelProfile.floorWifi[f]) ? currentHotelProfile.floorWifi[f] : "Paradise@123";
+    return `<div><label class="block text-slate-400 mb-0.5">${f} WiFi</label><input type="text" id="wifi_${f.replace(/\s+/g, '_')}" value="${p}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"></div>`;
   }).join('');
 }
-
 window.saveFloorWifi = async () => {
-  const wifiObj = {};
-  hotelFloors.forEach(f => { wifiObj[f] = document.getElementById(`wifi_${f.replace(/\s+/g, '_')}`)?.value || "Paradise@123"; });
-  await updateDoc(doc(db, "hotels", currentHotelId), { floorWifi: wifiObj });
-  currentHotelProfile.floorWifi = wifiObj;
-  alert("Floor WiFi updated!");
+  const obj = {};
+  hotelFloors.forEach(f => { obj[f] = document.getElementById(`wifi_${f.replace(/\s+/g, '_')}`)?.value || "Paradise@123"; });
+  await updateDoc(doc(db, "hotels", currentHotelId), { floorWifi: obj });
+  currentHotelProfile.floorWifi = obj;
+  alert("WiFi updated!");
 };
 
 async function loadHotelProfileSettings() {
@@ -1847,24 +2158,15 @@ async function loadHotelProfileSettings() {
     currentHotelProfile = { ...currentHotelProfile, ...d };
     document.getElementById("setHotelPhone").value = d.phone || "";
     document.getElementById("setHotelUpiId").value = d.upiId || "";
-    let inTime = "12:00 PM", outTime = "11:00 AM";
-    if(d.policyNote) {
-      const parts = d.policyNote.split("|");
-      if(parts[0]) inTime = parts[0].replace("Standard check-in:", "").trim();
-      if(parts[1]) outTime = parts[1].replace("Check-out:", "").trim();
-    }
-    document.getElementById("setCheckIn").value = inTime;
-    document.getElementById("setCheckOut").value = outTime;
+    let inT = "12:00 PM", outT = "11:00 AM";
+    if(d.policyNote) { const p = d.policyNote.split("|"); if(p[0]) inT = p[0].replace("Standard check-in:", "").trim(); if(p[1]) outT = p[1].replace("Check-out:", "").trim(); }
+    document.getElementById("setCheckIn").value = inT;
+    document.getElementById("setCheckOut").value = outT;
     document.getElementById("setPolicyNote").value = d.policyNote || "";
   }
 }
 
-window.requestSettingsAuth = (payload) => {
-  pendingSettingsPayload = payload;
-  document.getElementById("settingsAuthPass").value = "";
-  document.getElementById("settingsAuthModal").classList.remove("hidden");
-};
-
+window.requestSettingsAuth = (p) => { pendingSettingsPayload = p; document.getElementById("settingsAuthPass").value = ""; document.getElementById("settingsAuthModal").classList.remove("hidden"); };
 window.verifySettingsPassword = async () => {
   const pass = document.getElementById("settingsAuthPass").value;
   const btn = document.getElementById("settingsAuthBtn");
@@ -1874,59 +2176,51 @@ window.verifySettingsPassword = async () => {
     await signInWithEmailAndPassword(auth, auth.currentUser.email, pass);
     if (pendingSettingsPayload && pendingSettingsPayload.action === "saveProfile") {
       await updateDoc(doc(db, "hotels", currentHotelId), pendingSettingsPayload.data);
-      alert("Settings updated successfully!");
+      alert("Settings updated!");
       currentHotelProfile = { ...currentHotelProfile, ...pendingSettingsPayload.data };
     }
     document.getElementById("settingsAuthModal").classList.add("hidden");
-  } catch (err) { alert("Incorrect password! Settings not saved."); }
+  } catch (err) { alert("Incorrect password!"); }
   finally { btn.innerText = "Verify & Save"; btn.disabled = false; pendingSettingsPayload = null; }
 };
-
 window.saveHotelProfile = () => {
   const phone = document.getElementById("setHotelPhone").value.trim();
   const upiId = document.getElementById("setHotelUpiId").value.trim();
-  const inTime = document.getElementById("setCheckIn").value.trim();
-  const outTime = document.getElementById("setCheckOut").value.trim();
+  const inT = document.getElementById("setCheckIn").value.trim();
+  const outT = document.getElementById("setCheckOut").value.trim();
   const note = document.getElementById("setPolicyNote").value.trim();
-  const policy = `Standard check-in: ${inTime} | Check-out: ${outTime} | ${note}`;
-  requestSettingsAuth({ action: "saveProfile", data: { phone, upiId, policyNote: policy } });
+  requestSettingsAuth({ action: "saveProfile", data: { phone, upiId, policyNote: `Standard check-in: ${inT} | Check-out: ${outT} | ${note}` } });
 };
 
 // ============================================================
 // BACKUP / RESTORE
 // ============================================================
 window.downloadBackup = () => {
-  const data = {
-    hotelName: currentHotelProfile?.hotelName || "Hotel",
-    exportDate: new Date().toISOString(),
-    rooms: cachedRooms, bookings: cachedBookings, expenses: cachedExpenses,
-    staff: cachedStaff, deposits: cachedDeposits
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const data = { hotelName: currentHotelProfile?.hotelName || "Hotel", exportDate: new Date().toISOString(), rooms: cachedRooms, bookings: cachedBookings, expenses: cachedExpenses, staff: cachedStaff, deposits: cachedDeposits, refunds: window._cachedRefunds };
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   a.download = `SmartFix_Backup_${new Date().toISOString().split('T')[0]}.json`;
   a.click();
 };
 
 window.triggerRestore = () => document.getElementById("restoreFileInput").click();
-
 window.handleRestoreFile = (event) => {
   const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
       const data = JSON.parse(e.target.result);
-      if(!data.hotelName) throw new Error("Invalid Backup File Format.");
-      if(!confirm(`WARNING: This will overwrite current data with backup from ${data.exportDate.split('T')[0]}. Continue?`)) { event.target.value = ""; return; }
+      if(!data.hotelName) throw new Error("Invalid backup.");
+      if(!confirm(`Overwrite current data with backup from ${data.exportDate.split('T')[0]}?`)) { event.target.value = ""; return; }
       if(data.rooms) for(const r of data.rooms) await setDoc(doc(db, "hotels", currentHotelId, "rooms", r.id), r);
       if(data.bookings) for(const b of data.bookings) await setDoc(doc(db, "hotels", currentHotelId, "bookings", b.id), b);
       if(data.expenses) for(const ex of data.expenses) await setDoc(doc(db, "hotels", currentHotelId, "expenses", ex.id), ex);
       if(data.staff) for(const s of data.staff) await setDoc(doc(db, "hotels", currentHotelId, "staff", s.id), s);
       if(data.deposits) for(const d of data.deposits) await setDoc(doc(db, "hotels", currentHotelId, "bank_deposits", d.id), d);
-      alert("Data restored successfully! Page will reload.");
+      if(data.refunds) for(const rf of data.refunds) await setDoc(doc(db, "hotels", currentHotelId, "refunds", rf.id), rf);
+      alert("Restored! Reloading...");
       window.location.reload();
-    } catch (err) { alert("Restore Failed: " + err.message); event.target.value = ""; }
+    } catch (err) { alert("Failed: " + err.message); event.target.value = ""; }
   };
   reader.readAsText(file);
 };
