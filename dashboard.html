@@ -597,8 +597,15 @@ window.confirmUpiPaymentReceived = async () => {
   const btn = document.getElementById("upiConfirmBtn");
   btn.innerText = "Processing..."; btn.disabled = true;
   try {
-    const newPaid = (booking.totalPaid || booking.advancePaid || 0) + (booking.balanceDue || 0);
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", activeUpiBookingId), { totalPaid: newPaid, balanceDue: 0, isSettled: true, lastPaymentMode: "Bank" });
+    // FIX #4: Track UPI payment in payments array
+    const upiAmount = booking.balanceDue || 0;
+    const newPaid = (booking.totalPaid || booking.advancePaid || 0) + upiAmount;
+    const existingPayments = booking.payments || [];
+    const newPayments = [...existingPayments];
+    if (upiAmount > 0) {
+      newPayments.push({ amount: upiAmount, mode: "Bank", date: new Date().toISOString(), type: "upi" });
+    }
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", activeUpiBookingId), { totalPaid: newPaid, balanceDue: 0, isSettled: true, lastPaymentMode: "Bank", payments: newPayments });
     alert("Payment recorded successfully!");
     document.getElementById("upiPaymentModal").classList.add("hidden");
     await loadInvoiceArchives(); await loadFinancialReports();
@@ -626,14 +633,15 @@ window.toggleAadhaarScanner = () => {
 
 function handleAadhaarScan(qrText) {
   try {
-    let aadhaarNumber = "", guestName = "";
-    const match = qrText.match(/\d{12}/);
-    if (match) aadhaarNumber = match[0];
-    if (qrText.includes("<PrintLetterBarcodeData")) {
-      const xmlDoc = new DOMParser().parseFromString(qrText, "text/xml");
-      const root = xmlDoc.getElementsByTagName("PrintLetterBarcodeData")[0];
-      if(root) { guestName = root.getAttribute("name") || ""; aadhaarNumber = root.getAttribute("uid") || aadhaarNumber; }
+    // FIX #8: Detect Secure QR and warn
+    if (!qrText.includes("<PrintLetterBarcodeData")) {
+      alert("⚠️ This appears to be a Secure QR Code (newer Aadhaar).\n\nSecure QR codes are compressed binary and cannot be read as plain XML. Please enter the Aadhaar number manually.");
+      return;
     }
+    let aadhaarNumber = "", guestName = "";
+    const xmlDoc = new DOMParser().parseFromString(qrText, "text/xml");
+    const root = xmlDoc.getElementsByTagName("PrintLetterBarcodeData")[0];
+    if(root) { guestName = root.getAttribute("name") || ""; aadhaarNumber = root.getAttribute("uid") || ""; }
     if (aadhaarNumber) { document.getElementById("bookIdType").value = "Aadhaar"; document.getElementById("bookIdNumber").value = aadhaarNumber; }
     if (guestName) document.getElementById("bookGuestName").value = guestName;
     document.getElementById("verifiedBadge").classList.remove("hidden");
@@ -652,7 +660,7 @@ window.openCheckInList = () => {
   const list = document.getElementById('checkinList');
   const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
   if(inHouse.length === 0) list.innerHTML = `<div class="text-center text-slate-500 text-xs py-8">No guests currently checked in.</div>`;
-  else list.innerHTML = inHouse.map(b => `<div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800"><div><div class="text-sm font-bold text-white">${b.guestName} <span class="text-[10px] text-slate-500">(${b.phone})</span></div><div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | Bill: ₹${(b.summary?.grandTotal || 0).toFixed(2)}</div></div><span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span></div>`).join('');
+  else list.innerHTML = inHouse.map(b => `<div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800"><div><div class="text-sm font-bold text-white">${b.guestName} <span class="text-[10px] text-slate-500">(${b.phone})</span></div><div class="text-xs text-cyan-400 mt-1">Room ${b.roomNumber} | Bill: ₹${((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2)}</div></div><span class="px-2 py-1 bg-cyan-950 text-cyan-400 rounded text-[10px] font-bold border border-cyan-800">ACTIVE</span></div>`).join('');
   document.getElementById('checkinModal').classList.remove('hidden');
 };
 
@@ -777,14 +785,20 @@ window.confirmCheckout = async () => {
   const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
   const bookingId = checkoutBookingData.bookingId;
   try {
-    // FIXED: summary.grandTotal is not overwritten to avoid double counting in invoice print
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), { 
-      "foodTotal": liveFoodBill, 
-      "totalPaid": totalPaid, 
-      "balanceDue": newBal > 0 ? newBal : 0, 
-      "isSettled": isFullySettled, 
-      "lastPaymentMode": paymentMode, 
-      "collectedBy": collectedBy 
+    // FIX #2: Track checkout payment in payments array + don't overwrite summary.grandTotal
+    const existingPayments = checkoutBookingData.payments || [];
+    const newPayments = [...existingPayments];
+    if (collectNow > 0) {
+      newPayments.push({ amount: collectNow, mode: paymentMode, date: new Date().toISOString(), type: "checkout" });
+    }
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), {
+      "foodTotal": liveFoodBill,
+      "totalPaid": totalPaid,
+      "balanceDue": newBal > 0 ? newBal : 0,
+      "isSettled": isFullySettled,
+      "lastPaymentMode": paymentMode,
+      "collectedBy": collectedBy,
+      "payments": newPayments
     });
     await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { checkOutTime: outTime, totalPaid: totalPaid, balanceDue: newBal > 0 ? newBal : 0, isSettled: isFullySettled, collectedBy: collectedBy });
     await settleRoomFoodOrders(currentHotelId, checkoutBookingData.roomNumber);
@@ -862,12 +876,15 @@ window.sendDueWhatsApp = (phone, name, due) => {
 window.openDueModal = (id) => {
   dueBookingData = cachedBookings.find(b => b.id === id || b.bookingId === id);
   if(!dueBookingData) return;
+  const totalBill = (dueBookingData.summary?.grandTotal || 0) + (dueBookingData.foodTotal || 0);
+  const paid = dueBookingData.totalPaid || dueBookingData.advancePaid || 0;
+  const currentDue = dueBookingData.balanceDue || 0;
   document.getElementById("dueGuestName").innerText = dueBookingData.guestName;
   document.getElementById("dueInvoiceId").innerText = dueBookingData.bookingId;
-  document.getElementById("dueTotalBill").innerText = `₹${(dueBookingData.summary?.grandTotal || 0).toFixed(2)}`;
-  document.getElementById("duePaid").innerText = `₹${(dueBookingData.totalPaid || dueBookingData.advancePaid || 0).toFixed(2)}`;
-  document.getElementById("dueAmount").innerText = `₹${(dueBookingData.balanceDue || 0).toFixed(2)}`;
-  document.getElementById("dueCollectAmount").value = (dueBookingData.balanceDue || 0).toFixed(2);
+  document.getElementById("dueTotalBill").innerText = `₹${totalBill.toFixed(2)}`;
+  document.getElementById("duePaid").innerText = `₹${paid.toFixed(2)}`;
+  document.getElementById("dueAmount").innerText = `₹${currentDue.toFixed(2)}`;
+  document.getElementById("dueCollectAmount").value = currentDue.toFixed(2);
   calcNewDue();
   document.getElementById("dueModal").classList.remove("hidden");
 };
@@ -885,10 +902,20 @@ window.submitDueCollection = async () => {
   if(collect <= 0) return alert("Enter valid amount.");
   const oldPaid = dueBookingData.totalPaid || dueBookingData.advancePaid || 0;
   const newPaid = oldPaid + collect;
-  const newBal = Math.max(0, (dueBookingData.summary?.grandTotal || 0) - newPaid); // FIXED: Added fallback for safety
+  const totalBill = (dueBookingData.summary?.grandTotal || 0) + (dueBookingData.foodTotal || 0);
+  const newBal = Math.max(0, totalBill - newPaid);
   const isSettled = newBal <= 0;
   try {
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), { totalPaid: newPaid, balanceDue: newBal, isSettled: isSettled, lastPaymentMode: pMode });
+    // FIX #3: Track due payment in payments array
+    const existingPayments = dueBookingData.payments || [];
+    const newPayments = [...existingPayments, { amount: collect, mode: pMode, date: new Date().toISOString(), type: "due" }];
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), {
+      totalPaid: newPaid,
+      balanceDue: newBal,
+      isSettled: isSettled,
+      lastPaymentMode: pMode,
+      payments: newPayments
+    });
     alert("Payment collected successfully!");
     document.getElementById("dueModal").classList.add("hidden");
     await loadInvoiceArchives(); await loadFinancialReports(); loadMarketDue();
@@ -911,12 +938,22 @@ window.toggleGroupMode = () => {
   else { document.getElementById("bookRoomRate").readOnly = false; document.getElementById("bookRoomRate").classList.remove("opacity-50"); handleRoomSelectChange(); }
 };
 
+// FIX #10: Show upcoming reservation warnings in room dropdown
 window.openBookingModal = (presetRoomNo = null) => {
   const sel = document.getElementById("bookRoomSelect");
   sel.innerHTML = "";
   const vac = cachedRooms.filter(r => r.status === "vacant");
   if (!vac.length) return alert("No vacant rooms available!");
-  vac.forEach(r => { sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 0}" data-type="${r.type}" data-package="${r.packageType || 'lodging_only'}">Room ${r.roomNumber} (${r.type})</option>`; });
+  const today = new Date().toLocaleDateString('en-CA');
+  vac.forEach(r => {
+    const upcoming = cachedBookings.filter(b =>
+      b.roomNumber === r.roomNumber &&
+      b.status === 'confirmed' &&
+      b.checkInDate && b.checkInDate >= today
+    ).sort((a,b) => a.checkInDate.localeCompare(b.checkInDate));
+    const warning = upcoming.length > 0 ? ` ⚠️ Reserved ${upcoming[0].checkInDate}` : '';
+    sel.innerHTML += `<option value="${r.roomNumber}" data-rate="${r.rate}" data-food="${r.foodRate || 0}" data-type="${r.type}" data-package="${r.packageType || 'lodging_only'}">Room ${r.roomNumber} (${r.type})${warning}</option>`;
+  });
   if (presetRoomNo) sel.value = presetRoomNo;
   document.getElementById("bookAdvancePaid").value = "0";
   document.getElementById("bookAdvanceMode").value = "Cash";
@@ -932,7 +969,21 @@ window.openBookingModal = (presetRoomNo = null) => {
   document.getElementById("bookingModal").classList.remove("hidden");
 };
 
-window.closeBookingModal = () => document.getElementById("bookingModal").classList.add("hidden");
+// FIX #7: Stop camera when modal closed
+window.closeBookingModal = () => {
+  if (isScanning && html5QrCode) {
+    html5QrCode.stop().then(() => {
+      isScanning = false;
+      const reader = document.getElementById("reader");
+      const btn = document.getElementById("scanBtn");
+      const status = document.getElementById("scanStatus");
+      if (reader) reader.classList.add("hidden");
+      if (status) status.classList.add("hidden");
+      if (btn) { btn.innerText = "Scan Aadhaar"; btn.classList.replace("bg-rose-500","bg-cyan-500"); btn.classList.replace("hover:bg-rose-400","hover:bg-cyan-400"); }
+    }).catch(err => console.log("Scanner stop error:", err));
+  }
+  document.getElementById("bookingModal").classList.add("hidden");
+};
 
 window.handleRoomSelectChange = () => {
   const sel = document.getElementById("bookRoomSelect");
@@ -987,7 +1038,29 @@ window.submitBooking = async () => {
   const charges = recalcBill();
   const todayStr = new Date().toLocaleDateString('en-CA');
   const isFutureBooking = checkInDate > todayStr;
+
+  // FIX #9: Double-booking conflict check
+  const newStart = new Date(checkInDate);
+  const newEnd = new Date(checkInDate);
+  newEnd.setDate(newEnd.getDate() + nights);
+  const conflicts = cachedBookings.filter(b => {
+    if (b.roomNumber !== roomNo) return false;
+    if (b.status === 'cancelled' || b.status === 'checked_out') return false;
+    if (!b.checkInDate) return false;
+    const bStart = new Date(b.checkInDate);
+    const bEnd = new Date(b.checkInDate);
+    bEnd.setDate(bEnd.getDate() + (b.nights || 1));
+    return !(newEnd <= bStart || newStart >= bEnd);
+  });
+  if (conflicts.length > 0) {
+    const conflictMsg = conflicts.map(c => `• ${c.guestName} — ${c.checkInDate} (${c.nights}N)`).join('\n');
+    if (!confirm(`⚠️ DOUBLE BOOKING WARNING!\n\nRoom ${roomNo} already has these bookings overlapping your dates:\n\n${conflictMsg}\n\nContinue anyway? (Guest may face issue at check-in)`)) {
+      return;
+    }
+  }
+
   const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+  // FIX #1: Initialize payments array for tracking
   const payload = {
     roomId: roomNo, roomNumber: roomNo, roomType: roomData?.type || "Standard",
     floor: roomData?.floor || "Floor 1",
@@ -998,6 +1071,7 @@ window.submitBooking = async () => {
     isFutureBooking: isFutureBooking,
     isGroup, groupName, advancePaid, discount,
     lastPaymentMode: advanceMode,
+    payments: advancePaid > 0 ? [{ amount: advancePaid, mode: advanceMode, date: new Date().toISOString(), type: "advance" }] : [],
     ...charges
   };
   try {
@@ -1132,7 +1206,6 @@ window.loadInvoiceArchives = async () => {
     let html = "";
     cachedBookings.forEach(b => {
       const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
-      // FIXED: Add foodTotal to the displayed total so it reflects the full amount
       const total = ((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2);
       const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
       const due = (b.balanceDue || 0).toFixed(2);
@@ -1311,11 +1384,22 @@ window.loadFinancialReports = async () => {
     window._cachedPosOrders = []; posSnap.forEach(d => window._cachedPosOrders.push(d.data()));
   } catch(e) { window._cachedPosOrders = []; }
 
+  // FIX #5: Accurate cash/bank tracking using payments array
   let cashRevenue = 0, bankRevenue = 0, totalRevenue = 0;
   cachedBookings.forEach(b => {
-    const paid = b.totalPaid || b.advancePaid || 0;
-    totalRevenue += paid;
-    if (b.lastPaymentMode === "Bank") bankRevenue += paid; else cashRevenue += paid;
+    if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
+      b.payments.forEach(p => {
+        const amt = parseFloat(p.amount) || 0;
+        totalRevenue += amt;
+        if (p.mode === "Bank") bankRevenue += amt;
+        else cashRevenue += amt;
+      });
+    } else {
+      const paid = b.totalPaid || b.advancePaid || 0;
+      totalRevenue += paid;
+      if (b.lastPaymentMode === "Bank") bankRevenue += paid;
+      else cashRevenue += paid;
+    }
   });
 
   let cashExpenses = 0, bankExpenses = 0, totalExpenses = 0;
@@ -1410,8 +1494,24 @@ window.renderCharts = () => {
     return d >= start && d <= end;
   });
 
+  // FIX #6: Date-based revenue using payments array
   let totalRev = 0;
-  filteredBookings.forEach(b => totalRev += (b.totalPaid || b.advancePaid || 0));
+  filteredBookings.forEach(b => {
+    if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
+      b.payments.forEach(p => {
+        const pDate = new Date(p.date || b.createdAt);
+        if (pDate >= start && pDate <= end) {
+          totalRev += (parseFloat(p.amount) || 0);
+        }
+      });
+    } else {
+      const paidDate = b.createdAt ? new Date(b.createdAt) : null;
+      if (paidDate && paidDate >= start && paidDate <= end) {
+        totalRev += (b.totalPaid || b.advancePaid || 0);
+      }
+    }
+  });
+
   let totalExp = 0;
   const expenseByCategory = {};
   filteredExpenses.forEach(e => {
@@ -1431,7 +1531,16 @@ window.renderCharts = () => {
   const sortedDays = Object.keys(days).sort();
   const profitData = sortedDays.map(day => {
     let dayRev = 0;
-    filteredBookings.forEach(b => { if(b.checkInDate === day || (!b.checkInDate && day === new Date().toISOString().split('T')[0])) dayRev += (b.totalPaid || b.advancePaid || 0); });
+    filteredBookings.forEach(b => {
+      if (b.payments && Array.isArray(b.payments) && b.payments.length > 0) {
+        b.payments.forEach(p => {
+          const pDate = new Date(p.date || b.createdAt).toLocaleDateString('en-CA');
+          if (pDate === day) dayRev += (parseFloat(p.amount) || 0);
+        });
+      } else if(b.checkInDate === day || (!b.checkInDate && day === new Date().toISOString().split('T')[0])) {
+        dayRev += (b.totalPaid || b.advancePaid || 0);
+      }
+    });
     return dayRev;
   });
 
