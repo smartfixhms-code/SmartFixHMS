@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartFix HMS - Complete Hotel Management Software</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23ffffff'/%3E%3Crect x='100' y='150' width='312' height='262' rx='20' fill='%23ff5b22'/%3E%3Crect x='130' y='180' width='40' height='60' fill='%23ffffff'/%3E%3Crect x='190' y='180' width='40' height='60' fill='%23ffffff'/%3E%3Crect x='250' y='180' width='40' height='60' fill='%23ffffff'/%3E%3Crect x='310' y='180' width='40' height='60' fill='%23ffffff'/%3E%3Crect x='130' y='270' width='220' height='80' rx='10' fill='%23ffffff'/%3E%3Cpolygon points='356,90 386,140 326,140' fill='%23ff5b22'/%3E%3Ctext x='356' y='130' font-family='Arial' font-weight='900' font-size='40' fill='%23ffffff' text-anchor='middle'>✓</text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23ffffff'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ff5722'/%3E%3Cstop offset='100%25' stop-color='%23ff9800'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='80' y='160' width='60' height='260' rx='10' fill='url(%23g)'/%3E%3Crect x='372' y='160' width='60' height='260' rx='10' fill='url(%23g)'/%3E%3Cpath d='M170 140 L256 60 L342 140 L342 420 L170 420 Z' fill='url(%23g)'/%3E%3Ccircle cx='256' cy='260' r='70' fill='%23ffffff'/%3E%3Cpolyline points='220,260 245,285 295,235' fill='none' stroke='%23ff5722' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ffffff">
 <meta name="description" content="Complete Hotel Management System. Manage bookings, restaurant, staff, and GST reports from any device.">
@@ -18,8 +18,7 @@ tailwind.config = {
         brand: {
           DEFAULT: '#ff5722',
           light: '#ff7a4d',
-          dark: '#e64a19',
-          gradient: 'linear-gradient(135deg, #ff5722 0%, #ff9800 100%)'
+          dark: '#e64a19'
         }
       },
       fontFamily: { sans: ['Inter', 'sans-serif'] }
@@ -50,13 +49,28 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex items-center justify-between h-16 sm:h-20">
+
 <!-- Logo -->
-<a href="#" class="flex items-center gap-2">
-<div class="bg-brand-gradient w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-white text-2xl font-black shadow-lg">S</div>
-<div>
-<div class="text-lg sm:text-xl font-black text-slate-900 leading-none">Smart<span class="text-brand">Fix</span> <span class="text-brand">HMS</span></div>
-<div class="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Hotel Management System</div>
-</div>
+<a href="#" class="flex items-center gap-2 sm:gap-3">
+<svg class="h-10 sm:h-12 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="lg-brand" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#ff5722"/>
+<stop offset="100%" stop-color="#ff9800"/>
+</linearGradient>
+</defs>
+<g transform="translate(10,5)">
+<rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand)" stroke-width="2.5" fill="#fff5ed"/>
+<rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand)" stroke-width="2.5" fill="#fff5ed"/>
+<path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#lg-brand)" stroke-width="3" fill="#ff5722"/>
+<circle cx="45" cy="50" r="18" fill="#ffffff"/>
+<polyline points="37,50 43,56 55,42" fill="none" stroke="#ff5722" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="110" y="48" font-family="'Inter',sans-serif" font-weight="900" font-size="42" fill="#1e293b">Smart<tspan fill="url(#lg-brand)">Fix</tspan></text>
+<rect x="295" y="16" width="94" height="36" rx="8" fill="url(#lg-brand)"/>
+<text x="342" y="42" font-family="'Inter',sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle" letter-spacing="1">HMS</text>
+<text x="112" y="74" font-family="'Inter',sans-serif" font-weight="700" font-size="11" fill="#ff5722" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+</svg>
 </a>
 
 <!-- Desktop nav -->
@@ -69,7 +83,7 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 
 <!-- CTA buttons -->
 <div class="flex items-center gap-2">
-<a href="tel:+919046356631" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand hover:bg-brand/5 rounded-lg transition">
+<a href="tel:+919046356631" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand hover:bg-orange-50 rounded-lg transition">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
 <span class="hidden lg:inline">+91 90463 56631</span>
 </a>
@@ -84,13 +98,12 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 <!-- HERO SECTION -->
 <!-- ============================================================ -->
 <section class="hero-bg relative overflow-hidden">
-<div class="absolute top-20 right-0 w-96 h-96 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
-<div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-200/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-20 right-0 w-96 h-96 bg-orange-200/40 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-100/60 rounded-full blur-3xl pointer-events-none"></div>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative">
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
-<!-- Left content -->
 <div class="text-center lg:text-left">
 <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 border border-orange-300 rounded-full text-xs font-bold text-brand mb-4 sm:mb-6">
 <span class="w-2 h-2 bg-brand rounded-full animate-pulse"></span>
@@ -118,7 +131,6 @@ Start 30-Day Free Trial →
 </div>
 </div>
 
-<!-- Right image (mockup) -->
 <div class="relative order-first lg:order-last">
 <div class="animate-float">
 <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 sm:p-4">
@@ -161,22 +173,10 @@ Start 30-Day Free Trial →
 <section class="bg-brand-gradient text-white">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-<div>
-<div class="text-2xl sm:text-3xl font-black">500+</div>
-<div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Hotels Trust Us</div>
-</div>
-<div>
-<div class="text-2xl sm:text-3xl font-black">50,000+</div>
-<div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Bookings Processed</div>
-</div>
-<div>
-<div class="text-2xl sm:text-3xl font-black">₹10Cr+</div>
-<div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Transactions Handled</div>
-</div>
-<div>
-<div class="text-2xl sm:text-3xl font-black">99.9%</div>
-<div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Uptime Guarantee</div>
-</div>
+<div><div class="text-2xl sm:text-3xl font-black">500+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Hotels Trust Us</div></div>
+<div><div class="text-2xl sm:text-3xl font-black">50,000+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Bookings Processed</div></div>
+<div><div class="text-2xl sm:text-3xl font-black">₹10Cr+</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Transactions Handled</div></div>
+<div><div class="text-2xl sm:text-3xl font-black">99.9%</div><div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-90 mt-1">Uptime Guarantee</div></div>
 </div>
 </div>
 </section>
@@ -194,7 +194,6 @@ Start 30-Day Free Trial →
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
-<!-- Feature 1 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -203,7 +202,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">See which rooms are vacant, occupied, or cleaning in real-time. One-click check-in/check-out.</p>
 </div>
 
-<!-- Feature 2 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -212,7 +210,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Digital menu, KOT system, room-service orders. Auto-transfer food bills to guest's room folio.</p>
 </div>
 
-<!-- Feature 3 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -221,7 +218,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Automated 12% lodging and 5% food GST with SAC codes. Download Excel reports for your CA.</p>
 </div>
 
-<!-- Feature 4 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -230,7 +226,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Manage staff, record salaries, generate payslips. Role-based access for owner, manager, receptionist.</p>
 </div>
 
-<!-- Feature 5 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -239,7 +234,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Beautiful charts showing profit, revenue, expense breakdown, and top-selling food items.</p>
 </div>
 
-<!-- Feature 6 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -248,7 +242,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Month and week view calendar. See room availability at a glance. Prevent double bookings.</p>
 </div>
 
-<!-- Feature 7 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -257,7 +250,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Track outstanding balances. Send automated WhatsApp payment reminders to guests.</p>
 </div>
 
-<!-- Feature 8 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
@@ -266,7 +258,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Scan Aadhaar QR code with phone camera. Auto-fill guest name and ID. Fast check-in.</p>
 </div>
 
-<!-- Feature 9 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -275,7 +266,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Generate UPI QR codes for GPay/PhonePe/Paytm. Guests pay directly. Auto-mark settled.</p>
 </div>
 
-<!-- Feature 10 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -284,7 +274,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">End-of-day reconciliation. Verify cash drawer, UPI receipts, expenses — one click.</p>
 </div>
 
-<!-- Feature 11 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -293,7 +282,6 @@ Start 30-Day Free Trial →
 <p class="text-sm text-slate-600 leading-relaxed">Print 58mm/80mm thermal bills instantly. Generate professional A4 tax invoices.</p>
 </div>
 
-<!-- Feature 12 -->
 <div class="feature-card bg-white border border-slate-200 rounded-2xl p-6">
 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
@@ -319,7 +307,6 @@ Start 30-Day Free Trial →
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-<!-- Benefit 1 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -328,14 +315,11 @@ Start 30-Day Free Trial →
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">Save 2-3 Hours Daily</h3>
 <p class="text-sm text-slate-600 leading-relaxed">No more paper registers. Auto calculations for bills, GST, and occupancy. Reception desk runs 3x faster.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">⚡</span> Manual work reduced by 80%
-</div>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">⚡</span> Manual work reduced by 80%</div>
 </div>
 </div>
 </div>
 
-<!-- Benefit 2 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -344,14 +328,11 @@ Start 30-Day Free Trial →
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">Zero Cash Leakage</h3>
 <p class="text-sm text-slate-600 leading-relaxed">Every rupee tracked. Cash in hand, bank balance, refunds, expenses — all auto-calculated. Day-close summary catches theft.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">💰</span> Save ₹5000-15000/month
-</div>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">💰</span> Save ₹5000-15000/month</div>
 </div>
 </div>
 </div>
 
-<!-- Benefit 3 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -360,14 +341,11 @@ Start 30-Day Free Trial →
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">GST & Tax Compliant</h3>
 <p class="text-sm text-slate-600 leading-relaxed">Automated 12% + 5% GST calculation. SAC codes included. Your CA gets clean Excel reports — no more stress during filing.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">📊</span> CA-ready Excel exports
-</div>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">📊</span> CA-ready Excel exports</div>
 </div>
 </div>
 </div>
 
-<!-- Benefit 4 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -376,14 +354,11 @@ Start 30-Day Free Trial →
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">Access From Anywhere</h3>
 <p class="text-sm text-slate-600 leading-relaxed">Home, office, or traveling — check your hotel's status from mobile. Real-time data. No installation needed.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">📱</span> Works on any device
-</div>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">📱</span> Works on any device</div>
 </div>
 </div>
 </div>
 
-<!-- Benefit 5 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -391,15 +366,12 @@ Start 30-Day Free Trial →
 </div>
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">Control Your Staff</h3>
-<p class="text-sm text-slate-600 leading-relaxed">Role-based access. Receptionist can't see P&L. Housekeeping can't checkout. Suspend/reset passwords anytime. Full audit trail.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">🔐</span> Prevent staff fraud
-</div>
+<p class="text-sm text-slate-600 leading-relaxed">Role-based access. Receptionist can't see P&L. Housekeeping can't checkout. Suspend/reset passwords anytime.</p>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">🔐</span> Prevent staff fraud</div>
 </div>
 </div>
 </div>
 
-<!-- Benefit 6 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
 <div class="flex items-start gap-4">
 <div class="w-14 h-14 bg-brand-gradient rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -408,9 +380,7 @@ Start 30-Day Free Trial →
 <div>
 <h3 class="text-lg font-bold text-slate-900 mb-2">Zero Technical Setup</h3>
 <p class="text-sm text-slate-600 leading-relaxed">No servers, no IT team, no software install. Just open browser and login. Works on existing laptop/phone.</p>
-<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand">
-<span class="text-xl">✨</span> Ready in 5 minutes
-</div>
+<div class="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand"><span class="text-xl">✨</span> Ready in 5 minutes</div>
 </div>
 </div>
 </div>
@@ -428,7 +398,6 @@ Start 30-Day Free Trial →
 <div class="inline-block px-3 py-1 bg-orange-100 rounded-full text-xs font-bold text-brand uppercase tracking-widest mb-3">How It Works</div>
 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">Get Started in 3 Simple Steps</h2>
 </div>
-
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
 <div class="text-center">
 <div class="w-16 h-16 bg-brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-white text-2xl font-black">1</div>
@@ -461,16 +430,11 @@ Start 30-Day Free Trial →
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-<!-- 6 Months -->
 <div class="bg-white border-2 border-slate-200 rounded-3xl p-6 sm:p-8 relative">
 <div class="absolute top-4 right-4 px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-full uppercase">Flexible</div>
 <h3 class="text-lg font-bold text-slate-900 mb-1">6 Months Plan</h3>
 <p class="text-sm text-slate-500 mb-6">For small properties</p>
-<div class="flex items-baseline gap-1 mb-6">
-<span class="text-4xl sm:text-5xl font-black text-slate-900">₹4,999</span>
-<span class="text-sm text-slate-500">/ 6 months</span>
-</div>
+<div class="flex items-baseline gap-1 mb-6"><span class="text-4xl sm:text-5xl font-black text-slate-900">₹4,999</span><span class="text-sm text-slate-500">/ 6 months</span></div>
 <ul class="space-y-3 mb-6 text-sm">
 <li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Unlimited Rooms & Bookings</li>
 <li class="flex items-start gap-2"><span class="text-brand font-bold">✓</span> Restaurant POS + KOT</li>
@@ -482,16 +446,12 @@ Start 30-Day Free Trial →
 <button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition">Start Free Trial</button>
 </div>
 
-<!-- 1 Year -->
 <div class="bg-brand-gradient border-2 border-brand rounded-3xl p-6 sm:p-8 relative shadow-2xl shadow-brand/30">
 <div class="absolute top-4 right-4 px-2 py-1 bg-white text-brand text-[10px] font-bold rounded-full uppercase">Save 25%</div>
 <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-yellow-300 text-slate-900 text-xs font-black rounded-full uppercase">Best Value</div>
 <h3 class="text-lg font-bold text-white mb-1">1 Year Plan</h3>
 <p class="text-sm text-white/80 mb-6">For growing hotels</p>
-<div class="flex items-baseline gap-1 mb-6">
-<span class="text-4xl sm:text-5xl font-black text-white">₹8,999</span>
-<span class="text-sm text-white/80">/ year</span>
-</div>
+<div class="flex items-baseline gap-1 mb-6"><span class="text-4xl sm:text-5xl font-black text-white">₹8,999</span><span class="text-sm text-white/80">/ year</span></div>
 <ul class="space-y-3 mb-6 text-sm text-white">
 <li class="flex items-start gap-2"><span class="font-bold">✓</span> Everything in 6-Month Plan</li>
 <li class="flex items-start gap-2"><span class="font-bold">✓</span> Unlimited Staff Logins</li>
@@ -502,9 +462,7 @@ Start 30-Day Free Trial →
 </ul>
 <button onclick="openLoginModal('owner', 'register')" class="w-full py-3 bg-white text-brand font-black rounded-xl hover:scale-[1.02] transition shadow-lg">Start 30-Day Free Trial</button>
 </div>
-
 </div>
-
 <p class="text-center text-xs text-slate-500 mt-8">All prices in INR. GST extra. Cancel anytime during trial.</p>
 </div>
 </section>
@@ -513,9 +471,6 @@ Start 30-Day Free Trial →
 <!-- CONTACT / CTA -->
 <!-- ============================================================ -->
 <section id="contact" class="py-16 sm:py-24 bg-brand-gradient text-white relative overflow-hidden">
-<div class="absolute inset-0 opacity-10">
-<svg viewBox="0 0 100 100" class="w-full h-full"><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern><rect width="100" height="100" fill="url(#grid)"/></svg>
-</div>
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">Ready to Modernize Your Hotel?</h2>
 <p class="text-sm sm:text-base lg:text-lg opacity-90 mb-8 max-w-2xl mx-auto">Join 500+ hotels already using SmartFix HMS. Start your 30-day free trial today — no credit card required.</p>
@@ -537,11 +492,13 @@ Start 30-Day Free Trial →
 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 <div class="md:col-span-2">
 <div class="flex items-center gap-2 mb-4">
-<div class="bg-brand-gradient w-10 h-10 rounded-xl flex items-center justify-center text-white text-xl font-black">S</div>
-<div>
-<div class="text-lg font-black text-white">Smart<span class="text-brand">Fix</span> HMS</div>
-<div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Hotel Management System</div>
-</div>
+<svg class="h-10 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="lg-brand2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff5722"/><stop offset="100%" stop-color="#ff9800"/></linearGradient></defs>
+<g transform="translate(10,5)"><rect x="0" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand2)" stroke-width="2.5" fill="#1e293b"/><rect x="68" y="32" width="22" height="58" rx="2" stroke="url(#lg-brand2)" stroke-width="2.5" fill="#1e293b"/><path d="M26 24 L45 8 L64 24 L64 90 L26 90 Z" stroke="url(#lg-brand2)" stroke-width="3" fill="#ff5722"/><circle cx="45" cy="50" r="18" fill="#ffffff"/><polyline points="37,50 43,56 55,42" fill="none" stroke="#ff5722" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="110" y="48" font-family="'Inter',sans-serif" font-weight="900" font-size="42" fill="#ffffff">Smart<tspan fill="url(#lg-brand2)">Fix</tspan></text>
+<rect x="295" y="16" width="94" height="36" rx="8" fill="url(#lg-brand2)"/><text x="342" y="42" font-family="'Inter',sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">HMS</text>
+<text x="112" y="74" font-family="'Inter',sans-serif" font-weight="700" font-size="11" fill="#ff9800" letter-spacing="3.5">HOTEL MANAGEMENT SYSTEM</text>
+</svg>
 </div>
 <p class="text-sm text-slate-400 max-w-md">Complete cloud-based hotel management solution. Manage bookings, restaurant, staff, GST, and analytics from any device.</p>
 <div class="mt-4 space-y-2">
@@ -592,17 +549,14 @@ WhatsApp Support
 <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-700 text-2xl leading-none w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center">×</button>
 </div>
 
-<!-- Tabs -->
 <div id="loginTabs" class="bg-slate-100 rounded-xl p-1 grid grid-cols-2 gap-1">
 <button onclick="switchLoginMode('owner')" id="tabOwner" class="py-2 text-xs font-bold rounded-lg transition">🏨 Owner</button>
 <button onclick="switchLoginMode('staff')" id="tabStaff" class="py-2 text-xs font-bold rounded-lg text-slate-500 transition">👥 Staff</button>
 </div>
 
-<!-- Form -->
 <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();" class="space-y-3">
-<!-- Register extra fields -->
 <div id="registerFields" class="hidden space-y-2">
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Hotel Name *</label><input type="text" id="regHotelName" required placeholder="Grand Palace Hotel" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
+<div><label class="block text-xs font-bold text-slate-700 mb-1">Hotel Name *</label><input type="text" id="regHotelName" placeholder="Grand Palace Hotel" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
 <div><label class="block text-xs font-bold text-slate-700 mb-1">Hotel Address</label><input type="text" id="regHotelAddress" placeholder="Street, City, PIN" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
 <div class="grid grid-cols-2 gap-2">
 <div><label class="block text-xs font-bold text-slate-700 mb-1">GSTIN</label><input type="text" id="regHotelGstin" placeholder="19ABCDE..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono uppercase"></div>
@@ -610,23 +564,22 @@ WhatsApp Support
 </div>
 </div>
 
-<!-- Owner login fields -->
 <div id="ownerFields">
-<div class="mb-2"><label class="block text-xs font-bold text-slate-700 mb-1">Email</label><input type="email" id="ownerEmail" required placeholder="you@hotel.com" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
-<div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="ownerPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
+<div class="mb-2"><label class="block text-xs font-bold text-slate-700 mb-1">Email</label><input type="email" id="ownerEmail" placeholder="you@hotel.com" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900"></div>
+<div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="ownerPassword" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
 </div>
 
-<!-- Staff login fields -->
 <div id="staffFields" class="hidden">
 <div class="mb-2">
 <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
 <input type="tel" id="staffPhone" maxlength="10" placeholder="9876543210" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono">
-<span class="text-[10px] text-slate-500">Enter the phone your owner registered for you</span>
+<span class="text-[10px] text-slate-500">Phone your owner registered for you</span>
 </div>
 <div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="staffPassword" placeholder="Your password" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm text-slate-900 font-mono"></div>
 </div>
 
 <div id="loginError" class="hidden text-xs p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700"></div>
+<div id="loginSuccess" class="hidden text-xs p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700"></div>
 
 <button type="submit" id="loginBtn" class="w-full py-3 bg-brand-gradient text-white font-black text-sm uppercase tracking-wider rounded-xl glow-btn transition">
 Login
@@ -637,7 +590,6 @@ Don't have an account? <button type="button" onclick="toggleRegister()" class="t
 </div>
 </form>
 
-<!-- Disclaimer inside modal (before actual login) -->
 <div id="disclaimerInModal" class="hidden space-y-2">
 <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg max-h-64 overflow-y-auto text-[11px] text-slate-700 leading-relaxed">
 <p class="font-bold text-amber-800 mb-2">⚠️ Important Disclaimer</p>
@@ -652,7 +604,7 @@ Don't have an account? <button type="button" onclick="toggleRegister()" class="t
 <input type="checkbox" id="disclaimerModalCheck" class="w-4 h-4 mt-0.5 accent-brand">
 <span class="text-[11px] text-slate-700"><b>I have read and agree to above terms.</b></span>
 </label>
-<button id="disclaimerContinueBtn" onclick="continueAfterDisclaimer()" disabled class="w-full py-2.5 bg-brand-gradient text-white font-black text-sm uppercase rounded-xl disabled:opacity-40">Agree & Continue → Login</button>
+<button type="button" id="disclaimerContinueBtn" onclick="continueAfterDisclaimer()" disabled class="w-full py-2.5 bg-brand-gradient text-white font-black text-sm uppercase rounded-xl disabled:opacity-40">Agree & Continue → Login</button>
 </div>
 
 </div>
@@ -663,24 +615,39 @@ Don't have an account? <button type="button" onclick="toggleRegister()" class="t
 <!-- ============================================================ -->
 <script type="module">
 import { db, auth } from "./js/firebase-config.js";
-import { loginUser, registerNewHotel, monitorAuthState } from "./js/auth.js";
+import { loginUser, registerNewHotel } from "./js/auth.js";
 import { hashPassword } from "./js/common.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // ============================================================
 // STATE
 // ============================================================
-let loginMode = 'owner'; // owner or staff
+let loginMode = 'owner';
 let isRegistering = false;
 let pendingLoginData = null;
 
 // ============================================================
 // AUTO REDIRECT IF LOGGED IN
 // ============================================================
-monitorAuthState((state) => {
-  if (state && state.user && state.profile) {
-    if (state.profile.role === 'superadmin') window.location.href = 'super-admin.html';
-    else window.location.href = 'dashboard.html';
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    try {
+      const userSnap = await getDoc(doc(db, "users", user.uid));
+      if (userSnap.exists()) {
+        const profile = userSnap.data();
+        if (profile.role === 'superadmin') {
+          window.location.href = 'super-admin.html';
+          return;
+        }
+        sessionStorage.setItem('smartfix_owner_session', JSON.stringify({
+          role: profile.role || 'owner',
+          hotelId: profile.hotelId,
+          email: user.email
+        }));
+        window.location.href = 'dashboard.html';
+      }
+    } catch (e) { console.error(e); }
   }
 });
 
@@ -690,14 +657,16 @@ if (sessionStorage.getItem('smartfix_staff_session')) {
 }
 
 // ============================================================
-// MODAL
+// MODAL (Expose on window for inline onclick)
 // ============================================================
 window.openLoginModal = (mode = 'owner', action = 'login') => {
   loginMode = mode;
   isRegistering = (action === 'register');
   document.getElementById('loginModal').classList.remove('hidden');
   document.getElementById('loginError').classList.add('hidden');
+  document.getElementById('loginSuccess').classList.add('hidden');
   document.getElementById('disclaimerInModal').classList.add('hidden');
+  document.getElementById('loginForm').classList.remove('hidden');
   updateUI();
 };
 
@@ -709,11 +678,15 @@ window.closeLoginModal = () => {
 window.switchLoginMode = (mode) => {
   loginMode = mode;
   isRegistering = false;
+  document.getElementById('loginError').classList.add('hidden');
+  document.getElementById('loginSuccess').classList.add('hidden');
   updateUI();
 };
 
 window.toggleRegister = () => {
   isRegistering = !isRegistering;
+  document.getElementById('loginError').classList.add('hidden');
+  document.getElementById('loginSuccess').classList.add('hidden');
   updateUI();
 };
 
@@ -761,19 +734,20 @@ function updateUI() {
 }
 
 // ============================================================
-// SUBMIT LOGIN
+// SUBMIT LOGIN (exposed on window)
 // ============================================================
 window.submitLogin = async () => {
   const errEl = document.getElementById('loginError');
+  const successEl = document.getElementById('loginSuccess');
   const btn = document.getElementById('loginBtn');
   errEl.classList.add('hidden');
+  successEl.classList.add('hidden');
 
   btn.innerText = 'Processing...';
   btn.disabled = true;
 
   try {
     if (isRegistering) {
-      // Register owner
       const email = document.getElementById('ownerEmail').value.trim();
       const pwd = document.getElementById('ownerPassword').value;
       const hotelName = document.getElementById('regHotelName').value.trim();
@@ -781,6 +755,7 @@ window.submitLogin = async () => {
       const hotelGstin = document.getElementById('regHotelGstin').value.trim();
       const hotelPhone = document.getElementById('regHotelPhone').value.trim();
 
+      if (!email || !pwd) throw new Error('Email and password required');
       if (!hotelName) throw new Error('Hotel Name required');
       if (pwd.length < 6) throw new Error('Password must be 6+ characters');
 
@@ -789,31 +764,34 @@ window.submitLogin = async () => {
         email, pwd
       );
 
-      alert('✅ Registration successful!\n\nPlease check your email for verification link.\n\nYou can now login.');
+      successEl.innerText = '✅ Registration successful! Please login now.';
+      successEl.classList.remove('hidden');
       isRegistering = false;
       updateUI();
+      document.getElementById('ownerEmail').value = email;
+      document.getElementById('ownerPassword').value = '';
       return;
     }
 
     if (loginMode === 'owner') {
-      // Owner login
       const email = document.getElementById('ownerEmail').value.trim();
       const pwd = document.getElementById('ownerPassword').value;
 
       if (!email || !pwd) throw new Error('Email and password required');
 
       const res = await loginUser(email, pwd);
+      
       if (res.profile.role === 'superadmin') {
         window.location.href = 'super-admin.html';
-      } else {
-        // Save owner session
-        sessionStorage.setItem('smartfix_owner_session', JSON.stringify({
-          role: res.profile.role || 'owner',
-          hotelId: res.profile.hotelId,
-          email: res.user.email
-        }));
-        window.location.href = 'dashboard.html';
+        return;
       }
+      
+      sessionStorage.setItem('smartfix_owner_session', JSON.stringify({
+        role: res.profile.role || 'owner',
+        hotelId: res.profile.hotelId,
+        email: res.user.email
+      }));
+      window.location.href = 'dashboard.html';
     } else {
       // Staff login
       const phone = document.getElementById('staffPhone').value.trim();
@@ -822,18 +800,16 @@ window.submitLogin = async () => {
       if (!/^\d{10}$/.test(phone)) throw new Error('Phone must be 10 digits');
       if (!pwd) throw new Error('Password required');
 
-      // Fetch global staff login
       const snap = await getDoc(doc(db, "staff_logins", phone));
-      if (!snap.exists()) throw new Error('Phone number not registered. Ask your owner to create a login.');
+      if (!snap.exists()) throw new Error('Phone not registered. Ask owner to create login.');
 
       const data = snap.data();
-      if (data.isSuspended) throw new Error('Your account is suspended. Contact owner.');
+      if (data.isSuspended) throw new Error('Account suspended. Contact owner.');
 
-      // Verify password
       const hashed = await hashPassword(pwd, data.salt);
       if (hashed !== data.passwordHash) throw new Error('Incorrect password');
 
-      // Show disclaimer if not agreed this session
+      // Check disclaimer for staff
       if (sessionStorage.getItem('smartfix_disclaimer_agreed') !== 'true') {
         pendingLoginData = {
           role: data.role, hotelId: data.hotelId,
@@ -849,8 +825,7 @@ window.submitLogin = async () => {
         return;
       }
 
-      // Proceed to login
-      await completeStaffLogin(pendingLoginData || {
+      await completeStaffLogin({
         role: data.role, hotelId: data.hotelId,
         staffName: data.staffName, staffPhone: phone,
         staffId: data.staffId, phone
@@ -859,23 +834,21 @@ window.submitLogin = async () => {
   } catch(err) {
     errEl.innerText = err.message;
     errEl.classList.remove('hidden');
+    console.error('Login error:', err);
   } finally {
-    btn.innerText = isRegistering ? 'Register & Start Trial' : 'Login';
-    btn.disabled = false;
+    if (!pendingLoginData) {
+      btn.innerText = isRegistering ? 'Register & Start Trial' : 'Login';
+      btn.disabled = false;
+    }
   }
 };
 
-// ============================================================
-// STAFF LOGIN COMPLETE
-// ============================================================
 async function completeStaffLogin(data) {
-  // Update last login
   try {
     await updateDoc(doc(db, "staff_logins", data.phone), { lastLoginAt: new Date().toISOString() });
     await updateDoc(doc(db, "hotels", data.hotelId, "staff_logins", data.phone), { lastLoginAt: new Date().toISOString() }).catch(() => {});
-  } catch(e) { /* ignore */ }
+  } catch(e) { }
 
-  // Save session
   sessionStorage.setItem('smartfix_staff_session', JSON.stringify({
     role: data.role, hotelId: data.hotelId,
     staffName: data.staffName, staffPhone: data.staffPhone,
@@ -886,7 +859,7 @@ async function completeStaffLogin(data) {
 }
 
 // ============================================================
-// DISCLAIMER CHECK IN MODAL
+// DISCLAIMER IN MODAL
 // ============================================================
 document.addEventListener('change', (e) => {
   if (e.target.id === 'disclaimerModalCheck') {
@@ -907,13 +880,11 @@ window.continueAfterDisclaimer = async () => {
 // ============================================================
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
+    if (entry.isIntersecting) entry.target.classList.add('visible');
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.feature-card, section > div > div').forEach(el => {
+document.querySelectorAll('.feature-card').forEach(el => {
   el.classList.add('fade-in');
   observer.observe(el);
 });
