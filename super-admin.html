@@ -24,7 +24,7 @@
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-[0_0_15px_rgba(34,211,238,0.3)]">S</div>
         <div>
-          <div class="text-sm font-black text-white">Smart<span class="text-cyan-400">Fix</span> HMS</div>
+          <div class="text-sm font-black text-white">Smart<span class="text-cyan-400">Fix</span> Suite</div>
           <div class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Master Console</div>
         </div>
       </div>
@@ -81,20 +81,50 @@
       <!-- Cards generated via JS -->
     </div>
 
-    <!-- Pricing Engine -->
-    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl mt-8">
-      <h3 class="text-sm font-bold uppercase text-cyan-400 mb-4">Platform Pricing Engine</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs items-end">
-        <div>
-          <label class="block text-slate-400 mb-1">6-Month License (₹)</label>
-          <input type="number" id="price6M" value="4999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none">
+    <!-- SYSTEM SETTINGS (Pricing & Product Links) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+      
+      <!-- Pricing Engine -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase text-cyan-400 mb-4 flex items-center gap-2">
+          <span>💰</span> Platform Pricing Engine
+        </h3>
+        <div class="space-y-3 font-mono text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">6-Month License (₹)</label>
+            <input type="number" id="price6M" value="4999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none focus:border-cyan-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">1-Year License (₹)</label>
+            <input type="number" id="price1Y" value="8999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none focus:border-cyan-500">
+          </div>
+          <button onclick="savePlatformPricing()" id="savePriceBtn" class="w-full px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold uppercase rounded-lg transition mt-2">Save Pricing</button>
         </div>
-        <div>
-          <label class="block text-slate-400 mb-1">1-Year License (₹)</label>
-          <input type="number" id="price1Y" value="8999" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none">
-        </div>
-        <button onclick="savePlatformPricing()" id="savePriceBtn" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold uppercase rounded-lg transition">Save Pricing</button>
       </div>
+
+      <!-- Product Links (NEW) -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase text-orange-400 mb-4 flex items-center gap-2">
+          <span>🔗</span> Software Suite Links
+        </h3>
+        <p class="text-[10px] text-slate-400 mb-3">These links will appear on the homepage (index.html) for the "Learn More" buttons of each software.</p>
+        <div class="space-y-3 font-mono text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">SmartFix Pro (Mobile Shop) URL</label>
+            <input type="url" id="linkPro" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">SmartFix TMP (Restaurant) URL</label>
+            <input type="url" id="linkTmp" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">SmartFix ERP URL</label>
+            <input type="url" id="linkErp" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white outline-none focus:border-orange-500">
+          </div>
+          <button onclick="saveProductLinks()" id="saveLinksBtn" class="w-full px-4 py-2.5 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold uppercase rounded-lg transition mt-2">Save Links</button>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -108,10 +138,7 @@
         <h3 class="text-sm font-bold uppercase text-white">Hotel Details</h3>
         <button onclick="document.getElementById('hotelDetailsModal').classList.add('hidden')" class="text-slate-400 hover:text-white text-xl">×</button>
       </div>
-      
-      <div id="hotelDetailsContent" class="p-5 space-y-5 overflow-y-auto custom-scrollbar">
-        <!-- Content loaded via JS -->
-      </div>
+      <div id="hotelDetailsContent" class="p-5 space-y-5 overflow-y-auto custom-scrollbar"></div>
     </div>
   </div>
 
@@ -161,13 +188,14 @@
 
     let tenantsList = [];
     let platformPricing = { price6M: 4999, price1Y: 8999 };
+    let productLinks = { pro: '', tmp: '', erp: '' };
     let targetHotelIdForRestore = null;
 
     // 1. Auth Check
     monitorAuthState(async (state) => {
       if (state && state.user && state.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
         document.getElementById("adminSessionEmail").innerText = state.user.email;
-        await loadPlatformPricing();
+        await loadSystemSettings();
         await loadTenants();
       } else {
         alert("Unauthorized Developer Access.");
@@ -177,13 +205,23 @@
 
     window.handleAdminLogout = () => logoutUser();
 
-    // 2. Load Pricing
-    window.loadPlatformPricing = async () => {
-      const snap = await getDoc(doc(db, "system", "pricing"));
-      if (snap.exists()) {
-        platformPricing = snap.data();
+    // 2. Load System Settings (Pricing + Links)
+    window.loadSystemSettings = async () => {
+      // Load Pricing
+      const priceSnap = await getDoc(doc(db, "system", "pricing"));
+      if (priceSnap.exists()) {
+        platformPricing = priceSnap.data();
         document.getElementById("price6M").value = platformPricing.price6M || 4999;
         document.getElementById("price1Y").value = platformPricing.price1Y || 8999;
+      }
+
+      // Load Product Links
+      const linksSnap = await getDoc(doc(db, "system", "products"));
+      if (linksSnap.exists()) {
+        productLinks = linksSnap.data();
+        document.getElementById("linkPro").value = productLinks.pro || "";
+        document.getElementById("linkTmp").value = productLinks.tmp || "";
+        document.getElementById("linkErp").value = productLinks.erp || "";
       }
     };
 
@@ -201,7 +239,22 @@
       finally { btn.innerText = "Save Pricing"; }
     };
 
-    // 4. Load & Render Tenants
+    // 4. Save Product Links
+    window.saveProductLinks = async () => {
+      const btn = document.getElementById("saveLinksBtn");
+      btn.innerText = "Saving...";
+      try {
+        const pro = document.getElementById("linkPro").value.trim();
+        const tmp = document.getElementById("linkTmp").value.trim();
+        const erp = document.getElementById("linkErp").value.trim();
+        await setDoc(doc(db, "system", "products"), { pro, tmp, erp }, { merge: true });
+        productLinks = { pro, tmp, erp };
+        alert("Product Links updated successfully!");
+      } catch (err) { alert("Error: " + err.message); }
+      finally { btn.innerText = "Save Links"; }
+    };
+
+    // 5. Load & Render Tenants
     window.loadTenants = async () => {
       const container = document.getElementById("hotelCardContainer");
       container.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400 animate-pulse">Fetching directory...</div>`;
@@ -231,7 +284,6 @@
       document.getElementById("statTrialHotels").innerText = trial;
     }
 
-    // Helper: Calculate days left
     function getDaysLeft(expDate) {
       if(!expDate) return 0;
       const now = new Date();
@@ -305,7 +357,7 @@
       container.innerHTML = html;
     };
 
-    // 5. View Details & Admin Actions
+    // 6. View Details & Admin Actions
     window.openDetails = async (hotelId) => {
       const h = tenantsList.find(x => x.id === hotelId);
       if(!h) return;
@@ -386,7 +438,7 @@
       `;
     };
 
-    // 6. WhatsApp Messaging Logic
+    // 7. WhatsApp Messaging Logic
     window.sendWhatsApp = (phone, hotelName, status, daysLeft) => {
       if(!phone) return alert("No phone number available for this hotel.");
       
@@ -409,7 +461,7 @@
       window.open(url, '_blank');
     };
 
-    // 7. Actions (Renew, Suspend, Edit, Backup, Delete, Clear)
+    // 8. Actions (Renew, Suspend, Edit, Backup, Delete, Clear)
     window.renewHotel = async (hId, months) => {
       if(!confirm(`Extend license by ${months} months?`)) return;
       try {
@@ -499,15 +551,10 @@
       }
     };
 
-    // --- CLEAR DATA LOGIC ---
     window.clearHotelData = async (hotelId, hotelName) => {
       const confirmation = prompt(`DANGER: This will permanently delete ALL data (Rooms, Bookings, POS, Staff, Expenses) for *${hotelName}*, but keep the hotel profile.\n\nThis action is irreversible. Type 'CLEAR' to proceed:`);
+      if(confirmation !== "CLEAR") return alert("Action cancelled.");
       
-      if(confirmation !== "CLEAR") {
-        alert("Action cancelled. You must type CLEAR exactly.");
-        return;
-      }
-
       const btn = document.getElementById("clearDataBtn");
       const originalText = btn.innerHTML;
       btn.innerHTML = "Clearing Data...";
@@ -520,8 +567,7 @@
           const promises = snap.docs.map(d => deleteDoc(d.ref));
           await Promise.all(promises);
         }
-        
-        alert("All hotel data cleared successfully. You can now restore from a backup or start fresh.");
+        alert("All hotel data cleared successfully.");
         document.getElementById("hotelDetailsModal").classList.add("hidden");
       } catch (e) {
         alert("Error clearing data: " + e.message);
@@ -531,7 +577,6 @@
       }
     };
 
-    // --- RESTORE LOGIC ---
     window.triggerAdminRestore = (hotelId) => {
       targetHotelIdForRestore = hotelId;
       document.getElementById("adminRestoreFile").value = ""; 
@@ -547,19 +592,13 @@
         try {
           const data = JSON.parse(e.target.result);
           if(!data.rooms && !data.bookings) throw new Error("Invalid Backup File Format.");
-
-          const hName = tenantsList.find(t => t.id === targetHotelIdForRestore)?.hotelName || "this hotel";
-          const confirmMsg = `DANGER: This will overwrite all current data for ${hName} with the backup from ${data.exportedAt ? data.exportedAt.split('T')[0] : 'unknown date'}.\n\nThis cannot be undone. Type 'RESTORE' to confirm:`;
           
-          const promptRes = prompt(confirmMsg);
-          if(promptRes !== 'RESTORE') {
-            alert("Restore cancelled.");
-            return;
-          }
+          const promptRes = prompt(`DANGER: This will overwrite all current data for this hotel. Type 'RESTORE' to confirm:`);
+          if(promptRes !== 'RESTORE') return alert("Restore cancelled.");
 
           const btn = document.getElementById("restoreAdminBtn");
           const originalText = btn.innerHTML;
-          btn.innerHTML = "Restoring Data...";
+          btn.innerHTML = "Restoring...";
           btn.disabled = true;
 
           const collections = ['rooms', 'bookings', 'expenses', 'pos_orders', 'menu_items', 'staff'];
@@ -570,24 +609,17 @@
               }
             }
           }
-
           alert("Data restored successfully from backup!");
           document.getElementById("hotelDetailsModal").classList.add("hidden");
         } catch (err) {
           alert("Restore Failed: " + err.message);
         } finally {
           event.target.value = ""; 
-          const btn = document.getElementById("restoreAdminBtn");
-          if(btn) {
-            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Restore Data from Backup`;
-            btn.disabled = false;
-          }
         }
       };
       reader.readAsText(file);
     };
 
-    // 8. Delete Hotel Logic
     window.openDeleteModal = (hotelId, hotelName) => {
       document.getElementById("hotelDetailsModal").classList.add("hidden");
       document.getElementById("deleteHotelId").value = hotelId;
