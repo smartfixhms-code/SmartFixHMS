@@ -50,7 +50,7 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex items-center justify-between h-16 sm:h-20">
 
-<!-- Logo (Fixed) -->
+<!-- Logo -->
 <a href="#" class="flex items-center gap-2 sm:gap-3">
 <svg class="h-10 sm:h-12 w-auto" viewBox="0 0 460 110" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
@@ -247,7 +247,7 @@ Start 30-Day Free Trial →
 </section>
 
 <!-- ============================================================ -->
-<!-- NEW: OUR SOFTWARE SUITE (Advertisement Section) -->
+<!-- OUR SOFTWARE SUITE (Advertisement Section) -->
 <!-- ============================================================ -->
 <section id="our-software" class="py-16 sm:py-24 bg-slate-900 text-white">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -273,7 +273,7 @@ Start 30-Day Free Trial →
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> BIN EMI Tracking</li>
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> Used Mobile Sales CRM</li>
     </ul>
-    <button onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
+    <button id="btnPro" onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
   </div>
 
   <!-- Product 2: SmartFix TMP (Restaurant) -->
@@ -290,7 +290,7 @@ Start 30-Day Free Trial →
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> Swiggy & Zomato Ledger</li>
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> Advance Table Booking</li>
     </ul>
-    <button onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
+    <button id="btnTmp" onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
   </div>
 
   <!-- Product 3: SmartFix ERP -->
@@ -307,7 +307,7 @@ Start 30-Day Free Trial →
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> Centralized Accounting</li>
       <li class="flex items-start gap-2"><span class="text-orange-400 font-bold">✓</span> Custom Role Permissions</li>
     </ul>
-    <button onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
+    <button id="btnErp" onclick="alert('Coming Soon to this website!')" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition">Learn More</button>
   </div>
 
 </div>
@@ -568,20 +568,48 @@ Don't have an account? <button type="button" onclick="window.toggleRegister()" c
 </div>
 
 <!-- ============================================================ -->
-<!-- SCRIPTS (FIXED GLOBAL SCOPE) -->
+<!-- SCRIPTS -->
 <!-- ============================================================ -->
 <script type="module">
 import { db, auth } from "./js/firebase-config.js";
 import { loginUser, registerNewHotel } from "./js/auth.js";
 import { hashPassword } from "./js/common.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 let loginMode = 'owner';
 let isRegistering = false;
 let pendingLoginData = null;
 
-// Auth state listener for auto-redirect
+// ============================================================
+// DYNAMIC PRODUCT LINKS (From Super Admin)
+// ============================================================
+async function loadProductLinks() {
+  try {
+    const snap = await getDoc(doc(db, "system", "products"));
+    if (snap.exists()) {
+      const data = snap.data();
+      
+      if (data.pro) {
+        document.getElementById('btnPro').setAttribute('onclick', `window.open('${data.pro}', '_blank')`);
+        document.getElementById('btnPro').innerText = 'Visit Website';
+      }
+      if (data.tmp) {
+        document.getElementById('btnTmp').setAttribute('onclick', `window.open('${data.tmp}', '_blank')`);
+        document.getElementById('btnTmp').innerText = 'Visit Website';
+      }
+      if (data.erp) {
+        document.getElementById('btnErp').setAttribute('onclick', `window.open('${data.erp}', '_blank')`);
+        document.getElementById('btnErp').innerText = 'Visit Website';
+      }
+    }
+  } catch(e) { console.log("Error loading product links:", e); }
+}
+loadProductLinks();
+
+// ============================================================
+// AUTH REDIRECTS
+// ============================================================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
@@ -603,12 +631,13 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Check for existing staff session
 if (sessionStorage.getItem('smartfix_staff_session')) {
   window.location.href = 'dashboard.html';
 }
 
-// GLOBAL SCOPE EXPOSURE (Fixes the button not clicking issue)
+// ============================================================
+// MODAL CONTROLS
+// ============================================================
 window.openLoginModal = (mode = 'owner', action = 'login') => {
   loginMode = mode;
   isRegistering = (action === 'register');
@@ -683,6 +712,9 @@ function updateUI() {
   }
 }
 
+// ============================================================
+// LOGIN SUBMIT
+// ============================================================
 window.submitLogin = async () => {
   const errEl = document.getElementById('loginError');
   const successEl = document.getElementById('loginSuccess');
@@ -805,6 +837,9 @@ async function completeStaffLogin(data) {
   window.location.href = 'dashboard.html';
 }
 
+// ============================================================
+// DISCLAIMER
+// ============================================================
 document.addEventListener('change', (e) => {
   if (e.target.id === 'disclaimerModalCheck') {
     document.getElementById('disclaimerContinueBtn').disabled = !e.target.checked;
