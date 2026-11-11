@@ -59,7 +59,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 
 <main class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6">
 
-<!-- DASHBOARD VIEW -->
 <section id="view-dashboard" class="space-y-6">
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
 <div onclick="filterRoomsStatus('all')" class="cursor-pointer bg-slate-900 border border-slate-800 p-4 rounded-2xl hover:border-cyan-500/50 transition"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Rooms</span><div id="statTotalRooms" class="text-2xl font-black text-white mt-1 font-mono">0</div></div>
@@ -95,7 +94,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <div id="roomGridContainer" class="space-y-6"></div>
 </div>
 
-<!-- RECENT EXPENSES (with date filter) -->
 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 mt-6">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
 <h3 class="text-sm font-black uppercase tracking-wider text-white">Recent Expenses</h3>
@@ -118,7 +116,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- FOLLOW UP -->
 <section id="view-followup" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Follow-up & Upcoming Bookings</h2><button onclick="openBookingModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ New Booking</button></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -129,7 +126,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- MARKET DUE -->
 <section id="view-marketdue" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Market Due / Outstanding Balances</h2><span class="text-xs text-rose-400 font-bold" id="totalMarketDueText">Total Due: ₹0.00</span></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -140,7 +136,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- STAFF -->
 <section id="view-staff" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Staff Directory & Salary</h2><button onclick="openStaffModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Add Staff</button></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -151,7 +146,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- POS -->
 <section id="view-pos" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Restaurant POS & Room Service</h2><button onclick="openMenuModal()" class="px-3 py-1.5 bg-slate-800 text-cyan-400 text-xs font-bold rounded-lg hover:bg-slate-700">+ Add Menu Item</button></div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -170,7 +164,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- ROOM MANAGER -->
 <section id="view-room-manager" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Room Tariffs & Meal Rates</h2><button onclick="openAddRoomModal()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">+ Add Room</button></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -181,7 +174,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- BILLING ARCHIVE -->
 <section id="view-billing-archive" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">Bookings & Settlements</h2><input type="text" id="billSearchInput" oninput="filterInvoicesTable()" placeholder="Search guest..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white"></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -192,7 +184,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- P&L REPORTS -->
 <section id="view-reports" class="hidden space-y-6">
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
 <h2 class="text-base font-bold text-white uppercase tracking-wider">Financial P&L Analytics</h2>
@@ -225,7 +216,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- GST AUDIT -->
 <section id="view-gst-audit" class="hidden space-y-6">
 <div class="flex justify-between items-center"><h2 class="text-base font-bold text-white uppercase tracking-wider">GST Audit & Ledger</h2><button onclick="exportGstToCsv()" class="px-4 py-2 bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-xl">📥 Export CA CSV</button></div>
 <div class="bg-slate-900 border border-slate-800 rounded-2xl table-responsive">
@@ -236,7 +226,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </section>
 
-<!-- SETTINGS -->
 <section id="view-settings" class="hidden space-y-6">
 <h2 class="text-base font-bold text-white uppercase tracking-wider">Hotel Operational Settings</h2>
 <div class="bg-yellow-950/30 border border-yellow-800/50 p-4 rounded-xl flex gap-3 text-yellow-400 text-xs"><span>⚠️</span><p>Saving changes in this section requires your current login password for security verification.</p></div>
@@ -265,7 +254,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </main>
 </div>
 
-<!-- MOBILE NAV -->
 <div class="md:hidden fixed bottom-0 left-0 w-full glass-nav z-40 flex justify-between items-center px-4 py-2 pb-safe">
 <button onclick="switchView('dashboard')" class="flex flex-col items-center gap-1 text-cyan-400"><svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span class="text-[10px] font-bold">Home</span></button>
 <button onclick="switchView('followup')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-[10px] font-bold">Follow-up</span></button>
@@ -274,7 +262,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 <button onclick="switchView('settings')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg><span class="text-[10px] font-bold">Menu</span></button>
 </div>
 
-<!-- UPI QR MODAL -->
 <div id="upiPaymentModal" class="hidden fixed inset-0 bg-slate-950/95 z-[70] flex items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-700 p-6 rounded-3xl shadow-2xl text-center space-y-4">
 <h3 class="text-sm font-bold uppercase text-white tracking-wider">Scan & Pay via UPI</h3>
@@ -291,7 +278,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- LICENSE LOCK MODAL -->
 <div id="licenseLockModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl shadow-2xl shadow-rose-500/10 text-center space-y-6">
 <div class="w-20 h-20 bg-rose-950/50 rounded-full flex items-center justify-center mx-auto border border-rose-800"><span class="text-3xl">🔒</span></div>
@@ -300,7 +286,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- SUSPENSION MODAL -->
 <div id="suspensionModal" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col items-center justify-center p-4 backdrop-blur-md">
 <div class="w-full max-w-md bg-slate-900 border border-rose-800/50 p-8 rounded-3xl shadow-2xl shadow-rose-500/10 text-center space-y-6">
 <div class="w-20 h-20 bg-rose-950/50 rounded-full flex items-center justify-center mx-auto border border-rose-800"><span class="text-3xl">🚫</span></div>
@@ -309,7 +294,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- CHECK-IN LIST MODAL -->
 <div id="checkinModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
 <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
 <div class="flex justify-between items-center border-b border-slate-800 pb-2"><h3 class="text-sm font-bold uppercase text-cyan-400">In-House Guests</h3><button onclick="document.getElementById('checkinModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button></div>
@@ -317,7 +301,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- CHECK-OUT LIST MODAL -->
 <div id="checkoutListModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
 <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
 <div class="flex justify-between items-center border-b border-slate-800 pb-2"><h3 class="text-sm font-bold uppercase text-rose-400">Select Guest for Check-Out</h3><button onclick="document.getElementById('checkoutListModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button></div>
@@ -325,7 +308,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- CLEANING LIST MODAL -->
 <div id="cleaningModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
 <div class="w-full max-w-lg bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-h-[85vh] overflow-y-auto">
 <div class="flex justify-between items-center border-b border-slate-800 pb-2"><h3 class="text-sm font-bold uppercase text-amber-400">Housekeeping / Cleaning</h3><button onclick="document.getElementById('cleaningModal').classList.add('hidden')" class="text-slate-400 text-lg">×</button></div>
@@ -333,7 +315,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- BOOKING MODAL -->
 <div id="bookingModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
 <div class="w-full max-w-xl bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl my-auto max-h-[95vh] overflow-y-auto hide-scrollbar relative">
 <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-4 sticky top-0 bg-slate-900 z-10"><h3 class="text-sm font-bold uppercase text-cyan-400">New Reservation</h3><button type="button" onclick="closeBookingModal()" class="text-rose-400 hover:text-rose-300 font-bold text-2xl leading-none bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center border border-slate-700">×</button></div>
@@ -382,7 +363,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- CHECKOUT MODAL -->
 <div id="checkoutModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4 overflow-y-auto">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 my-auto">
 <h3 class="text-sm font-bold uppercase text-emerald-400 text-center">Settle & Check-Out</h3>
@@ -404,7 +384,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- DUE MODAL -->
 <div id="dueModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
 <h3 class="text-sm font-bold uppercase text-cyan-400 text-center">Collect Market Due</h3>
@@ -422,7 +401,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- DEPOSIT MODAL -->
 <div id="depositModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
 <h3 class="text-sm font-bold uppercase text-blue-400 text-center">Deposit Cash to Bank</h3>
@@ -432,7 +410,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- SETTINGS AUTH MODAL -->
 <div id="settingsAuthModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
 <h3 class="text-sm font-bold uppercase text-rose-400 text-center">Security Verification</h3>
@@ -442,7 +419,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- ROOM EDIT MODAL -->
 <div id="roomEditModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
 <h3 id="roomModalTitle" class="text-sm font-bold uppercase text-cyan-400">Configure Room</h3>
@@ -457,7 +433,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- EXPENSE MODAL -->
 <div id="expenseModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3.5">
 <h3 class="text-sm font-bold uppercase text-emerald-400">Log Property Expense</h3>
@@ -470,7 +445,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- MENU ADD MODAL -->
 <div id="menuModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
 <h3 class="text-sm font-bold uppercase text-cyan-400">Add POS Menu Item</h3>
@@ -482,7 +456,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- STAFF MODAL -->
 <div id="staffModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
 <h3 class="text-sm font-bold uppercase text-cyan-400">Add New Staff</h3>
@@ -498,7 +471,6 @@ body{font-family:'Inter',sans-serif;background-color:#060913}.font-mono{font-fam
 </div>
 </div>
 
-<!-- SALARY MODAL -->
 <div id="salaryModal" class="hidden fixed inset-0 bg-slate-950/90 z-[60] flex items-center justify-center p-4">
 <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
 <h3 class="text-sm font-bold uppercase text-emerald-400 text-center">Pay Salary</h3>
@@ -595,7 +567,6 @@ window.switchView = (vId) => {
   if (vId === 'reports') renderCharts();
 };
 
-// --- UPI PAYMENT ---
 window.showUpiQrCode = async (bookingId) => {
   const booking = cachedBookings.find(b => b.id === bookingId || b.bookingId === bookingId);
   if(!booking) return alert("Booking not found");
@@ -637,7 +608,6 @@ window.confirmUpiPaymentReceived = async () => {
   finally { btn.innerText = "Payment Received (Mark as Settled)"; btn.disabled = false; }
 };
 
-// --- AADHAAR QR ---
 window.toggleAadhaarScanner = () => {
   const reader = document.getElementById("reader"), btn = document.getElementById("scanBtn"), status = document.getElementById("scanStatus");
   if (isScanning) {
@@ -678,7 +648,6 @@ window.manualVerifyId = () => {
   alert("ID marked as manually verified.");
 };
 
-// --- LIST MODALS ---
 window.openCheckInList = () => {
   const list = document.getElementById('checkinList');
   const inHouse = cachedBookings.filter(b => b.status === 'checked_in');
@@ -710,7 +679,6 @@ window.openCleaningList = () => {
 
 window.markCleanedFromList = async (rid) => { await markRoomCleaned(currentHotelId, rid); openCleaningList(); };
 
-// --- DASHBOARD GRID ---
 function renderFloorGrid(rooms) {
   const container = document.getElementById("roomGridContainer"); if (!container) return;
   const grouped = {};
@@ -740,7 +708,6 @@ function updateMetrics(rooms) {
 
 window.filterRoomsStatus = (st) => { if (st === 'all') renderFloorGrid(cachedRooms); else renderFloorGrid(cachedRooms.filter(r => r.status === st)); };
 
-// --- CHECK-IN FROM UPCOMING ---
 window.checkInUpcoming = async (bookingId, roomId) => {
   if(!confirm("Confirm Check-In for this upcoming booking?")) return;
   const inTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
@@ -752,7 +719,6 @@ window.checkInUpcoming = async (bookingId, roomId) => {
   } catch (e) { alert("Error: " + e.message); }
 };
 
-// --- NO-SHOW CANCEL ---
 window.cancelNoShowBooking = async (bookingId, roomId) => {
   const b = cachedBookings.find(x => x.id === bookingId || x.bookingId === bookingId);
   if(!b) return;
@@ -766,7 +732,6 @@ window.cancelNoShowBooking = async (bookingId, roomId) => {
   } catch(e) { alert("Error: " + e.message); }
 };
 
-// --- CHECKOUT ---
 window.handleRoomAction = async (rId) => {
   const r = cachedRooms.find(x => x.id === rId); if (!r) return;
   if (r.status === "vacant") { openBookingModal(r.roomNumber); }
@@ -812,7 +777,15 @@ window.confirmCheckout = async () => {
   const outTime = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
   const bookingId = checkoutBookingData.bookingId;
   try {
-    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), { "summary.grandTotal": liveTotalBill, "foodTotal": liveFoodBill, "totalPaid": totalPaid, "balanceDue": newBal > 0 ? newBal : 0, "isSettled": isFullySettled, "lastPaymentMode": paymentMode, "collectedBy": collectedBy });
+    // FIXED: summary.grandTotal is not overwritten to avoid double counting in invoice print
+    await updateDoc(doc(db, "hotels", currentHotelId, "bookings", checkoutBookingData.id), { 
+      "foodTotal": liveFoodBill, 
+      "totalPaid": totalPaid, 
+      "balanceDue": newBal > 0 ? newBal : 0, 
+      "isSettled": isFullySettled, 
+      "lastPaymentMode": paymentMode, 
+      "collectedBy": collectedBy 
+    });
     await processCheckOut(currentHotelId, bookingId, checkoutRoomId, { checkOutTime: outTime, totalPaid: totalPaid, balanceDue: newBal > 0 ? newBal : 0, isSettled: isFullySettled, collectedBy: collectedBy });
     await settleRoomFoodOrders(currentHotelId, checkoutBookingData.roomNumber);
     document.getElementById("checkoutModal").classList.add("hidden");
@@ -821,7 +794,6 @@ window.confirmCheckout = async () => {
   } catch(e) { alert("Error: " + e.message); }
 };
 
-// --- FOLLOWUP ---
 window.loadFollowupBookings = () => {
   const tbody = document.getElementById("followupTableBody");
   const upcoming = cachedBookings.filter(b => b.status === 'confirmed').sort((a,b) => (a.checkInDate||'').localeCompare(b.checkInDate||''));
@@ -857,7 +829,6 @@ window.sendWhatsAppReminder = (id, phone, name, date, due) => {
   window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
 };
 
-// --- MARKET DUE ---
 window.loadMarketDue = () => {
   const tbody = document.getElementById("marketDueTableBody"), totalText = document.getElementById("totalMarketDueText");
   const dueBookings = cachedBookings.filter(b => (b.balanceDue || 0) > 0 && b.status !== 'cancelled');
@@ -914,7 +885,7 @@ window.submitDueCollection = async () => {
   if(collect <= 0) return alert("Enter valid amount.");
   const oldPaid = dueBookingData.totalPaid || dueBookingData.advancePaid || 0;
   const newPaid = oldPaid + collect;
-  const newBal = Math.max(0, dueBookingData.summary.grandTotal - newPaid);
+  const newBal = Math.max(0, (dueBookingData.summary?.grandTotal || 0) - newPaid); // FIXED: Added fallback for safety
   const isSettled = newBal <= 0;
   try {
     await updateDoc(doc(db, "hotels", currentHotelId, "bookings", dueBookingData.id), { totalPaid: newPaid, balanceDue: newBal, isSettled: isSettled, lastPaymentMode: pMode });
@@ -924,7 +895,6 @@ window.submitDueCollection = async () => {
   } catch(e) { alert("Error: " + e.message); }
 };
 
-// --- BOOKING ---
 window.checkCustomerHistory = () => {
   const phone = document.getElementById("bookPhone").value.trim();
   const statusDiv = document.getElementById("crmStatus");
@@ -1039,7 +1009,6 @@ window.submitBooking = async () => {
   } catch (e) { alert("Error: " + e.message); }
 };
 
-// --- STAFF ---
 async function loadStaff() {
   try { const snap = await getDocs(collection(db, "hotels", currentHotelId, "staff")); cachedStaff = []; snap.forEach(d => cachedStaff.push({ id: d.id, ...d.data() })); }
   catch(e) { console.error("Staff load error:", e); cachedStaff = []; }
@@ -1127,7 +1096,6 @@ window.printSalarySlip = (staff, month, amount, deduction = 0, reason = "N/A") =
   w.document.close();
 };
 
-// --- POS MENU ---
 async function loadMenuItems() {
   const snap = await getDocs(collection(db, "hotels", currentHotelId, "menu_items"));
   cachedMenuItems = []; snap.forEach(d => cachedMenuItems.push({ id: d.id, ...d.data() }));
@@ -1155,7 +1123,6 @@ window.handleMenuSelectChange = () => {
   if(opt.value) { document.getElementById("posItemName").value = opt.dataset.name; document.getElementById("posItemPrice").value = opt.dataset.price; }
 };
 
-// --- INVOICE ARCHIVE ---
 window.loadInvoiceArchives = async () => {
   try {
     const snap = await getDocs(collection(db, "hotels", currentHotelId, "bookings"));
@@ -1165,7 +1132,8 @@ window.loadInvoiceArchives = async () => {
     let html = "";
     cachedBookings.forEach(b => {
       const isSettled = b.status === "checked_out" ? b.isSettled : (b.balanceDue <= 0);
-      const total = (b.summary?.grandTotal || 0).toFixed(2);
+      // FIXED: Add foodTotal to the displayed total so it reflects the full amount
+      const total = ((b.summary?.grandTotal || 0) + (b.foodTotal || 0)).toFixed(2);
       const paid = (b.totalPaid || b.advancePaid || 0).toFixed(2);
       const due = (b.balanceDue || 0).toFixed(2);
       let statusBadge = "";
@@ -1214,7 +1182,6 @@ window.triggerPrint = async (format, bId) => {
   else printA4TaxInvoice(currentHotelProfile, bData, food.orders);
 };
 
-// --- POS ORDER ---
 window.populatePosRooms = () => {
   const sel = document.getElementById("posRoomSelect");
   sel.innerHTML = "";
@@ -1260,13 +1227,11 @@ window.submitPosOrder = async () => {
     await setDoc(doc(db, "hotels", currentHotelId, "pos_orders", orderId), { orderId, bookingId: bid, roomNumber: roomNo, items: currentPosOrder, status: "served", isSettled: false, createdAt: new Date().toISOString() });
     alert(`Food order of ₹${orderTotal} sent to Room ${roomNo} folio!`);
     currentPosOrder = []; renderPosOrder();
-    // Refresh top items cache
     const posSnap = await getDocs(collection(db, "hotels", currentHotelId, "pos_orders"));
     window._cachedPosOrders = []; posSnap.forEach(d => window._cachedPosOrders.push(d.data()));
   } catch (e) { alert("Error: " + e.message); }
 };
 
-// --- ROOM MANAGER ---
 window.loadRoomManager = () => {
   const tbody = document.getElementById("roomManagerTableBody");
   tbody.innerHTML = cachedRooms.map(r => `<tr class="hover:bg-slate-800/40"><td class="py-3 px-4 font-bold text-white">${r.roomNumber}</td><td class="py-3 px-4 text-slate-400">${r.floor}</td><td class="py-3 px-4 text-cyan-300 font-sans">${r.type}</td><td class="py-3 px-4 text-emerald-400">₹${r.rate}</td><td class="py-3 px-4 text-amber-400">₹${r.packageType === 'fooding_lodging' ? (r.foodRate || 0) : 'N/A'}</td><td class="py-3 px-4 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.status === 'occupied' ? 'bg-rose-500/20 text-rose-400' : (r.status === 'cleaning' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400')}">${r.status.toUpperCase()}</span></td><td class="py-3 px-4 text-right space-x-2 font-sans">${r.status !== 'vacant' ? `<button onclick="forceVacant('${r.id}')" class="px-2 py-1 bg-amber-600 text-white rounded text-[10px] font-bold">Force Vacant</button>` : ''}<button onclick="openEditRoomModal('${r.id}')" class="px-2 py-1 bg-slate-800 text-cyan-400 rounded">Edit</button><button onclick="deleteRoom('${r.id}')" class="px-2 py-1 bg-rose-950 text-rose-300 rounded">Delete</button></td></tr>`).join('');
@@ -1329,7 +1294,6 @@ window.deleteRoom = async (rId) => {
   await deleteDoc(doc(db, "hotels", currentHotelId, "rooms", rId));
 };
 
-// --- FINANCIAL REPORTS ---
 window.loadFinancialReports = async () => {
   try {
     const expSnap = await getDocs(collection(db, "hotels", currentHotelId, "expenses"));
@@ -1383,7 +1347,6 @@ window.loadFinancialReports = async () => {
   if(document.getElementById("recentExpenseDashboard")) filterDashboardExpenses();
 };
 
-// --- Dashboard Expense Filter/Export ---
 function parseExpDate(s){ if(!s) return null; const p = s.split("/"); return p.length === 3 ? new Date(`${p[2]}-${p[1]}-${p[0]}`) : null; }
 
 function filterExpList(s, e) {
@@ -1428,7 +1391,6 @@ window.exportDashboardExpenses = () => {
   a.click();
 };
 
-// --- CHARTS ---
 window.renderCharts = () => {
   const startInput = document.getElementById("reportStartDate").value;
   const endInput = document.getElementById("reportEndDate").value;
@@ -1462,7 +1424,6 @@ window.renderCharts = () => {
   document.getElementById("repTotalRevenue").innerText = `₹${totalRev.toFixed(2)}`;
   document.getElementById("repNetProfit").innerText = `₹${(totalRev - totalExp).toFixed(2)}`;
 
-  // Profit chart
   const ctxProfit = document.getElementById('profitChart').getContext('2d');
   if(profitChartInstance) profitChartInstance.destroy();
   const days = {};
@@ -1483,7 +1444,6 @@ window.renderCharts = () => {
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
   });
 
-  // Expense chart
   const ctxExpense = document.getElementById('expenseChart').getContext('2d');
   if(expenseChartInstance) expenseChartInstance.destroy();
   const catLabels = Object.keys(expenseByCategory);
@@ -1498,7 +1458,6 @@ window.renderCharts = () => {
     options: { plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }, cutout: '70%' }
   });
 
-  // TOP ITEMS CHART (POS)
   const itemTotals = {};
   (window._cachedPosOrders || []).forEach(o => {
     if(!o.createdAt) return;
@@ -1549,7 +1508,6 @@ window.submitExpense = async () => {
   renderCharts();
 };
 
-// --- BANK DEPOSIT ---
 window.openDepositModal = () => {
   document.getElementById("depAmount").value = "";
   document.getElementById("depNote").value = "";
@@ -1569,7 +1527,6 @@ window.submitDeposit = async () => {
   } catch (e) { alert("Error: " + e.message); }
 };
 
-// --- EXPORT CSV ---
 window.exportExpensesCsv = () => {
   let csv = "Date,Category,Description,Payment Source,Amount\n";
   cachedExpenses.forEach(e => { csv += `"${e.date}","${e.category}","${e.description}","${e.paymentSource || 'Cash'}",${e.amount}\n`; });
@@ -1580,7 +1537,6 @@ window.exportExpensesCsv = () => {
   a.click();
 };
 
-// --- GST ---
 window.renderGstAudit = () => {
   const tbody = document.getElementById("gstAuditTableBody");
   tbody.innerHTML = cachedBookings.map(b => `<tr class="hover:bg-slate-800/40"><td class="py-2.5 px-3 text-slate-400">${b.checkInTime?.split(",")[0] || 'Today'}</td><td class="py-2.5 px-3 text-cyan-400 font-bold">${b.bookingId}</td><td class="py-2.5 px-3 text-amber-400">996311 / 996331</td><td class="py-2.5 px-3">₹${(b.summary?.grandTaxable || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalCgst || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-cyan-300">₹${(b.summary?.totalSgst || 0).toFixed(2)}</td><td class="py-2.5 px-3 text-emerald-400 font-bold text-right">₹${(b.summary?.grandTotal || 0).toFixed(2)}</td></tr>`).join('');
@@ -1593,7 +1549,6 @@ window.exportGstToCsv = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `GST_Audit_${currentHotelId}.csv`; a.click();
 };
 
-// --- SETTINGS ---
 async function loadHotelFloors() {
   const snap = await getDoc(doc(db, "hotels", currentHotelId));
   if (snap.exists() && snap.data().floors) hotelFloors = snap.data().floors;
@@ -1694,7 +1649,6 @@ window.saveHotelProfile = () => {
   requestSettingsAuth({ action: "saveProfile", data: { phone, upiId, policyNote: policy } });
 };
 
-// --- BACKUP/RESTORE ---
 window.downloadBackup = () => {
   const data = {
     hotelName: currentHotelProfile?.hotelName || "Hotel",
